@@ -38,6 +38,7 @@
 			<view class="button-block-2" ref='buttonstart2'></view>
 			<view class="button-block-4" ref='buttonstart4'></view>
 			<view class="button-block-5" ref='buttonstart5'></view>
+			<view class="button-wait" ref='buttonwait'></view>
 		</view>
 	</view>
 </template>
@@ -66,22 +67,52 @@
 					this.$refs.buttonstart5.$el.style.width = '0px';
 					this.$refs.buttoncontent1.$el.style.width = '0px';
 					this.$refs.buttoncontent2.$el.style.height = '0px';
-					this.$refs.buttoncontent3.$el.style.height = '100px';
 					this.$refs.matchingcircle.$el.style.opacity='100';
+					setTimeout( () => {	
+						if(this.isclicked){
+						this.$refs.buttoncontent3.$el.style.height = '100px';
+						this.$refs.buttonwait.$el.style.opacity = '100';
+						}
+					}, 400)
+					setTimeout( () => {
+						if(this.isclicked){
+							uni.navigateTo({
+							    url: '../confirmchat/confirmchat'
+							});
+						}
+						this.$refs.buttoncontent3.$el.style.height = '0px';
+						this.$refs.buttonwait.$el.style.opacity = '0';
+						this.$refs.buttonstart.$el.style.width = '40px';
+						this.$refs.buttonstart3.$el.style.height = '40px';
+						this.$refs.buttonstart2.$el.style.height = '45px';
+						this.$refs.buttonstart2.$el.style.margin = '65px 0 0 255px';
+						this.$refs.buttonstart4.$el.style.width = '45px';
+						this.$refs.buttonstart4.$el.style.margin = '105px 0 0 215px';
+						this.$refs.buttonstart5.$el.style.width = '40px';
+						this.$refs.buttoncontent1.$el.style.width = '50px';
+						this.$refs.buttoncontent2.$el.style.height = '100px';
+						this.$refs.matchingcircle.$el.style.opacity='0';
+						this.isclicked = false;
+					}, 5000)
 					this.isclicked = true;
 				} else {
-					this.isclicked = false;
-					this.$refs.buttonstart.$el.style.width = '40px';
-					this.$refs.buttonstart3.$el.style.height = '40px';
-					this.$refs.buttonstart2.$el.style.height = '45px';
-					this.$refs.buttonstart2.$el.style.margin = '65px 0 0 255px';
-					this.$refs.buttonstart4.$el.style.width = '45px';
-					this.$refs.buttonstart4.$el.style.margin = '105px 0 0 215px';
-					this.$refs.buttonstart5.$el.style.width = '40px';
-					this.$refs.buttoncontent1.$el.style.width = '50px';
-					this.$refs.buttoncontent2.$el.style.height = '100px';
 					this.$refs.buttoncontent3.$el.style.height = '0px';
-					this.$refs.matchingcircle.$el.style.opacity='0';
+					this.$refs.buttonwait.$el.style.opacity = '0';
+					setTimeout( () => {
+						if(!this.isclicked){
+							this.$refs.buttonstart.$el.style.width = '40px';
+							this.$refs.buttonstart3.$el.style.height = '40px';
+							this.$refs.buttonstart2.$el.style.height = '45px';
+							this.$refs.buttonstart2.$el.style.margin = '65px 0 0 255px';
+							this.$refs.buttonstart4.$el.style.width = '45px';
+							this.$refs.buttonstart4.$el.style.margin = '105px 0 0 215px';
+							this.$refs.buttonstart5.$el.style.width = '40px';
+							this.$refs.buttoncontent1.$el.style.width = '50px';
+							this.$refs.buttoncontent2.$el.style.height = '100px';
+							this.$refs.matchingcircle.$el.style.opacity='0';
+						}
+					}, 400)
+					this.isclicked = false;
 				}
 
 			},
@@ -103,25 +134,30 @@
 		background-image: url(https://pic.kohaku.xin/images/2021/10/26/7.jpg);
 		background-size: 100% auto;
 		background-repeat: no-repeat;
+		text-align: center;
 	}
 
 	.button-start {
-		margin: 65vh 17vw;
+		margin: 65vh auto;
+		width: 250px;
 
-		height: 200rpx;
+		height: 100px;
 		display: inline-flex;
 		transition: all .5s ease-in-out;
 	}
 	.matching-circle{
+		display: inline-flex;
 		opacity:0;
 		content: '';
-		width: 200rpx;
-		height: 200rpx;
+		width: 100px;
+		height: 100px;
 		border: 4rpx solid #007AFF;
 		position: absolute;
-		border-radius: 100rpx;
-		margin-top: 350rpx;
-		margin-left: 270rpx;
+		border-radius: 50px;
+		margin-top: 175px;
+		margin-left: -50px;
+
+		
 		transition: all 0.5s ease-in-out;
 		animation: circleborder 5s alternate infinite;
 	}
@@ -130,6 +166,23 @@
 		0%{}
 		50%{box-shadow:0px 0px 20px white;}
 		100%{}
+	}
+	.button-wait{
+		content: '';
+		width:20px;
+		height: 2px;
+		background-color: white;
+		opacity:0;
+		position: absolute;
+		margin-top:90px;
+		margin-left:20px;
+		transition: all 0.5s ease-in-out;
+		animation: wait 3s alternate infinite ease-in-out;
+	}
+	@keyframes wait{
+		0%{margin-left:20px;}
+		50%{ width: 50px;}
+		100%{margin-left:210px;}
 	}
 
 	/* 	.button-start:hover > .button-block{
@@ -161,92 +214,95 @@
 	.button-block-5 {
 		content: '';
 		background-color: white;
-		height: 5rpx;
-		width: 80rpx;
+		height: 2px;
+		width: 40px;
 		position: absolute;
-		margin-left: 25rpx;
-		margin-top: 100rpx;
+		margin-left: 13px;
+		margin-top: 50px;
 		transition: all .5s ease-in-out;
 	}
 
 	.button-block {
 		content: '';
 		background-color: white;
-		height: 5rpx;
-		width: 90rpx;
+		height: 2px;
+		width: 45px;
 		position: absolute;
-		margin-top: -10rpx;
-		margin-left: -20rpx;
+		margin-top: -5px;
+		margin-left: -10px;
 		transition: all .5s ease-in-out;
 	}
 
 	.button-block-3 {
 		content: '';
 		background-color: white;
-		height: 90rpx;
-		width: 5rpx;
+		height: 45px;
+		width: 2px;
 		position: absolute;
-		margin-top: -20rpx;
-		margin-left: -10rpx;
+		margin-top: -10px;
+		margin-left: -5px;
 		transition: all .5s ease-in-out;
 	}
 
 	.button-block-2 {
 		content: '';
 		background-color: white;
-		height: 80rpx;
-		width: 5rpx;
+		height: 40px;
+		width: 2px;
 		position: absolute;
-		margin-left: 510rpx;
-		margin-top: 140rpx;
+		margin-left: 255px;
+		margin-top: 70px;
 		transition: all .5s ease-in-out;
 	}
 
 	.button-block-4 {
 		content: '';
 		background-color: white;
-		height: 5rpx;
-		width: 80rpx;
+		height: 2px;
+		width: 40px;
 		position: absolute;
-		margin-left: 440rpx;
-		margin-top: 210rpx;
+		margin-left: 220px;
+		margin-top: 105px;
 		transition: all .5s ease-in-out;
 	}
 
 	.button-1 {
-		width: 100rpx;
+		width: 50px;
 		font-family: 'SSJian Song Xian Xi Ti';
 		color: white;
-		font-size: 80rpx;
-		padding-left: 30rpx;
-		line-height: 100rpx;
+		font-size: 40px;
+		padding-left: 15px;
+		line-height: 50px;
 		overflow: hidden;
+		text-align:left;
 		transition: all .5s ease-in-out;
 	}
 
 	.button-2 {
-		margin-top: -10rpx;
-		margin-left: 100rpx;
+		margin-top: -5px;
+		margin-left: 50px;
 		font-family: 'SSJian Song Xian Xi Ti';
 		color: white;
 		position: absolute;
-		width: 500rpx;
-		height: 200rpx;
-		font-size: 220rpx;
+		width: 250px;
+		height: 100px;
+		font-size: 110px;
 		overflow: hidden;
+		text-align:left;
 		transition: all .5s ease-in-out;
 	}
 
 	.button-onprocess {
-		margin-top: 40rpx;
-		margin-left: 40rpx;
+		margin-top: 20px;
+		margin-left: 20px;
 		font-family: 'SSJian Song Xian Xi Ti';
 		color: white;
 		position: absolute;
-		width: 500rpx;
-		height: 0rpx;
-		font-size: 120rpx;
+		width: 250px;
+		height: 0px;
+		font-size: 60px;
 		overflow: hidden;
+		text-align:left;
 		transition: all .5s ease-in-out;
 	}
 	.star-box {

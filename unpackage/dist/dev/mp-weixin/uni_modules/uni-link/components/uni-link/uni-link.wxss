@@ -1,0 +1,14 @@
+
+.uni-link {
+	display: inline-flex;
+	text-align: center;
+	cursor: pointer;
+	font-size: 50px;
+}
+.uni-link--withline {
+	display: inline-flex;
+	text-align: center;
+	font-size: 50px;
+	text-decoration: none;
+}
+

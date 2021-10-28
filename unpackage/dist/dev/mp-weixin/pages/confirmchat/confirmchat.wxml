@@ -1,0 +1,1 @@
+<view class="main"><uni-link class="link" vue-id="36998a4e-1" href="{{source+id}}" text="进入聊天" bind:__l="__l"></uni-link><view data-event-opts="{{[['tap',[['getre']]]]}}" bindtap="__e">获取</view><view>{{id}}</view></view>

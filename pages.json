@@ -3,10 +3,38 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "uni-app"
+				"navigationBarTitleText": "匹配",
+				"enablePullDownRefresh": false
 			}
 		}
-	],
+	    ,{
+            "path" : "pages/me/me",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "个人资料",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/chatlist/chatlist",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "聊天",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/confirmchat/confirmchat",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
@@ -21,6 +49,12 @@
 		"list": [{
 			"pagePath": "pages/index/index",
 			"text": "匹配"
+		},{
+			"pagePath": "pages/chatlist/chatlist",
+			"text": "聊天"
+		},{
+			"pagePath": "pages/me/me",
+			"text": "个人"
 		}]
 	}
 }

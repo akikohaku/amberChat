@@ -1,0 +1,16 @@
+
+.main{
+	text-align: center;
+}
+.link{
+	width: 200px;
+	height: 70px;
+	border: 2px solid orange;
+	display: inline-flex;
+	text-align: center;
+	font-size: 50px;
+	padding-top: 10px;
+	padding-left: 40px;
+	border-radius: 5px;
+}
+

@@ -1,0 +1,36 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/me/me",
+    "pages/chatlist/chatlist",
+    "pages/confirmchat/confirmchat"
+  ],
+  "subPackages": [],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "uni-app",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8"
+  },
+  "tabBar": {
+    "color": "#7A7E83",
+    "selectedColor": "#3cc51f",
+    "borderStyle": "black",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "匹配"
+      },
+      {
+        "pagePath": "pages/chatlist/chatlist",
+        "text": "聊天"
+      },
+      {
+        "pagePath": "pages/me/me",
+        "text": "个人"
+      }
+    ]
+  },
+  "usingComponents": {}
+}
