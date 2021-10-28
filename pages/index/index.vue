@@ -54,10 +54,17 @@
 		onLoad() {
 
 		},
+		onshow() {
+			if (this.goEasy.getConnectionStatus() === 'disconnected') {
+				getApp().globalData.imService = new IMService(this.goEasy, this.GoEasy);
+				getApp().globalData.imService.connect(getApp().globalData.userID);
+			}
+		},
 		methods: {
 			matchClick() {
 				if (!this.isclicked) {
 					console.log("clicked");
+					console.log(this.goEasy.getConnectionStatus());
 					this.$refs.buttonstart.$el.style.width = '270px';
 					this.$refs.buttonstart3.$el.style.height = '120px';
 					this.$refs.buttonstart2.$el.style.height = '120px';
@@ -67,17 +74,17 @@
 					this.$refs.buttonstart5.$el.style.width = '0px';
 					this.$refs.buttoncontent1.$el.style.width = '0px';
 					this.$refs.buttoncontent2.$el.style.height = '0px';
-					this.$refs.matchingcircle.$el.style.opacity='100';
-					setTimeout( () => {	
-						if(this.isclicked){
-						this.$refs.buttoncontent3.$el.style.height = '100px';
-						this.$refs.buttonwait.$el.style.opacity = '100';
+					this.$refs.matchingcircle.$el.style.opacity = '100';
+					setTimeout(() => {
+						if (this.isclicked) {
+							this.$refs.buttoncontent3.$el.style.height = '100px';
+							this.$refs.buttonwait.$el.style.opacity = '100';
 						}
 					}, 400)
-					setTimeout( () => {
-						if(this.isclicked){
+					setTimeout(() => {
+						if (this.isclicked) {
 							uni.navigateTo({
-							    url: '../confirmchat/confirmchat'
+								url: '../confirmchat/confirmchat'
 							});
 						}
 						this.$refs.buttoncontent3.$el.style.height = '0px';
@@ -91,15 +98,15 @@
 						this.$refs.buttonstart5.$el.style.width = '40px';
 						this.$refs.buttoncontent1.$el.style.width = '50px';
 						this.$refs.buttoncontent2.$el.style.height = '100px';
-						this.$refs.matchingcircle.$el.style.opacity='0';
+						this.$refs.matchingcircle.$el.style.opacity = '0';
 						this.isclicked = false;
 					}, 5000)
 					this.isclicked = true;
 				} else {
 					this.$refs.buttoncontent3.$el.style.height = '0px';
 					this.$refs.buttonwait.$el.style.opacity = '0';
-					setTimeout( () => {
-						if(!this.isclicked){
+					setTimeout(() => {
+						if (!this.isclicked) {
 							this.$refs.buttonstart.$el.style.width = '40px';
 							this.$refs.buttonstart3.$el.style.height = '40px';
 							this.$refs.buttonstart2.$el.style.height = '45px';
@@ -109,7 +116,7 @@
 							this.$refs.buttonstart5.$el.style.width = '40px';
 							this.$refs.buttoncontent1.$el.style.width = '50px';
 							this.$refs.buttoncontent2.$el.style.height = '100px';
-							this.$refs.matchingcircle.$el.style.opacity='0';
+							this.$refs.matchingcircle.$el.style.opacity = '0';
 						}
 					}, 400)
 					this.isclicked = false;
@@ -145,9 +152,10 @@
 		display: inline-flex;
 		transition: all .5s ease-in-out;
 	}
-	.matching-circle{
+
+	.matching-circle {
 		display: inline-flex;
-		opacity:0;
+		opacity: 0;
 		content: '';
 		width: 100px;
 		height: 100px;
@@ -157,32 +165,46 @@
 		margin-top: 175px;
 		margin-left: -50px;
 
-		
+
 		transition: all 0.5s ease-in-out;
 		animation: circleborder 5s alternate infinite;
 	}
-	
-	@keyframes circleborder{
-		0%{}
-		50%{box-shadow:0px 0px 20px white;}
-		100%{}
+
+	@keyframes circleborder {
+		0% {}
+
+		50% {
+			box-shadow: 0px 0px 20px white;
+		}
+
+		100% {}
 	}
-	.button-wait{
+
+	.button-wait {
 		content: '';
-		width:20px;
+		width: 20px;
 		height: 2px;
 		background-color: white;
-		opacity:0;
+		opacity: 0;
 		position: absolute;
-		margin-top:90px;
-		margin-left:20px;
+		margin-top: 90px;
+		margin-left: 20px;
 		transition: all 0.5s ease-in-out;
 		animation: wait 3s alternate infinite ease-in-out;
 	}
-	@keyframes wait{
-		0%{margin-left:20px;}
-		50%{ width: 50px;}
-		100%{margin-left:210px;}
+
+	@keyframes wait {
+		0% {
+			margin-left: 20px;
+		}
+
+		50% {
+			width: 50px;
+		}
+
+		100% {
+			margin-left: 210px;
+		}
 	}
 
 	/* 	.button-start:hover > .button-block{
@@ -274,7 +296,7 @@
 		padding-left: 15px;
 		line-height: 50px;
 		overflow: hidden;
-		text-align:left;
+		text-align: left;
 		transition: all .5s ease-in-out;
 	}
 
@@ -288,7 +310,7 @@
 		height: 100px;
 		font-size: 110px;
 		overflow: hidden;
-		text-align:left;
+		text-align: left;
 		transition: all .5s ease-in-out;
 	}
 
@@ -302,206 +324,232 @@
 		height: 0px;
 		font-size: 60px;
 		overflow: hidden;
-		text-align:left;
+		text-align: left;
 		transition: all .5s ease-in-out;
 	}
+
 	.star-box {
-	    width: 250px;
-	    height: 200px;
-	    position: absolute;
-	    margin: 0 auto;
+		width: 250px;
+		height: 200px;
+		position: absolute;
+		margin: 0 auto;
 	}
+
 	/* star styling */
-	
+
 	.star {
-	    position: absolute;
-	    box-shadow: 0 0 3px #fff;
-	    border-radius: 50%;
+		position: absolute;
+		box-shadow: 0 0 3px #fff;
+		border-radius: 50%;
 	}
+
 	.twinkle-star-1 {
-	    width: 4px;
-	    height: 5px;
-	    left: 30%;
-	    top: 64%;
-	    background: #a6b8ff;
-	    -webkit-animation: twinkle 0.5s alternate infinite;
-	    animation: twinkle 0.5s alternate infinite;
-	    -webkit-animation-delay: 1.61404s;
-	    animation-delay: 1.61404s;
+		width: 4px;
+		height: 5px;
+		left: 30%;
+		top: 64%;
+		background: #a6b8ff;
+		-webkit-animation: twinkle 0.5s alternate infinite;
+		animation: twinkle 0.5s alternate infinite;
+		-webkit-animation-delay: 1.61404s;
+		animation-delay: 1.61404s;
 	}
+
 	.twinkle-star-2 {
-	    left: 3%;
-	    top: 65%;
-	    width: 4px;
-	    height: 4px;
-	    background: #f4ccbf;
-	    -webkit-animation: twinkle 0.5s alternate infinite;
-	    animation: twinkle 0.5s alternate infinite;
-	    -webkit-animation-delay: 4.09091s;
-	    animation-delay: 4.09091s;
+		left: 3%;
+		top: 65%;
+		width: 4px;
+		height: 4px;
+		background: #f4ccbf;
+		-webkit-animation: twinkle 0.5s alternate infinite;
+		animation: twinkle 0.5s alternate infinite;
+		-webkit-animation-delay: 4.09091s;
+		animation-delay: 4.09091s;
 	}
+
 	.twinkle-star-3 {
-	    background: #aaccff;
-	    width: 3px;
-	    height: 3px;
-	    right: 27%;
-	    top: 32%;
-	    -webkit-animation: twinkle 0.75s alternate infinite;
-	    animation: twinkle 0.75s alternate infinite;
-	    -webkit-animation-delay: 1.77143s;
-	    animation-delay: 1.77143s;
+		background: #aaccff;
+		width: 3px;
+		height: 3px;
+		right: 27%;
+		top: 32%;
+		-webkit-animation: twinkle 0.75s alternate infinite;
+		animation: twinkle 0.75s alternate infinite;
+		-webkit-animation-delay: 1.77143s;
+		animation-delay: 1.77143s;
 	}
+
 	.twinkle-star-4 {
-	    width: 7px;
-	    height: 7px;
-	    left: 70%;
-	    top: 46%;
-	    background: #ffc8ee;
-	    -webkit-animation: twinkle 0.5s alternate infinite;
-	    animation: twinkle 0.5s alternate infinite;
-	    -webkit-animation-delay: 1.55357s;
-	    animation-delay: 1.55357s;
+		width: 7px;
+		height: 7px;
+		left: 70%;
+		top: 46%;
+		background: #ffc8ee;
+		-webkit-animation: twinkle 0.5s alternate infinite;
+		animation: twinkle 0.5s alternate infinite;
+		-webkit-animation-delay: 1.55357s;
+		animation-delay: 1.55357s;
 	}
+
 	.twinkle-star-5 {
-	    background: #a4aaff;
-	    width: 4px;
-	    height: 4px;
-	    left: 30.5%;
-	    top: 43.5%;
-	    -webkit-animation: twinkle 0.75s alternate infinite;
-	    animation: twinkle 0.75s alternate infinite;
-	    -webkit-animation-delay: 0.88462s;
-	    animation-delay: 0.88462s;
+		background: #a4aaff;
+		width: 4px;
+		height: 4px;
+		left: 30.5%;
+		top: 43.5%;
+		-webkit-animation: twinkle 0.75s alternate infinite;
+		animation: twinkle 0.75s alternate infinite;
+		-webkit-animation-delay: 0.88462s;
+		animation-delay: 0.88462s;
 	}
+
 	.twinkle-star-6 {
-	    background: #a6b8ff;
-	    width: 2px;
-	    height: 2px;
-	    right: 19.5%;
-	    top: 58.5%;
-	    -webkit-animation: twinkle 0.5s alternate infinite;
-	    animation: twinkle 0.5s alternate infinite;
-	    -webkit-animation-delay: 0.66s;
-	    animation-delay: 0.66s;
+		background: #a6b8ff;
+		width: 2px;
+		height: 2px;
+		right: 19.5%;
+		top: 58.5%;
+		-webkit-animation: twinkle 0.5s alternate infinite;
+		animation: twinkle 0.5s alternate infinite;
+		-webkit-animation-delay: 0.66s;
+		animation-delay: 0.66s;
 	}
+
 	.twinkle-star-7 {
-	    background: #a6b8ff;
-	    width: 6px;
-	    height: 7px;
-	    right: 19%;
-	    top: 77%;
-	    -webkit-animation: twinkle 0.75s alternate infinite;
-	    animation: twinkle 0.75s alternate infinite;
-	    -webkit-animation-delay: 0.03279s;
-	    animation-delay: 0.03279s;
+		background: #a6b8ff;
+		width: 6px;
+		height: 7px;
+		right: 19%;
+		top: 77%;
+		-webkit-animation: twinkle 0.75s alternate infinite;
+		animation: twinkle 0.75s alternate infinite;
+		-webkit-animation-delay: 0.03279s;
+		animation-delay: 0.03279s;
 	}
+
 	.twinkle-star-8 {
-	    background: #ffccaa;
-	    width: 3px;
-	    height: 3px;
-	    right: 10%;
-	    top: 20.5%;
-	    -webkit-animation: twinkle 0.5s alternate infinite;
-	    animation: twinkle 0.55s alternate infinite;
-	    -webkit-animation-delay: 1.77143s;
-	    animation-delay: 1.77143s;
+		background: #ffccaa;
+		width: 3px;
+		height: 3px;
+		right: 10%;
+		top: 20.5%;
+		-webkit-animation: twinkle 0.5s alternate infinite;
+		animation: twinkle 0.55s alternate infinite;
+		-webkit-animation-delay: 1.77143s;
+		animation-delay: 1.77143s;
 	}
+
 	.twinkle-star-9 {
-	    background: #ffaaff;
-	    width: 3px;
-	    height: 3px;
-	    right: 5%;
-	    top: 29%;
-	    -webkit-animation: twinkle 0.3s alternate infinite;
-	    animation: twinkle 0.3s alternate infinite;
-	    -webkit-animation-delay: 1.77143s;
-	    animation-delay: 1.77143s;
+		background: #ffaaff;
+		width: 3px;
+		height: 3px;
+		right: 5%;
+		top: 29%;
+		-webkit-animation: twinkle 0.3s alternate infinite;
+		animation: twinkle 0.3s alternate infinite;
+		-webkit-animation-delay: 1.77143s;
+		animation-delay: 1.77143s;
 	}
+
 	/* line styling */
-	
+
 	.line {
-	    width: 1px;
-	    height: 1px;
-	    position: absolute;
-	    background: rgba(246, 218, 230, 0.65);
-	    -webkit-animation: line 7s alternate infinite;
-	    animation: line 7s alternate infinite;
-	    -webkit-animation-delay: 1s;
-	    animation-delay: 1s;
+		width: 1px;
+		height: 1px;
+		position: absolute;
+		background: rgba(246, 218, 230, 0.65);
+		-webkit-animation: line 7s alternate infinite;
+		animation: line 7s alternate infinite;
+		-webkit-animation-delay: 1s;
+		animation-delay: 1s;
 	}
+
 	.line-1 {
-	    height: 108px;
-	    transform: rotate(102deg);
-	    top: 44%;
-	    left: 55.5%;
+		height: 108px;
+		transform: rotate(102deg);
+		top: 44%;
+		left: 55.5%;
 	}
+
 	.line-2 {
-	    height: 50px;
-	    transform: rotate(89deg);
-	    top: 52.5%;
-	    left: 16.5%;
+		height: 50px;
+		transform: rotate(89deg);
+		top: 52.5%;
+		left: 16.5%;
 	}
+
 	.line-3 {
-	    height: 64px;
-	    transform: rotate(58deg);
-	    top: 39%;
-	    left: 17%;
+		height: 64px;
+		transform: rotate(58deg);
+		top: 39%;
+		left: 17%;
 	}
+
 	.line-4 {
-	    height: 27px;
-	    transform: rotate(2deg);
-	    top: 48%;
-	    left: 30.5%;
+		height: 27px;
+		transform: rotate(2deg);
+		top: 48%;
+		left: 30.5%;
 	}
+
 	.line-5 {
-	    height: 17px;
-	    transform: rotate(8deg);
-	    top: 35.5%;
-	    right: 28%;
+		height: 17px;
+		transform: rotate(8deg);
+		top: 35.5%;
+		right: 28%;
 	}
+
 	.line-6 {
-	    height: 19px;
-	    transform: rotate(135deg);
-	    top: 49%;
-	    left: 75.5%;
+		height: 19px;
+		transform: rotate(135deg);
+		top: 49%;
+		left: 75.5%;
 	}
+
 	.line-7 {
-	    height: 22px;
-	    transform: rotate(1deg);
-	    top: 62.5%;
-	    right: 19.5%;
+		height: 22px;
+		transform: rotate(1deg);
+		top: 62.5%;
+		right: 19.5%;
 	}
+
 	.line-8 {
-	    height: 34px;
-	    transform: rotate(63deg);
-	    top: 17.5%;
-	    right: 19%;
+		height: 34px;
+		transform: rotate(63deg);
+		top: 17.5%;
+		right: 19%;
 	}
+
 	.line-9 {
-	    height: 11px;
-	    transform: rotate(320deg);
-	    top: 22.5%;
-	    right: 7.5%;
+		height: 11px;
+		transform: rotate(320deg);
+		top: 22.5%;
+		right: 7.5%;
 	}
+
 	/* the keyframes! */
-	
+
 	@keyframes twinkle {
-	    0% {
-	        opacity: .45;
-	    }
-	    100% {
-	        opacity: 1;
-	    }
+		0% {
+			opacity: .45;
+		}
+
+		100% {
+			opacity: 1;
+		}
 	}
+
 	@keyframes line {
-	    0% {
-	        opacity: .5;
-	    }
-	    20% {
-	        opacity: 0;
-	    }
-	    100% {
-	        opacity: 1;
-	    }
+		0% {
+			opacity: .5;
+		}
+
+		20% {
+			opacity: 0;
+		}
+
+		100% {
+			opacity: 1;
+		}
 	}
 </style>

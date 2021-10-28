@@ -2,6 +2,7 @@
 	<view class="main">
 		
 		<uni-link class="link" v-bind:href="source+id" text="进入聊天"></uni-link>
+		<view class="link" @click="enterChat('13451')">聊天2</view>
 		<view @click="getre()">获取</view>
 		<view>{{id}}</view>
 	</view>
@@ -19,6 +20,12 @@
 			
 		},
 		methods: {
+			enterChat (uuid) {//进入私聊
+				let path = '../privateChat/privateChat?to=' + uuid;
+				uni.navigateTo({
+					url: path
+				})
+			},
 			getre(){
 				let that=this
 				uni.request({
