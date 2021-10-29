@@ -1,5 +1,23 @@
 <template>
 	<view>
+		<view class="me-head">
+			<view class="me-head-pic">
+				<image :src="avatarUrl"></image>
+			</view>
+			<view class="me-head-id">
+				{{userName}}
+			</view>
+			<view class="me-head-wave-1"></view>
+			<view class="me-head-wave-2"></view>
+		</view>
+		<view class="me-menu">
+			<view class="me-menu-item">编辑个人资料</view>
+			<view class="me-menu-item">设置</view>
+			<view class="me-menu-item red">登出</view>
+			<view class="me-menu-line"></view>
+		</view>
+
+		<!-- <hr/> -->
 		<view>{{userID}}</view>
 		<view>{{userName}}</view>
 		<view @click="login()">id1</view>
@@ -29,18 +47,16 @@
 			connect() {
 				if (this.goEasy.getConnectionStatus() === 'disconnected') {
 					getApp().globalData.imService = new IMService(this.goEasy, this.GoEasy);
-					getApp().globalData.imService.connect(
-						 {
-							uuid: getApp().globalData.userID,
-							avatar: getApp().globalData.avaterUrl,
-							name: getApp().globalData.userName
-						}
-					);
+					getApp().globalData.imService.connect({
+						uuid: getApp().globalData.userID,
+						avatar: getApp().globalData.avaterUrl,
+						name: getApp().globalData.userName
+					});
 					uni.setStorageSync('currentUser', {
-							uuid: getApp().globalData.userID,
-							avatar: getApp().globalData.avaterUrl,
-							name: getApp().globalData.userName
-						});
+						uuid: getApp().globalData.userID,
+						avatar: getApp().globalData.avaterUrl,
+						name: getApp().globalData.userName
+					});
 				}
 			},
 			login() {
@@ -67,5 +83,97 @@
 </script>
 
 <style>
+	.me-head {
+		width: 100vw;
+		height: 200px;
+		text-align: center;
+		background-image: url(https://pic.kohaku.xin/images/2021/10/29/-2020-07-10-151533-Small.png);
+		background-size: 100% 100%;
+	}
 
+	.me-head-pic {
+		margin-top: 5vh;
+		display: inline-flex;
+		width: 80px;
+		height: 80px;
+		border: 2px solid #000000;
+		border-radius: 40px;
+	}
+
+	.me-head-pic image {
+		width: 100%;
+		height: 100%;
+		border-radius: 40px;
+	}
+
+	.me-head-id {
+		font-size: 20px;
+		padding-top: 5px;
+		font-weight: 400;
+		color: #ffffff;
+	}
+
+	.me-head-wave-1 {
+		height: 40px;
+		background: url(https://cdn.jsdelivr.net/gh/moezx/cdn@3.5.1/img/Sakura/images/wave1.png) repeat-x;
+		_filter: alpha(opacity=80);
+		position: absolute;
+		top:160px;
+		width: 1000%;
+		left: 0px;
+		z-index: 5;
+		opacity: 1;
+		transiton-property: opacity, bottom;
+		transition-duration: .4s, .4s;
+		animation: wave 250s alternate infinite;
+	}
+	@keyframes wave{
+		from{left:0px;}
+		to{left:-2500px;}
+	}
+	.me-head-wave-2{
+		height: 35px;
+		background: url(https://cdn.jsdelivr.net/gh/moezx/cdn@3.5.1/img/Sakura/images/wave1.png) repeat-x;
+		_filter: alpha(opacity=80);
+		position: absolute;
+		top:165px;
+		width: 1000%;
+		left: -50px;
+		z-index: 5;
+		opacity: 1;
+		transiton-property: opacity, bottom;
+		transition-duration: .4s, .4s;
+		animation: wave2 250s alternate infinite;
+	}
+	@keyframes wave2{
+		from{left:0px;}
+		to{left:-1500px;}
+	}
+	.me-menu{
+		margin-top: 20px;
+	}
+	.me-menu-item{
+		padding-top: 8px;
+		padding-left: 10px;
+		padding-bottom: 8px;
+		font-size: 17px;
+	}
+	.me-menu-item::before{
+		content: '';
+		height: 1px;
+		width: 100vw;
+		position: absolute;
+		left: 0px;
+		margin-top: -8px;
+		background-color: #00000011;
+	}
+	.me-menu-line{
+		content: '';
+		height: 1px;
+		width: 100vw;
+		background-color: #00000011;
+	}
+	.red{
+		color: red;
+	}
 </style>

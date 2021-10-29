@@ -22,6 +22,24 @@
 		</view>
 		<view class="matching">
 			<view class="matching-circle" ref='matchingcircle'></view>
+			<view class="mfx-main">
+				<view class="mfz" ref="mfz">
+					<view class="r1"></view>
+					<view class="r2"></view>
+				
+					<view class="z1"></view>
+					<view class="z2"></view>
+				</view>
+				
+				<view class="mfz1" ref="mfz2">
+					<view class="r3"></view>
+					<view class="r4"></view>
+				
+					<view class="z3"></view>
+					<view class="z4"></view>
+				</view>
+			</view>
+			
 		</view>
 		<view class="button-start" @click="matchClick()">
 			<view class="button-block" ref='buttonstart'></view>
@@ -62,6 +80,12 @@
 		},
 		methods: {
 			matchClick() {
+				if (this.goEasy.getConnectionStatus() === 'disconnected') {
+					uni.switchTab({
+						url: '../../pages/me/me'
+					});
+					return;
+				}
 				if (!this.isclicked) {
 					console.log("clicked");
 					console.log(this.goEasy.getConnectionStatus());
@@ -75,6 +99,8 @@
 					this.$refs.buttoncontent1.$el.style.width = '0px';
 					this.$refs.buttoncontent2.$el.style.height = '0px';
 					this.$refs.matchingcircle.$el.style.opacity = '100';
+					this.$refs.mfz.$el.style.display = 'block';
+					this.$refs.mfz2.$el.style.display = 'block';
 					setTimeout(() => {
 						if (this.isclicked) {
 							this.$refs.buttoncontent3.$el.style.height = '100px';
@@ -84,9 +110,11 @@
 					setTimeout(() => {
 						if (this.isclicked) {
 							uni.navigateTo({
-								url: '../confirmchat/confirmchat'
+								url: '/pages/confirmchat/confirmchat'
 							});
 						}
+						this.$refs.mfz.$el.style.display = 'none';
+						this.$refs.mfz2.$el.style.display = 'none';
 						this.$refs.buttoncontent3.$el.style.height = '0px';
 						this.$refs.buttonwait.$el.style.opacity = '0';
 						this.$refs.buttonstart.$el.style.width = '40px';
@@ -100,13 +128,15 @@
 						this.$refs.buttoncontent2.$el.style.height = '100px';
 						this.$refs.matchingcircle.$el.style.opacity = '0';
 						this.isclicked = false;
-					}, 5000)
+					}, 6000)
 					this.isclicked = true;
 				} else {
 					this.$refs.buttoncontent3.$el.style.height = '0px';
 					this.$refs.buttonwait.$el.style.opacity = '0';
 					setTimeout(() => {
 						if (!this.isclicked) {
+							this.$refs.mfz.$el.style.display = 'none';
+							this.$refs.mfz2.$el.style.display = 'none';
 							this.$refs.buttonstart.$el.style.width = '40px';
 							this.$refs.buttonstart3.$el.style.height = '40px';
 							this.$refs.buttonstart2.$el.style.height = '45px';
@@ -154,7 +184,7 @@
 	}
 
 	.matching-circle {
-		display: inline-flex;
+		display: none;
 		opacity: 0;
 		content: '';
 		width: 100px;
@@ -551,5 +581,201 @@
 		100% {
 			opacity: 1;
 		}
+	}
+	.mfx-main{
+		position: absolute;
+		margin-left: -185px;
+		width: 500px;
+		height: 500px;
+		display: inline-flex;
+	}
+	.mfz > *,.mfz1 > *{
+		box-shadow: 0px 0px 8px #ffff00,0px 0px 8px #ffff00 inset;
+	}
+	.mfz{
+		display: none;
+		position: absolute;
+		top: 125px;
+		left: 81px;
+		opacity: 0.8;
+		transform: scale(0.7);
+	}
+	.r1,.r2{
+		border: 3px solid #fff;
+		border-radius: 100%;
+		position: absolute;
+	}
+	.r1{/* 小圆 */
+		width: 300px;
+		height: 300px;
+		/* clip-path: polygon(x y,x y,x y....) */
+		animation: r1 1s linear;
+		-webkit-animation: r1 1s linear;
+	}
+	.r2{
+		width: 320px;
+		height: 320px;
+		top: -10px;
+		left: -10px;
+		transform: rotate(200deg);
+		animation: r1 1s linear;
+		-webkit-animation: r1 1s linear;
+	}
+	
+	/* 正方形 */
+	.z1,.z2{
+		width: 210px;
+		height: 210px;
+		border: 3px solid #fff;
+		box-shadow: 0px 0px 8px #ffff00,0px 0px 8px #ffff00 inset;
+		position: absolute;
+		left: 45px;
+		top: 45px;
+	}
+	.z1{
+		/* 20-4   4/20*/
+		/* clip-path: polygon(x y,x y,x y....) */
+		animation: z1 3s ease-in-out;
+		-webkit-animation: z1 3s ease-in-out;
+	}
+	.z2{
+		transform: rotate(45deg);
+		/* 24-20   20/24*/
+		animation: z2 4s ease-in-out;
+		-webkit-animation: z2 4s ease-in-out;
+		
+	}
+	
+	@-webkit-keyframes changeright{       
+			 
+					0%{-webkit-transform:rotateZ(0deg);}
+			 
+					50%{-webkit-transform:rotateZ(180deg);}
+			
+					100%{-webkit-transform:rotateZ(360deg);}
+	}
+	
+	.mfz1{
+		position: absolute;
+		display: none;
+		top: 88px;
+		left: 45px;
+		opacity: 0.3;
+		transform: scale(0.7);
+		
+				/* -webkit-animation:changeright 6s linear infinite; */
+	}
+	.r3,.r4{
+		border: 3px solid #fff;
+		border-radius: 100%;
+		position: absolute;
+	}
+	.r3{/* 小圆 */
+		width: 450px;
+		height: 450px;
+		top: -22px;
+		left: -22px;
+		/* clip-path: polygon(x y,x y,x y....) */
+		animation: r1 1s linear;
+		-webkit-animation: r1 1s linear;
+	}
+	.r4{
+		width: 480px;
+		height: 480px;
+		top: -36px;
+		left: -36px;
+		transform: rotate(200deg);
+		animation: r1 1s linear;
+		-webkit-animation: r1 1s linear;
+	}
+	
+	/* 正方形 */
+	.z3,.z4{
+		width: 315px;
+		height: 315px;
+		border: 3px solid #fff;
+		position: absolute;
+		left: 45px;
+		top: 45px;
+	}
+	.z3{
+		/* 20-4   4/20*/
+		/* clip-path: polygon(x y,x y,x y....) */
+		animation: z1 3s ease-in-out;
+		-webkit-animation: z1 3s ease-in-out;
+	}
+	.z4{
+		transform: rotate(45deg);
+		/* 24-20   20/24*/
+		animation: z2 4s ease-in-out;
+		-webkit-animation: z2 4s ease-in-out;
+	}
+	@-webkit-keyframes r1{
+		0%{clip-path: polygon(50% 0%,50% 0,50% 0,50% 0,50% 0);}
+		
+		25%{clip-path: polygon(50% 0%,100% 0,100% 50%,100% 50%,100% 50%);}
+		
+		50%{clip-path: polygon(50% 0%,100% 0,100% 100%,50% 100%,50% 100%);}
+		
+		75%{clip-path: polygon(50% 0%,100% 0,100% 100%,0 100%,0 50%);}
+		
+		100%{clip-path: polygon(50% 0%,100% 0,100% 100%,0 100%,0 0);}
+	}
+	
+	@keyframes r1{
+		0%{clip-path: polygon(50% 0%,50% 0,50% 0,50% 0,50% 0);}
+		
+		25%{clip-path: polygon(50% 0%,100% 0,100% 50%,100% 50%,100% 50%);}
+		
+		50%{clip-path: polygon(50% 0%,100% 0,100% 100%,50% 100%,50% 100%);}
+		
+		75%{clip-path: polygon(50% 0%,100% 0,100% 100%,0 100%,0 50%);}
+		
+		100%{clip-path: polygon(50% 0%,100% 0,100% 100%,0 100%,0 0);}
+	}
+	
+	
+	
+	@keyframes z1{
+		0%{opacity: 0;}
+		20%{opacity: 0;}
+		20.1%{opacity: 1;clip-path: polygon(0 0,0 0,0 0);}
+		
+		30%{clip-path: polygon(0 0,100% 0,100% 2%);}
+		40%{clip-path: polygon(100% 0,100% 100%,98% 100%);}
+		50%{clip-path: polygon(100% 100%,0 100%,0 98%);}
+		60%{clip-path: polygon(0 100%,0 0%,2% 0);}
+		
+		60.001%{clip-path: polygon(0 0,0 0,0 0,0 0);}
+		70%{clip-path: polygon(0 0,100% 0,100% 2%,100% 2%);}
+		80%{clip-path: polygon(0 0,100% 0,100% 100%,100% 100%);}
+		90%{clip-path: polygon(0 0,100% 0,100% 100%,0 100%);}
+		
+		100%{clip-path: polygon(0 0,100% 0,100% 100%,0 100%,0 0);}
+	}
+	@-webkit-keyframes z1{
+		0%{opacity: 0;}
+		20%{opacity: 0;}
+		20.1%{opacity: 1;clip-path: polygon(0 0,0 0,0 0);}
+		
+		30%{clip-path: polygon(0 0,100% 0,100% 2%);}
+		40%{clip-path: polygon(100% 0,100% 100%,98% 100%);}
+		50%{clip-path: polygon(100% 100%,0 100%,0 98%);}
+		60%{clip-path: polygon(0 100%,0 0%,2% 0);}
+		
+		60.001%{clip-path: polygon(0 0,0 0,0 0,0 0);}
+		70%{clip-path: polygon(0 0,100% 0,100% 2%,100% 2%);}
+		80%{clip-path: polygon(0 0,100% 0,100% 100%,100% 100%);}
+		90%{clip-path: polygon(0 0,100% 0,100% 100%,0 100%);}
+		
+		100%{clip-path: polygon(0 0,100% 0,100% 100%,0 100%,0 0);}
+	}
+	
+	
+	@keyframes z2{
+		/* 20/24=0.833 */
+		0%{opacity: 0;}
+		83.5%{opacity: 0;transform: rotate(0deg);}
+		100%{transform: rotate(45deg);}
 	}
 </style>
