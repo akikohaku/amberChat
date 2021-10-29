@@ -26,17 +26,28 @@
 			that.avatarUrl = getApp().globalData.avaterUrl;
 		},
 		methods: {
-			connect(){
+			connect() {
 				if (this.goEasy.getConnectionStatus() === 'disconnected') {
 					getApp().globalData.imService = new IMService(this.goEasy, this.GoEasy);
-					getApp().globalData.imService.connect(getApp().globalData.userID);
+					getApp().globalData.imService.connect(
+						 {
+							uuid: getApp().globalData.userID,
+							avatar: getApp().globalData.avaterUrl,
+							name: getApp().globalData.userName
+						}
+					);
+					uni.setStorageSync('currentUser', {
+							uuid: getApp().globalData.userID,
+							avatar: getApp().globalData.avaterUrl,
+							name: getApp().globalData.userName
+						});
 				}
 			},
 			login() {
 				let that = this;
 				getApp().globalData.userID = "08c0a6ec-a42b-47b2-bb1e-15e0f5f9a19a";
-				getApp().globalData.userName = 'kohaku';
-				getApp().globalData.avaterUrl = '';
+				getApp().globalData.userName = 'Mattie';
+				getApp().globalData.avaterUrl = '/static/images/Avatar-1.png';
 				that.userID = getApp().globalData.userID;
 				that.userName = getApp().globalData.userName;
 				that.avatarUrl = getApp().globalData.avaterUrl;
@@ -44,9 +55,9 @@
 			},
 			login2() {
 				let that = this;
-				getApp().globalData.userID = '13451def';
-				getApp().globalData.userName = 'idea';
-				getApp().globalData.avaterUrl = '';
+				getApp().globalData.userID = '3bb179af-bcc5-4fe0-9dac-c05688484649';
+				getApp().globalData.userName = 'Wallace';
+				getApp().globalData.avaterUrl = '/static/images/Avatar-2.png';
 				that.userID = getApp().globalData.userID;
 				that.userName = getApp().globalData.userName;
 				that.avatarUrl = getApp().globalData.avaterUrl;

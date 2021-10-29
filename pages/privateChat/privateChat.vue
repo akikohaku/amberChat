@@ -147,6 +147,7 @@
 			this.currentUser = uni.getStorageSync('currentUser');
 			//聊天对象
             let friendId = options.to;
+			console.log(friendId);
             //从服务器获取最新的好友信息
             this.friend = imService.findFriendById(friendId);
 			console.log('onLoad friend - ', this.friend);
