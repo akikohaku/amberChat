@@ -134,37 +134,59 @@
 		onReady () {
 			this.video.context = uni.createVideoContext('videoPlayer',this);
 			// https://uniapp.dcloud.io/api/ui/navigationbar?id=setnavigationbartitle
-			uni.setNavigationBarTitle({
-				title : this.friend.name
-			});
+			
 		},
 		onShow () {
 			this.more.show = false;
 			this.emoji.show = false;
 		},
 		onLoad(options) {
+			let that=this;
 			let imService = getApp().globalData.imService;
 			this.currentUser = uni.getStorageSync('currentUser');
 			//聊天对象
             let friendId = options.to;
 			console.log(friendId);
+			
             //从服务器获取最新的好友信息
-            friend = imService.findFriendById(friendId);
-			console.log('onLoad friend - ', this.friend);
+			uni.request({
+			  method: 'GET',
+			  url: 'https://wechat.api.kohaku.xin:11731/user/getuserbyid',
+			  data:{
+					openID:friendId,
+			  },
+			  
+			  success(res) {
+			    console.log(res.data);
+				that.friend={
+					uuid:res.data.uuid,
+					name:res.data.name,
+					avatar:res.data.avater
+				}
+				console.log('onLoad friend - ', this.friend);
+				
+				//监听新消息
+				
+				uni.setNavigationBarTitle({
+					title : that.friend.name
+				});
+				
+			  }
+			})
+            // this.friend = imService.findFriendById(friendId);
 			this.messages = imService.getPrivateMessages(friendId);
-			//监听新消息
 			imService.onNewPrivateMessageReceive =  (friendId, message)=> {
 				if (friendId === this.friend.uuid) {
-                    //聊天时，收到消息标记为已读
+			        //聊天时，收到消息标记为已读
 					this.markPrivateMessageAsRead(friendId);
 					//收到新消息，是滚动到最底部
-					this.scrollToBottom();
+					thia.scrollToBottom();
 				}
 			};
 			//每次进入聊天页面，总是滚动到底部
 			this.scrollToBottom();
-            // 录音监听器
-            this.initRecorderListeners();
+			// 录音监听器
+			this.initRecorderListeners();
 			//收到的消息设置为已读
 			if(this.messages.length !==0){
 				this.markPrivateMessageAsRead(friendId);
