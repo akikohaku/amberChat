@@ -11,7 +11,7 @@
 			<view class="me-head-wave-2"></view>
 		</view>
 		<view class="me-menu">
-			<view class="me-menu-item">编辑个人资料</view>
+			<view class="me-menu-item" @click="toprofile()">编辑个人资料</view>
 			<view class="me-menu-item">设置</view>
 			<view class="me-menu-item red">登出</view>
 			<view class="me-menu-line"></view>
@@ -23,6 +23,7 @@
 		<view @click="login()">id1</view>
 		<view @click="login2()">id2</view>
 		<view @click="connect()">连接</view>
+		<view @click="loginmain()">登录</view>
 	</view>
 </template>
 
@@ -59,9 +60,14 @@
 					});
 				}
 			},
+			toprofile(){
+				uni.navigateTo({
+					url: '/pages/me/editprofile/editprofile'
+				});
+			},
 			login() {
 				let that = this;
-				getApp().globalData.userID = "08c0a6ec-a42b-47b2-bb1e-15e0f5f9a19a";
+				getApp().globalData.userID = "08c0a6ec-a42b";
 				getApp().globalData.userName = 'Mattie';
 				getApp().globalData.avaterUrl = '/static/images/Avatar-1.png';
 				that.userID = getApp().globalData.userID;
@@ -71,12 +77,28 @@
 			},
 			login2() {
 				let that = this;
-				getApp().globalData.userID = '3bb179af-bcc5-4fe0-9dac-c05688484649';
+				getApp().globalData.userID = '3bb179af-bcc5';
 				getApp().globalData.userName = 'Wallace';
 				getApp().globalData.avaterUrl = '/static/images/Avatar-2.png';
 				that.userID = getApp().globalData.userID;
 				that.userName = getApp().globalData.userName;
 				that.avatarUrl = getApp().globalData.avaterUrl;
+			},
+			loginmain(){
+				uni.request({
+				  method: 'GET',
+				  url: 'https://wechat.api.kohaku.xin:11731/user/login',
+				  data:{
+					  openID:getApp().globalData.userID,
+					  username:getApp().globalData.userName,
+					  avater:getApp().globalData.avaterUrl
+				  },
+				  
+				  success(res) {
+				    console.log(res.data.token);
+					getApp().globalData.token=res.data.token;
+				  }
+				})
 			}
 		}
 	}

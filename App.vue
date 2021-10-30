@@ -14,7 +14,8 @@
 			imService : null,
 			userID: '',
 			userName: '',
-			avaterUrl: ''
+			avaterUrl: '',
+			token:0
 		}
 	}
 </script>

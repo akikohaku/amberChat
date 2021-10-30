@@ -149,7 +149,7 @@
             let friendId = options.to;
 			console.log(friendId);
             //从服务器获取最新的好友信息
-            this.friend = imService.findFriendById(friendId);
+            friend = imService.findFriendById(friendId);
 			console.log('onLoad friend - ', this.friend);
 			this.messages = imService.getPrivateMessages(friendId);
 			//监听新消息

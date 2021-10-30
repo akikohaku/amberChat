@@ -43,6 +43,15 @@
 		    }
 		    
 		}
+        ,{
+            "path" : "pages/me/editprofile/editprofile",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
