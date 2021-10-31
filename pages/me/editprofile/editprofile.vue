@@ -79,8 +79,9 @@
 }
 .uni-list-cell-left {
     white-space: nowrap;
-	font-size:28rpx;
-	padding: 0 30rpx;
+	font-size:34rpx;
+	font-weight: 600;
+	padding: 10px 30rpx;
 }
 .uni-list-cell-db,
 .uni-list-cell-right {
