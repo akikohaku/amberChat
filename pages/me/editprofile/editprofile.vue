@@ -12,12 +12,21 @@
 		</view>
 		<view class="uni-list">
 			<view class="uni-list-cell">
-				<view class="uni-list-cell-left">
+				<view class="uni-list-cell-left" @tap="chooseImage()">
 					修改头像
 				</view>
+
+
 			</view>
-		</view>
-		<view class="uni-list">
+			<view class="uni-list-cell">
+				<view class="uni-list-cell-left-2">
+					修改昵称
+				</view>
+				<view class="uni-input-wrapper">
+
+					<input class="uni-input" v-model="userName" maxlength="10" placeholder="最大输入长度为10" />
+				</view>
+			</view>
 			<view class="uni-list-cell">
 				<view class="uni-list-cell-left">
 					性别
@@ -28,30 +37,45 @@
 					</picker>
 				</view>
 			</view>
-		</view>
-		<view class="me-hobby">
-			<view class="uni-list-cell-left">
-				选择爱好
+			<view class="uni-list-cell">
+				<view class="me-hobby">
+					<view class="uni-list-cell-left">
+						选择爱好
+					</view>
+					<!-- <view class="text">选中：{{JSON.stringify(formData.hobby)}}</view> -->
+					<uni-data-checkbox class="me-hobby-list" mode="tag" multiple v-model="formData.hobby"
+						:localdata="hobby">
+					</uni-data-checkbox>
+				</view>
 			</view>
-			<!-- <view class="text">选中：{{JSON.stringify(formData.hobby)}}</view> -->
-			<uni-data-checkbox class="me-hobby-list" mode="tag" multiple v-model="formData.hobby" :localdata="hobby">
-			</uni-data-checkbox>
 		</view>
+		<view class="upload" @click="uploadprofile">保存</view>
+		<kps-image-cutter @ok="onok" @cancel="oncancle" :url="tempurl" :fixed="false" :width="200" :height="200"
+			:blob="false">
+		</kps-image-cutter>
 	</view>
 </template>
 
 <script>
+	import kpsImageCutter from "@/components/ksp-image-cutter/ksp-image-cutter.vue";
 	export default {
+		components: {
+			kpsImageCutter
+		},
 		data() {
 			return {
 				avatarUrl: '',
 				userName: '',
+				tempurl: '',
 				array: [{
-					name: '未定义'
+					name: '未定义',
+					value:'u'
 				}, {
-					name: '男'
+					name: '男',
+					value:'m'
 				}, {
-					name: '女'
+					name: '女',
+					value:'f'
 				}],
 				index: 0,
 				formData: {
@@ -68,7 +92,7 @@
 					text: '动漫',
 					value: 2
 				}, {
-					text: '运动',
+					text: '体育',
 					value: 3
 				}, {
 					text: '文学',
@@ -94,6 +118,24 @@
 				}, {
 					text: '舞蹈',
 					value: 11
+				}, {
+					text: '美食',
+					value: 12
+				}, {
+					text: '数码',
+					value: 13
+				}, {
+					text: '军事',
+					value: 14
+				}, {
+					text: '宠物',
+					value: 15
+				}, {
+					text: '娱乐',
+					value: 16
+				}, {
+					text: '编程',
+					value: 17
 				}]
 			}
 		},
@@ -105,12 +147,92 @@
 			bindPickerChange: function(e) {
 				console.log('picker发送选择改变，携带值为：' + e.detail.value)
 				this.index = e.detail.value
+			},
+			chooseImage() {
+				uni.chooseImage({
+					success: (res) => {
+						// 设置url的值，显示控件
+						this.tempurl = res.tempFilePaths[0];
+					}
+				});
+			},
+			onok(ev) {
+				this.avatarUrl = ev.path.replace(/[\r\n]/g, "");
+				this.tempurl = "";
+			},
+			oncancle() {
+				// url设置为空，隐藏控件
+				this.tempurl = "";
+			},
+			uploadprofile() {
+				if (this.formData.hobby.length == 0) {
+					uni.showToast({
+						title: "请选择爱好",
+						icon: "error"
+					});
+					return;
+				}
+				if (this.userName == "") {
+					uni.showToast({
+						title: "请输入昵称",
+						icon: "error"
+					});
+					return;
+				}
+				if (this.avatarUrl == "") {
+					uni.showToast({
+						title: "请选择头像",
+						icon: "error"
+					});
+					return;
+				}
+				uni.request({
+					method: 'POST',
+					url: 'https://wechat.api.kohaku.xin:11731/updateprofile',
+					data: {
+						openid: getApp().globalData.userID,
+						username: this.userName,
+						sex:this.array[this.index].value,
+						pre:JSON.stringify(this.formData.hobby),
+						avater: this.avatarUrl
+						
+					},
+
+					success(res) {
+						console.log(res);
+						getApp().globalData.avaterUrl=this.avatarUrl;
+						getApp().userName=this.userName;
+						uni.showToast({
+							title: "保存成功"
+						})
+					}
+				})
 			}
 		}
 	}
 </script>
 
 <style>
+	.uni-input-wrapper {
+		/* #ifndef APP-NVUE */
+		display: inline-flex;
+		/* #endif */
+		padding: 8px 13px;
+		flex-direction: row;
+		flex-wrap: nowrap;
+		background-color: #FFFFFF;
+	}
+
+	.uni-input {
+		display: inline-flex;
+		height: 28px;
+		line-height: 28px;
+		font-size: 15px;
+		padding: 0px;
+		flex: 1;
+		background-color: #FFFFFF;
+	}
+
 	.me-head {
 		width: 100vw;
 		height: 200px;
@@ -265,8 +387,17 @@
 		padding: 10px 30rpx;
 	}
 
+	.uni-list-cell-left-2 {
+		display: inline-flex;
+		white-space: nowrap;
+		font-size: 34rpx;
+		font-weight: 600;
+		padding: 10px 30rpx;
+	}
+
 	.uni-list-cell-db,
 	.uni-list-cell-right {
+		margin-left: 45px;
 		flex: 1;
 	}
 
@@ -401,5 +532,18 @@
 
 	.uni-list.uni-active {
 		height: auto;
+	}
+
+	.upload {
+		width: 100vw;
+		height: 50px;
+		position: absolute;
+		bottom: 0rpx;
+		text-align: center;
+		padding-top: 10px;
+		font-size: 60rpx;
+		background-color: orange;
+		color: white;
+
 	}
 </style>
