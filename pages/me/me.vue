@@ -168,8 +168,8 @@
 		animation: wave2 250s alternate infinite;
 	}
 	@keyframes wave2{
-		from{left:0px;}
-		to{left:-1500px;}
+		from{left:-50px;}
+		to{left:-3500px;}
 	}
 	.me-menu{
 		margin-top: 20px;
