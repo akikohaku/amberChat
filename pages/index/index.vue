@@ -26,21 +26,25 @@
 				<view class="mfz" ref="mfz">
 					<view class="r1"></view>
 					<view class="r2"></view>
-				
+
 					<view class="z1"></view>
 					<view class="z2"></view>
 				</view>
-				
+
 				<view class="mfz1" ref="mfz2">
 					<view class="r3"></view>
 					<view class="r4"></view>
-				
+
 					<view class="z3"></view>
 					<view class="z4"></view>
 				</view>
 			</view>
-			
+
 		</view>
+		<view class="match-friendimg" >
+			<image :src="avatar" @click="chatClick()" ref="matchfriendimg"></image>
+		</view>
+		<view class="match-info" ref="matchinfo">轻触头像进入聊天</view>
 		<view class="button-start" @click="matchClick()">
 			<view class="button-block" ref='buttonstart'></view>
 			<view class="button-block-3" ref='buttonstart3'></view>
@@ -66,7 +70,9 @@
 		data() {
 			return {
 				title: 'Hello',
-				isclicked: false
+				avatar: '',
+				isclicked: false,
+				toid: ''
 			}
 		},
 		onLoad() {
@@ -79,6 +85,39 @@
 			}
 		},
 		methods: {
+			chatClick() {
+				let that = this;
+				
+				that.$refs.mfz.$el.style.display = 'none';
+				that.$refs.mfz2.$el.style.display = 'none';
+				that.$refs.buttoncontent3.$el.style.height = '0px';
+				that.$refs.buttonwait.$el.style.opacity = '0';
+				that.$refs.buttonstart.$el.style.width = '40px';
+				that.$refs.buttonstart3.$el.style.height = '40px';
+				that.$refs.buttonstart2.$el.style.height = '45px';
+				that.$refs.buttonstart2.$el.style.margin =
+					'65px 0 0 255px';
+				that.$refs.buttonstart4.$el.style.width = '45px';
+				that.$refs.buttonstart4.$el.style.margin =
+					'105px 0 0 215px';
+				that.$refs.buttonstart5.$el.style.width = '40px';
+				that.$refs.buttoncontent1.$el.style.width = '50px';
+				that.$refs.buttoncontent2.$el.style.height = '100px';
+				that.$refs.matchingcircle.$el.style.opacity = '0';
+				that.$refs.matchfriendimg.$el.style.opacity = '0';
+				that.$refs.matchinfo.$el.style.opacity = '0';
+				that.isclicked = false;
+				if(this.toid!=''){
+					this.enterChat(this.toid);
+				}
+				
+			},
+			enterChat (uuid) {//进入私聊
+				let path = '/pages/privateChat/privateChat?to='+uuid;
+				uni.navigateTo({
+					url: path
+				})
+			},
 			matchClick() {
 				if (this.goEasy.getConnectionStatus() === 'disconnected') {
 					uni.switchTab({
@@ -108,26 +147,48 @@
 						}
 					}, 400)
 					setTimeout(() => {
-						if (this.isclicked) {
-							uni.navigateTo({
-								url: '/pages/confirmchat/confirmchat'
-							});
-						}
-						this.$refs.mfz.$el.style.display = 'none';
-						this.$refs.mfz2.$el.style.display = 'none';
-						this.$refs.buttoncontent3.$el.style.height = '0px';
-						this.$refs.buttonwait.$el.style.opacity = '0';
-						this.$refs.buttonstart.$el.style.width = '40px';
-						this.$refs.buttonstart3.$el.style.height = '40px';
-						this.$refs.buttonstart2.$el.style.height = '45px';
-						this.$refs.buttonstart2.$el.style.margin = '65px 0 0 255px';
-						this.$refs.buttonstart4.$el.style.width = '45px';
-						this.$refs.buttonstart4.$el.style.margin = '105px 0 0 215px';
-						this.$refs.buttonstart5.$el.style.width = '40px';
-						this.$refs.buttoncontent1.$el.style.width = '50px';
-						this.$refs.buttoncontent2.$el.style.height = '100px';
-						this.$refs.matchingcircle.$el.style.opacity = '0';
-						this.isclicked = false;
+						// if (this.isclicked) {
+						// 	uni.navigateTo({
+						// 		url: '/pages/confirmchat/confirmchat'
+						// 	});
+						// }
+						let that = this;
+						uni.request({
+							method: 'GET',
+							url: 'https://wechat.api.kohaku.xin:11731/match',
+							data: {
+								openid: getApp().globalData.userID
+							},
+							success(res) {
+								console.log(res);
+								var friendid = res.data.uuid;
+								that.toid = friendid;
+								if (res.data.uuid != '') {
+									uni.request({
+										method: 'GET',
+										url: 'https://wechat.api.kohaku.xin:11731/getuserbyid',
+										data: {
+											openID: friendid,
+										},
+
+										success(res) {
+											console.log(res.data);
+											that.avatar = res.data.avater;
+											that.$refs.matchfriendimg.$el.style.opacity = '100';
+											that.$refs.matchinfo.$el.style.opacity = '100';
+										}
+									})
+								}else{
+									//匹配失败
+									uni.showToast({
+										title: "匹配失败"
+									})
+								}
+
+							}
+						})
+
+
 					}, 6000)
 					this.isclicked = true;
 				} else {
@@ -147,6 +208,8 @@
 							this.$refs.buttoncontent1.$el.style.width = '50px';
 							this.$refs.buttoncontent2.$el.style.height = '100px';
 							this.$refs.matchingcircle.$el.style.opacity = '0';
+							this.$refs.matchfriendimg.$el.style.opacity = '0';
+							this.$refs.matchinfo.$el.style.opacity = '0';
 						}
 					}, 400)
 					this.isclicked = false;
@@ -162,6 +225,49 @@
 	@font-face {
 		font-family: 'SSJian Song Xian Xi Ti';
 		src: url(../../static/stylesheet.css);
+	}
+
+	.match-friendimg {
+
+		width: 100vw;
+		height: 80px;
+		position: absolute;
+
+	}
+
+	.match-friendimg image {
+		opacity: 0;
+		display: inline-flex;
+		margin-top: 190px;
+		width: 80px;
+		height: 80px;
+		border: 1px solid #ffffff99;
+		border-radius: 40px;
+	}
+
+	.match-info {
+		opacity: 0;
+		/* display: inline-flex; */
+		position: absolute;
+		color: white;
+		width: 100vw;
+		margin-top: 390px;
+		text-align: center;
+		animation: textsw 3s alternate infinite ease-in-out;
+	}
+
+	@keyframes textsw {
+		0% {
+			color: #ffffff;
+		}
+
+		50% {
+			color: #ffffff99;
+		}
+
+		100% {
+			color: #FFFFFF;
+		}
 	}
 
 	.content {
@@ -582,17 +688,21 @@
 			opacity: 1;
 		}
 	}
-	.mfx-main{
+
+	.mfx-main {
 		position: absolute;
-		margin-left: -185px;
+		margin-left: -190px;
 		width: 500px;
 		height: 500px;
 		display: inline-flex;
 	}
-	.mfz > *,.mfz1 > *{
-		box-shadow: 0px 0px 8px #ffff00,0px 0px 8px #ffff00 inset;
+
+	.mfz>*,
+	.mfz1>* {
+		box-shadow: 0px 0px 8px #ffff00, 0px 0px 8px #ffff00 inset;
 	}
-	.mfz{
+
+	.mfz {
 		display: none;
 		position: absolute;
 		top: 125px;
@@ -600,19 +710,24 @@
 		opacity: 0.8;
 		transform: scale(0.7);
 	}
-	.r1,.r2{
+
+	.r1,
+	.r2 {
 		border: 3px solid #fff;
 		border-radius: 100%;
 		position: absolute;
 	}
-	.r1{/* 小圆 */
+
+	.r1 {
+		/* 小圆 */
 		width: 300px;
 		height: 300px;
 		/* clip-path: polygon(x y,x y,x y....) */
 		animation: r1 1s linear;
 		-webkit-animation: r1 1s linear;
 	}
-	.r2{
+
+	.r2 {
 		width: 320px;
 		height: 320px;
 		top: -10px;
@@ -621,56 +736,69 @@
 		animation: r1 1s linear;
 		-webkit-animation: r1 1s linear;
 	}
-	
+
 	/* 正方形 */
-	.z1,.z2{
+	.z1,
+	.z2 {
 		width: 210px;
 		height: 210px;
 		border: 3px solid #fff;
-		box-shadow: 0px 0px 8px #ffff00,0px 0px 8px #ffff00 inset;
+		box-shadow: 0px 0px 8px #ffff00, 0px 0px 8px #ffff00 inset;
 		position: absolute;
 		left: 45px;
 		top: 45px;
 	}
-	.z1{
+
+	.z1 {
 		/* 20-4   4/20*/
 		/* clip-path: polygon(x y,x y,x y....) */
 		animation: z1 3s ease-in-out;
 		-webkit-animation: z1 3s ease-in-out;
 	}
-	.z2{
+
+	.z2 {
 		transform: rotate(45deg);
 		/* 24-20   20/24*/
 		animation: z2 4s ease-in-out;
 		-webkit-animation: z2 4s ease-in-out;
-		
+
 	}
-	
-	@-webkit-keyframes changeright{       
-			 
-					0%{-webkit-transform:rotateZ(0deg);}
-			 
-					50%{-webkit-transform:rotateZ(180deg);}
-			
-					100%{-webkit-transform:rotateZ(360deg);}
+
+	@-webkit-keyframes changeright {
+
+		0% {
+			-webkit-transform: rotateZ(0deg);
+		}
+
+		50% {
+			-webkit-transform: rotateZ(180deg);
+		}
+
+		100% {
+			-webkit-transform: rotateZ(360deg);
+		}
 	}
-	
-	.mfz1{
+
+	.mfz1 {
 		position: absolute;
 		display: none;
 		top: 88px;
 		left: 45px;
 		opacity: 0.3;
 		transform: scale(0.7);
-		
-				/* -webkit-animation:changeright 6s linear infinite; */
+
+		/* -webkit-animation:changeright 6s linear infinite; */
 	}
-	.r3,.r4{
+
+	.r3,
+	.r4 {
 		border: 3px solid #fff;
 		border-radius: 100%;
 		position: absolute;
 	}
-	.r3{/* 小圆 */
+
+	.r3 {
+		/* 小圆 */
 		width: 450px;
 		height: 450px;
 		top: -22px;
@@ -679,7 +807,8 @@
 		animation: r1 1s linear;
 		-webkit-animation: r1 1s linear;
 	}
-	.r4{
+
+	.r4 {
 		width: 480px;
 		height: 480px;
 		top: -36px;
@@ -688,9 +817,10 @@
 		animation: r1 1s linear;
 		-webkit-animation: r1 1s linear;
 	}
-	
+
 	/* 正方形 */
-	.z3,.z4{
+	.z3,
+	.z4 {
 		width: 315px;
 		height: 315px;
 		border: 3px solid #fff;
@@ -698,84 +828,184 @@
 		left: 45px;
 		top: 45px;
 	}
-	.z3{
+
+	.z3 {
 		/* 20-4   4/20*/
 		/* clip-path: polygon(x y,x y,x y....) */
 		animation: z1 3s ease-in-out;
 		-webkit-animation: z1 3s ease-in-out;
 	}
-	.z4{
+
+	.z4 {
 		transform: rotate(45deg);
 		/* 24-20   20/24*/
 		animation: z2 4s ease-in-out;
 		-webkit-animation: z2 4s ease-in-out;
 	}
-	@-webkit-keyframes r1{
-		0%{clip-path: polygon(50% 0%,50% 0,50% 0,50% 0,50% 0);}
-		
-		25%{clip-path: polygon(50% 0%,100% 0,100% 50%,100% 50%,100% 50%);}
-		
-		50%{clip-path: polygon(50% 0%,100% 0,100% 100%,50% 100%,50% 100%);}
-		
-		75%{clip-path: polygon(50% 0%,100% 0,100% 100%,0 100%,0 50%);}
-		
-		100%{clip-path: polygon(50% 0%,100% 0,100% 100%,0 100%,0 0);}
+
+	@-webkit-keyframes r1 {
+		0% {
+			clip-path: polygon(50% 0%, 50% 0, 50% 0, 50% 0, 50% 0);
+		}
+
+		25% {
+			clip-path: polygon(50% 0%, 100% 0, 100% 50%, 100% 50%, 100% 50%);
+		}
+
+		50% {
+			clip-path: polygon(50% 0%, 100% 0, 100% 100%, 50% 100%, 50% 100%);
+		}
+
+		75% {
+			clip-path: polygon(50% 0%, 100% 0, 100% 100%, 0 100%, 0 50%);
+		}
+
+		100% {
+			clip-path: polygon(50% 0%, 100% 0, 100% 100%, 0 100%, 0 0);
+		}
 	}
-	
-	@keyframes r1{
-		0%{clip-path: polygon(50% 0%,50% 0,50% 0,50% 0,50% 0);}
-		
-		25%{clip-path: polygon(50% 0%,100% 0,100% 50%,100% 50%,100% 50%);}
-		
-		50%{clip-path: polygon(50% 0%,100% 0,100% 100%,50% 100%,50% 100%);}
-		
-		75%{clip-path: polygon(50% 0%,100% 0,100% 100%,0 100%,0 50%);}
-		
-		100%{clip-path: polygon(50% 0%,100% 0,100% 100%,0 100%,0 0);}
+
+	@keyframes r1 {
+		0% {
+			clip-path: polygon(50% 0%, 50% 0, 50% 0, 50% 0, 50% 0);
+		}
+
+		25% {
+			clip-path: polygon(50% 0%, 100% 0, 100% 50%, 100% 50%, 100% 50%);
+		}
+
+		50% {
+			clip-path: polygon(50% 0%, 100% 0, 100% 100%, 50% 100%, 50% 100%);
+		}
+
+		75% {
+			clip-path: polygon(50% 0%, 100% 0, 100% 100%, 0 100%, 0 50%);
+		}
+
+		100% {
+			clip-path: polygon(50% 0%, 100% 0, 100% 100%, 0 100%, 0 0);
+		}
 	}
-	
-	
-	
-	@keyframes z1{
-		0%{opacity: 0;}
-		20%{opacity: 0;}
-		20.1%{opacity: 1;clip-path: polygon(0 0,0 0,0 0);}
-		
-		30%{clip-path: polygon(0 0,100% 0,100% 2%);}
-		40%{clip-path: polygon(100% 0,100% 100%,98% 100%);}
-		50%{clip-path: polygon(100% 100%,0 100%,0 98%);}
-		60%{clip-path: polygon(0 100%,0 0%,2% 0);}
-		
-		60.001%{clip-path: polygon(0 0,0 0,0 0,0 0);}
-		70%{clip-path: polygon(0 0,100% 0,100% 2%,100% 2%);}
-		80%{clip-path: polygon(0 0,100% 0,100% 100%,100% 100%);}
-		90%{clip-path: polygon(0 0,100% 0,100% 100%,0 100%);}
-		
-		100%{clip-path: polygon(0 0,100% 0,100% 100%,0 100%,0 0);}
+
+
+
+	@keyframes z1 {
+		0% {
+			opacity: 0;
+		}
+
+		20% {
+			opacity: 0;
+		}
+
+		20.1% {
+			opacity: 1;
+			clip-path: polygon(0 0, 0 0, 0 0);
+		}
+
+		30% {
+			clip-path: polygon(0 0, 100% 0, 100% 2%);
+		}
+
+		40% {
+			clip-path: polygon(100% 0, 100% 100%, 98% 100%);
+		}
+
+		50% {
+			clip-path: polygon(100% 100%, 0 100%, 0 98%);
+		}
+
+		60% {
+			clip-path: polygon(0 100%, 0 0%, 2% 0);
+		}
+
+		60.001% {
+			clip-path: polygon(0 0, 0 0, 0 0, 0 0);
+		}
+
+		70% {
+			clip-path: polygon(0 0, 100% 0, 100% 2%, 100% 2%);
+		}
+
+		80% {
+			clip-path: polygon(0 0, 100% 0, 100% 100%, 100% 100%);
+		}
+
+		90% {
+			clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+		}
+
+		100% {
+			clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 0);
+		}
 	}
-	@-webkit-keyframes z1{
-		0%{opacity: 0;}
-		20%{opacity: 0;}
-		20.1%{opacity: 1;clip-path: polygon(0 0,0 0,0 0);}
-		
-		30%{clip-path: polygon(0 0,100% 0,100% 2%);}
-		40%{clip-path: polygon(100% 0,100% 100%,98% 100%);}
-		50%{clip-path: polygon(100% 100%,0 100%,0 98%);}
-		60%{clip-path: polygon(0 100%,0 0%,2% 0);}
-		
-		60.001%{clip-path: polygon(0 0,0 0,0 0,0 0);}
-		70%{clip-path: polygon(0 0,100% 0,100% 2%,100% 2%);}
-		80%{clip-path: polygon(0 0,100% 0,100% 100%,100% 100%);}
-		90%{clip-path: polygon(0 0,100% 0,100% 100%,0 100%);}
-		
-		100%{clip-path: polygon(0 0,100% 0,100% 100%,0 100%,0 0);}
+
+	@-webkit-keyframes z1 {
+		0% {
+			opacity: 0;
+		}
+
+		20% {
+			opacity: 0;
+		}
+
+		20.1% {
+			opacity: 1;
+			clip-path: polygon(0 0, 0 0, 0 0);
+		}
+
+		30% {
+			clip-path: polygon(0 0, 100% 0, 100% 2%);
+		}
+
+		40% {
+			clip-path: polygon(100% 0, 100% 100%, 98% 100%);
+		}
+
+		50% {
+			clip-path: polygon(100% 100%, 0 100%, 0 98%);
+		}
+
+		60% {
+			clip-path: polygon(0 100%, 0 0%, 2% 0);
+		}
+
+		60.001% {
+			clip-path: polygon(0 0, 0 0, 0 0, 0 0);
+		}
+
+		70% {
+			clip-path: polygon(0 0, 100% 0, 100% 2%, 100% 2%);
+		}
+
+		80% {
+			clip-path: polygon(0 0, 100% 0, 100% 100%, 100% 100%);
+		}
+
+		90% {
+			clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+		}
+
+		100% {
+			clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 0);
+		}
 	}
-	
-	
-	@keyframes z2{
+
+
+	@keyframes z2 {
+
 		/* 20/24=0.833 */
-		0%{opacity: 0;}
-		83.5%{opacity: 0;transform: rotate(0deg);}
-		100%{transform: rotate(45deg);}
+		0% {
+			opacity: 0;
+		}
+
+		83.5% {
+			opacity: 0;
+			transform: rotate(0deg);
+		}
+
+		100% {
+			transform: rotate(45deg);
+		}
 	}
 </style>

@@ -141,7 +141,7 @@
 			this.emoji.show = false;
 		},
 		onLoad(options) {
-			let that=this;
+			var that=this;
 			let imService = getApp().globalData.imService;
 			this.currentUser = uni.getStorageSync('currentUser');
 			//聊天对象
@@ -514,16 +514,18 @@
 		flex-direction: row-reverse;
 	}
 	.chatInterface .scroll-view .message-item .avatar{
-		width: 80rpx;
-		height: 80rpx;
+		width: 100rpx;
+		height: 100rpx;
 		margin-right:20rpx ;
 		flex-shrink: 0;
 		flex-grow: 0;
+		border-radius: 40rpx;
 	}
 	
 	.chatInterface .scroll-view .message-item .avatar image{
 		width: 100%;
 		height: 100%;
+		border-radius: 25px;
 	}
 	
 	.chatInterface .scroll-view .message-item.self .avatar{

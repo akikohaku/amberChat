@@ -22,8 +22,26 @@
 		<!-- <hr/> -->
 		<view>{{userID}}</view>
 		<view>{{userName}}</view>
+		<view class="uni-list-cell">
+			<view class="uni-list-cell-left-2">
+				id
+			</view>
+			<view class="uni-input-wrapper">
 
+				<input class="uni-input" v-model="userID" maxlength="30" placeholder="" />
+			</view>
+		</view>
+		<view class="uni-list-cell">
+			<view class="uni-list-cell-left-2">
+				昵称
+			</view>
+			<view class="uni-input-wrapper">
+
+				<input class="uni-input" v-model="userName" maxlength="10" placeholder="最大输入长度为10" />
+			</view>
+		</view>
 		<!-- <view @click="connect()">连接</view> -->
+		<view class="login" @click="setid()">设定id</view>
 		<view class="login" @click="loginmain()">登录</view>
 	</view>
 </template>
@@ -52,6 +70,16 @@
 			that.avatarUrl = getApp().globalData.avaterUrl;
 		},
 		methods: {
+			setid(){
+				let that = this;
+				if(that.userID!=""&&that.userName!=""){
+					getApp().globalData.userID = that.userID;
+					getApp().globalData.userName = that.userName;
+					getApp().globalData.avaterUrl = '/static/images/Avatar-1.png';
+					that.userID = getApp().globalData.userID;
+				}
+				
+			},
 			connect() {
 				if (this.goEasy.getConnectionStatus() === 'disconnected') {
 					getApp().globalData.imService = new IMService(this.goEasy, this.GoEasy);
@@ -99,7 +127,7 @@
 					},
 
 					success(res) {
-						console.log(res.data.token);
+						// console.log(res.data.token);
 						// getApp().globalData.token=res.data.token;
 						uni.request({
 							method: 'GET',
@@ -158,6 +186,55 @@
 </script>
 
 <style>
+	.uni-list-cell {
+		position: relative;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+	}
+	
+	.uni-list-cell-hover {
+		background-color: #eee;
+	}
+	
+	.uni-list-cell-pd {
+		padding: 22rpx 30rpx;
+	}
+	
+	.uni-list-cell-left {
+		white-space: nowrap;
+		font-size: 34rpx;
+		font-weight: 600;
+		padding: 10px 30rpx;
+	}
+	.uni-list-cell-left-2 {
+		display: inline-flex;
+		white-space: nowrap;
+		font-size: 34rpx;
+		font-weight: 600;
+		padding: 10px 30rpx;
+	}
+	
+	.uni-list-cell-db,
+	.uni-list-cell-right {
+		margin-left: 45px;
+		flex: 1;
+	}
+	
+	.uni-list-cell::after {
+		position: absolute;
+		z-index: 3;
+		right: 0;
+		bottom: 0;
+		left: 30rpx;
+		height: 1px;
+		content: '';
+		-webkit-transform: scaleY(.5);
+		transform: scaleY(.5);
+		background-color: #c8c7cc;
+	}
+	
 	.me-head {
 		width: 100vw;
 		height: 200px;
@@ -171,7 +248,7 @@
 		display: inline-flex;
 		width: 80px;
 		height: 80px;
-		border: 2px solid #000000;
+		/* border: 2px solid #000000; */
 		border-radius: 40px;
 		background-color: #ffffff;
 	}
@@ -179,6 +256,7 @@
 	.me-head-pic image {
 		width: 100%;
 		height: 100%;
+		border: 2px solid #000000;
 		border-radius: 40px;
 	}
 
@@ -274,8 +352,8 @@
 	.login {
 		width: 100vw;
 		height: 50px;
-		position: absolute;
-		bo.loginttom: 0rpx;
+		/* position: absolute; */
+		/* bo.loginttom: 0rpx; */
 		text-align: center;
 		padding-top: 10px;
 		font-size: 60rpx;

@@ -233,6 +233,8 @@
 					success(res) {
 						console.log(res);
 						getApp().globalData.userName=that.userName;
+						getApp().globalData.sex=that.sex;
+						getApp().globalData.pre=JSON.stringify(that.formData.hobby);
 						uni.showToast({
 							title: "保存成功"
 						})
@@ -277,13 +279,14 @@
 		display: inline-flex;
 		width: 80px;
 		height: 80px;
-		border: 2px solid #000000;
+		/* border: 2px solid #000000; */
 		border-radius: 40px;
 	}
 
 	.me-head-pic image {
 		width: 100%;
 		height: 100%;
+		border: 2px solid #000000;
 		border-radius: 40px;
 	}
 
