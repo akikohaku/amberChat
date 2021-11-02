@@ -102,7 +102,7 @@
 					'105px 0 0 215px';
 				that.$refs.buttonstart5.$el.style.width = '40px';
 				that.$refs.buttoncontent1.$el.style.width = '50px';
-				that.$refs.buttoncontent2.$el.style.height = '100px';
+				that.$refs.buttoncontent2.$el.style.height = '110px';
 				that.$refs.matchingcircle.$el.style.opacity = '0';
 				that.$refs.matchfriendimg.$el.style.opacity = '0';
 				that.$refs.matchinfo.$el.style.opacity = '0';
@@ -172,10 +172,13 @@
 										},
 
 										success(res) {
-											console.log(res.data);
-											that.avatar = res.data.avater;
-											that.$refs.matchfriendimg.$el.style.opacity = '100';
-											that.$refs.matchinfo.$el.style.opacity = '100';
+											if(that.isclicked){
+												console.log(res.data);
+												that.avatar = res.data.avater;
+												that.$refs.matchfriendimg.$el.style.opacity = '100';
+												that.$refs.matchinfo.$el.style.opacity = '100';
+											}
+											
 										}
 									})
 								}else{
@@ -206,7 +209,7 @@
 							this.$refs.buttonstart4.$el.style.margin = '105px 0 0 215px';
 							this.$refs.buttonstart5.$el.style.width = '40px';
 							this.$refs.buttoncontent1.$el.style.width = '50px';
-							this.$refs.buttoncontent2.$el.style.height = '100px';
+							this.$refs.buttoncontent2.$el.style.height = '110px';
 							this.$refs.matchingcircle.$el.style.opacity = '0';
 							this.$refs.matchfriendimg.$el.style.opacity = '0';
 							this.$refs.matchinfo.$el.style.opacity = '0';
@@ -223,8 +226,8 @@
 
 <style>
 	@font-face {
-		font-family: 'SSJian Song Xian Xi Ti';
-		src: url(../../static/stylesheet.css);
+		font-family: 'Source Han Serif CN Light';
+		src: url(../../static/lite.css);
 	}
 
 	.match-friendimg {
@@ -375,7 +378,7 @@
 		height: 2px;
 		width: 40px;
 		position: absolute;
-		margin-left: 13px;
+		margin-left: 17px;
 		margin-top: 50px;
 		transition: all .5s ease-in-out;
 	}
@@ -426,10 +429,10 @@
 
 	.button-1 {
 		width: 50px;
-		font-family: 'SSJian Song Xian Xi Ti';
+		font-family: 'Source Han Serif CN Light';
 		color: white;
-		font-size: 40px;
-		padding-left: 15px;
+		font-size: 35px;
+		padding-left: 20px;
 		line-height: 50px;
 		overflow: hidden;
 		text-align: left;
@@ -437,28 +440,28 @@
 	}
 
 	.button-2 {
-		margin-top: -5px;
-		margin-left: 50px;
-		font-family: 'SSJian Song Xian Xi Ti';
+		margin-top: -20px;
+		margin-left: 55px;
+		font-family: 'Source Han Serif CN Light';
 		color: white;
 		position: absolute;
 		width: 250px;
-		height: 100px;
-		font-size: 110px;
+		height: 110px;
+		font-size: 90px;
 		overflow: hidden;
 		text-align: left;
 		transition: all .5s ease-in-out;
 	}
 
 	.button-onprocess {
-		margin-top: 20px;
+		margin-top: 5px;
 		margin-left: 20px;
-		font-family: 'SSJian Song Xian Xi Ti';
+		font-family: 'Source Han Serif CN Light';
 		color: white;
 		position: absolute;
 		width: 250px;
 		height: 0px;
-		font-size: 60px;
+		font-size: 54px;
 		overflow: hidden;
 		text-align: left;
 		transition: all .5s ease-in-out;

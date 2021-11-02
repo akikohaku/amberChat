@@ -184,10 +184,16 @@
 					success(res){
 						console.log(res);
 						this.avatarUrl=res.fileID;
-						getApp().globalData.avaterUrl=this.avatarUrl
+						getApp().globalData.avaterUrl=this.avatarUrl;
+						uni.showToast({
+							title: "上传成功"
+						})
 					},
 					fail(res) {
 						console.log(res);
+						uni.showToast({
+							title: "上传失败"
+						})
 					},
 				});
 			},

@@ -19,9 +19,9 @@
 			<view class="me-menu-item" @click="login2()">id2</view>
 		</view>
 
-		<!-- <hr/> -->
+		<!-- 		<hr/>
 		<view>{{userID}}</view>
-		<view>{{userName}}</view>
+		<view>{{userName}}</view> -->
 		<view class="uni-list-cell">
 			<view class="uni-list-cell-left-2">
 				id
@@ -70,15 +70,15 @@
 			that.avatarUrl = getApp().globalData.avaterUrl;
 		},
 		methods: {
-			setid(){
+			setid() {
 				let that = this;
-				if(that.userID!=""&&that.userName!=""){
+				if (that.userID != "" && that.userName != "") {
 					getApp().globalData.userID = that.userID;
 					getApp().globalData.userName = that.userName;
 					getApp().globalData.avaterUrl = '/static/images/Avatar-1.png';
 					that.userID = getApp().globalData.userID;
 				}
-				
+
 			},
 			connect() {
 				if (this.goEasy.getConnectionStatus() === 'disconnected') {
@@ -193,21 +193,22 @@
 		justify-content: space-between;
 		align-items: center;
 	}
-	
+
 	.uni-list-cell-hover {
 		background-color: #eee;
 	}
-	
+
 	.uni-list-cell-pd {
 		padding: 22rpx 30rpx;
 	}
-	
+
 	.uni-list-cell-left {
 		white-space: nowrap;
 		font-size: 34rpx;
 		font-weight: 600;
 		padding: 10px 30rpx;
 	}
+
 	.uni-list-cell-left-2 {
 		display: inline-flex;
 		white-space: nowrap;
@@ -215,13 +216,13 @@
 		font-weight: 600;
 		padding: 10px 30rpx;
 	}
-	
+
 	.uni-list-cell-db,
 	.uni-list-cell-right {
 		margin-left: 45px;
 		flex: 1;
 	}
-	
+
 	.uni-list-cell::after {
 		position: absolute;
 		z-index: 3;
@@ -234,7 +235,7 @@
 		transform: scaleY(.5);
 		background-color: #c8c7cc;
 	}
-	
+
 	.me-head {
 		width: 100vw;
 		height: 200px;
