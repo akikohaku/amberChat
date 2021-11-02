@@ -235,6 +235,20 @@
 						getApp().globalData.userName=that.userName;
 						getApp().globalData.sex=that.sex;
 						getApp().globalData.pre=JSON.stringify(that.formData.hobby);
+						if (that.goEasy.getConnectionStatus() === 'connected') {
+							getApp().globalData.imService = new IMService(that.goEasy, that
+								.GoEasy);
+							getApp().globalData.imService.connect({
+								uuid: getApp().globalData.userID,
+								avatar: getApp().globalData.avaterUrl,
+								name: getApp().globalData.userName
+							});
+							uni.setStorageSync('currentUser', {
+								uuid: getApp().globalData.userID,
+								avatar: getApp().globalData.avaterUrl,
+								name: getApp().globalData.userName
+							});
+						}
 						uni.showToast({
 							title: "保存成功"
 						})
