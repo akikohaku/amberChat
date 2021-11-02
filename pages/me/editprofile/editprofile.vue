@@ -51,7 +51,7 @@
 		</view>
 		<view class="upload" @click="uploadprofile">保存</view>
 		<kps-image-cutter @ok="onok" @cancel="oncancle" :url="tempurl" :fixed="false" :width="200" :height="200"
-			:blob="false">
+			:blob="true">
 		</kps-image-cutter>
 	</view>
 </template>
@@ -158,7 +158,23 @@
 			},
 			onok(ev) {
 				this.avatarUrl = ev.path.replace(/[\r\n]/g, "");
+				console.log(this.avatarUrl);
 				this.tempurl = "";
+				uniCloud.uploadFile({
+					filePath:this.avatarUrl,
+					cloudPath:getApp().globalData.openID+".jpg",
+					onUploadProgress: function(progressEvent) {
+					          console.log(progressEvent);
+							  },
+					success(res){
+						console.log(res);
+						this.avatarUrl=res.fileID;
+						getApp().globalData.avaterUrl=this.avatarUrl
+					},
+					fail(res) {
+						console.log(res);
+					},
+				});
 			},
 			oncancle() {
 				// url设置为空，隐藏控件
@@ -186,22 +202,22 @@
 					});
 					return;
 				}
+				let that=this;
 				uni.request({
-					method: 'POST',
+					method: 'GET',
 					url: 'https://wechat.api.kohaku.xin:11731/updateprofile',
 					data: {
 						openid: getApp().globalData.userID,
 						username: this.userName,
 						sex:this.array[this.index].value,
 						pre:JSON.stringify(this.formData.hobby),
-						avater: this.avatarUrl
+						avatar: getApp().globalData.avaterUrl
 						
 					},
 
 					success(res) {
 						console.log(res);
-						getApp().globalData.avaterUrl=this.avatarUrl;
-						getApp().userName=this.userName;
+						getApp().globalData.userName=that.userName;
 						uni.showToast({
 							title: "保存成功"
 						})

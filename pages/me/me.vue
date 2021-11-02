@@ -44,6 +44,12 @@
 			that.userName = getApp().globalData.userName;
 			that.avatarUrl = getApp().globalData.avaterUrl;
 		},
+		onShow(){
+			let that = this;
+			that.userID = getApp().globalData.userID;
+			that.userName = getApp().globalData.userName;
+			that.avatarUrl = getApp().globalData.avaterUrl;
+		},
 		methods: {
 			connect() {
 				if (this.goEasy.getConnectionStatus() === 'disconnected') {
