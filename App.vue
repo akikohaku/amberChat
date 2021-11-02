@@ -15,6 +15,8 @@
 			userID: '',
 			userName: '',
 			avaterUrl: '',
+			sex:'u',
+			pre:'',
 			token:0
 		}
 	}

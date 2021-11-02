@@ -151,7 +151,7 @@
             //从服务器获取最新的好友信息
 			uni.request({
 			  method: 'GET',
-			  url: 'https://wechat.api.kohaku.xin:11731/user/getuserbyid',
+			  url: 'https://wechat.api.kohaku.xin:11731/getuserbyid',
 			  data:{
 					openID:friendId,
 			  },
@@ -163,7 +163,7 @@
 					name:res.data.name,
 					avatar:res.data.avater
 				}
-				console.log('onLoad friend - ', this.friend);
+				console.log('onLoad friend - ', that.friend);
 				
 				//监听新消息
 				

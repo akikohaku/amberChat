@@ -15,15 +15,16 @@
 			<view class="me-menu-item">设置</view>
 			<view class="me-menu-item red">登出</view>
 			<view class="me-menu-line"></view>
+			<view class="me-menu-item" @click="login()">id1</view>
+			<view class="me-menu-item" @click="login2()">id2</view>
 		</view>
 
 		<!-- <hr/> -->
 		<view>{{userID}}</view>
 		<view>{{userName}}</view>
-		<view @click="login()">id1</view>
-		<view @click="login2()">id2</view>
-		<view @click="connect()">连接</view>
-		<view @click="loginmain()">登录</view>
+
+		<!-- <view @click="connect()">连接</view> -->
+		<view class="login" @click="loginmain()">登录</view>
 	</view>
 </template>
 
@@ -44,7 +45,7 @@
 			that.userName = getApp().globalData.userName;
 			that.avatarUrl = getApp().globalData.avaterUrl;
 		},
-		onShow(){
+		onShow() {
 			let that = this;
 			that.userID = getApp().globalData.userID;
 			that.userName = getApp().globalData.userName;
@@ -66,7 +67,7 @@
 					});
 				}
 			},
-			toprofile(){
+			toprofile() {
 				uni.navigateTo({
 					url: '/pages/me/editprofile/editprofile'
 				});
@@ -77,8 +78,6 @@
 				getApp().globalData.userName = 'Mattie';
 				getApp().globalData.avaterUrl = '/static/images/Avatar-1.png';
 				that.userID = getApp().globalData.userID;
-				that.userName = getApp().globalData.userName;
-				that.avatarUrl = getApp().globalData.avaterUrl;
 
 			},
 			login2() {
@@ -87,23 +86,71 @@
 				getApp().globalData.userName = 'Wallace';
 				getApp().globalData.avaterUrl = '/static/images/Avatar-2.png';
 				that.userID = getApp().globalData.userID;
-				that.userName = getApp().globalData.userName;
-				that.avatarUrl = getApp().globalData.avaterUrl;
 			},
-			loginmain(){
+			loginmain() {
+				let that = this;
 				uni.request({
-				  method: 'GET',
-				  url: 'https://wechat.api.kohaku.xin:11731/user/login',
-				  data:{
-					  openID:getApp().globalData.userID,
-					  username:getApp().globalData.userName,
-					  avater:getApp().globalData.avaterUrl
-				  },
-				  
-				  success(res) {
-				    console.log(res.data.token);
-					getApp().globalData.token=res.data.token;
-				  }
+					method: 'GET',
+					url: 'https://wechat.api.kohaku.xin:11731/login',
+					data: {
+						openID: getApp().globalData.userID,
+						username: getApp().globalData.userName,
+						avater: getApp().globalData.avaterUrl
+					},
+
+					success(res) {
+						console.log(res.data.token);
+						// getApp().globalData.token=res.data.token;
+						uni.request({
+							method: 'GET',
+							url: 'https://wechat.api.kohaku.xin:11731/getprofile',
+							data: {
+								openid: getApp().globalData.userID
+							},
+
+							success(res) {
+								console.log(res);
+
+								getApp().globalData.userName = res.data.name;
+								getApp().globalData.avaterUrl = res.data.avatar;
+								getApp().globalData.sex = res.data.sex;
+								getApp().globalData.pre = res.data.pre;
+								that.userName = getApp().globalData.userName;
+								that.avatarUrl = getApp().globalData.avaterUrl;
+								if (that.goEasy.getConnectionStatus() === 'disconnected') {
+									getApp().globalData.imService = new IMService(that.goEasy, that
+										.GoEasy);
+									getApp().globalData.imService.connect({
+										uuid: getApp().globalData.userID,
+										avatar: getApp().globalData.avaterUrl,
+										name: getApp().globalData.userName
+									});
+									uni.setStorageSync('currentUser', {
+										uuid: getApp().globalData.userID,
+										avatar: getApp().globalData.avaterUrl,
+										name: getApp().globalData.userName
+									});
+								}
+								if (getApp().globalData.pre === '') {
+									uni.showModal({
+										content: "看来您是首次登录匿名聊天\n先来设置个人资料吧",
+										showCancel: false,
+										confirmText: "好耶！",
+										success: function(res) {
+											if (res.confirm) {
+												uni.navigateTo({
+													url: '/pages/me/editprofile/editprofile'
+												});
+											}
+										}
+									})
+								}
+								// getApp().globalData.token=res.data.token;
+
+							}
+						})
+
+					}
 				})
 			}
 		}
@@ -126,6 +173,7 @@
 		height: 80px;
 		border: 2px solid #000000;
 		border-radius: 40px;
+		background-color: #ffffff;
 	}
 
 	.me-head-pic image {
@@ -146,7 +194,7 @@
 		background: url(https://cdn.jsdelivr.net/gh/moezx/cdn@3.5.1/img/Sakura/images/wave1.png) repeat-x;
 		_filter: alpha(opacity=80);
 		position: absolute;
-		top:160px;
+		top: 160px;
 		width: 1000%;
 		left: 0px;
 		z-index: 5;
@@ -155,16 +203,23 @@
 		transition-duration: .4s, .4s;
 		animation: wave 250s alternate infinite;
 	}
-	@keyframes wave{
-		from{left:0px;}
-		to{left:-2500px;}
+
+	@keyframes wave {
+		from {
+			left: 0px;
+		}
+
+		to {
+			left: -2500px;
+		}
 	}
-	.me-head-wave-2{
+
+	.me-head-wave-2 {
 		height: 35px;
 		background: url(https://cdn.jsdelivr.net/gh/moezx/cdn@3.5.1/img/Sakura/images/wave1.png) repeat-x;
 		_filter: alpha(opacity=80);
 		position: absolute;
-		top:165px;
+		top: 165px;
 		width: 1000%;
 		left: -50px;
 		z-index: 5;
@@ -173,20 +228,29 @@
 		transition-duration: .4s, .4s;
 		animation: wave2 250s alternate infinite;
 	}
-	@keyframes wave2{
-		from{left:-50px;}
-		to{left:-3500px;}
+
+	@keyframes wave2 {
+		from {
+			left: -50px;
+		}
+
+		to {
+			left: -3500px;
+		}
 	}
-	.me-menu{
+
+	.me-menu {
 		margin-top: 20px;
 	}
-	.me-menu-item{
+
+	.me-menu-item {
 		padding-top: 8px;
 		padding-left: 10px;
 		padding-bottom: 8px;
 		font-size: 17px;
 	}
-	.me-menu-item::before{
+
+	.me-menu-item::before {
 		content: '';
 		height: 1px;
 		width: 100vw;
@@ -195,13 +259,28 @@
 		margin-top: -8px;
 		background-color: #00000011;
 	}
-	.me-menu-line{
+
+	.me-menu-line {
 		content: '';
 		height: 1px;
 		width: 100vw;
 		background-color: #00000011;
 	}
-	.red{
+
+	.red {
 		color: red;
+	}
+
+	.login {
+		width: 100vw;
+		height: 50px;
+		position: absolute;
+		bo.loginttom: 0rpx;
+		text-align: center;
+		padding-top: 10px;
+		font-size: 60rpx;
+		background-color: orange;
+		color: white;
+
 	}
 </style>

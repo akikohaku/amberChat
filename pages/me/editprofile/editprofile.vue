@@ -143,6 +143,21 @@
 			this.avatarUrl = getApp().globalData.avaterUrl;
 			this.userName = getApp().globalData.userName;
 		},
+		onShow(){
+			if(getApp().globalData.sex==='u'){
+				this.index=0;
+			}
+			if(getApp().globalData.sex==='m'){
+				this.index=1;
+			}
+			if(getApp().globalData.sex==='f'){
+				this.index=2;
+			}
+			if(getApp().globalData.pre!=''){
+				this.formData.hobby=JSON.parse(getApp().globalData.pre);
+			}
+			
+		},
 		methods: {
 			bindPickerChange: function(e) {
 				console.log('picker发送选择改变，携带值为：' + e.detail.value)
