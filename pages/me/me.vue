@@ -251,14 +251,17 @@
 		height: 80px;
 		/* border: 2px solid #000000; */
 		border-radius: 40px;
-		background-color: #ffffff;
+
 	}
 
 	.me-head-pic image {
-		width: 100%;
-		height: 100%;
+		width: 80px;
+		height: 80px;
+		/* 		width: 100%;
+		height: 100%; */
 		border: 2px solid #000000;
-		border-radius: 40px;
+		background-color: #ffffff;
+		border-radius: 50px;
 	}
 
 	.me-head-id {

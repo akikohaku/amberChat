@@ -41,7 +41,7 @@
 			</view>
 
 		</view>
-		<view class="match-friendimg" >
+		<view class="match-friendimg">
 			<image :src="avatar" @click="chatClick()" ref="matchfriendimg"></image>
 		</view>
 		<view class="match-info" ref="matchinfo">轻触头像进入聊天</view>
@@ -87,7 +87,7 @@
 		methods: {
 			chatClick() {
 				let that = this;
-				
+
 				that.$refs.mfz.$el.style.display = 'none';
 				that.$refs.mfz2.$el.style.display = 'none';
 				that.$refs.buttoncontent3.$el.style.height = '0px';
@@ -107,13 +107,13 @@
 				that.$refs.matchfriendimg.$el.style.opacity = '0';
 				that.$refs.matchinfo.$el.style.opacity = '0';
 				that.isclicked = false;
-				if(this.toid!=''){
+				if (this.toid != '') {
 					this.enterChat(this.toid);
 				}
-				
+
 			},
-			enterChat (uuid) {//进入私聊
-				let path = '/pages/privateChat/privateChat?to='+uuid;
+			enterChat(uuid) { //进入私聊
+				let path = '/pages/privateChat/privateChat?to=' + uuid;
 				uni.navigateTo({
 					url: path
 				})
@@ -128,6 +128,16 @@
 				if (!this.isclicked) {
 					console.log("clicked");
 					console.log(this.goEasy.getConnectionStatus());
+					uni.request({
+						method: 'GET',
+						url: 'https://wechat.api.kohaku.xin:11731/startmatch',
+						data: {
+							openid: getApp().globalData.userID,
+						},
+						success(res) {
+							console.log(res);
+						}
+					})
 					this.$refs.buttonstart.$el.style.width = '270px';
 					this.$refs.buttonstart3.$el.style.height = '120px';
 					this.$refs.buttonstart2.$el.style.height = '120px';
@@ -147,54 +157,65 @@
 						}
 					}, 400)
 					setTimeout(() => {
-						// if (this.isclicked) {
-						// 	uni.navigateTo({
-						// 		url: '/pages/confirmchat/confirmchat'
-						// 	});
-						// }
 						let that = this;
-						uni.request({
-							method: 'GET',
-							url: 'https://wechat.api.kohaku.xin:11731/match',
-							data: {
-								openid: getApp().globalData.userID
-							},
-							success(res) {
-								console.log(res);
-								var friendid = res.data.uuid;
-								that.toid = friendid;
-								if (res.data.uuid != '') {
-									uni.request({
-										method: 'GET',
-										url: 'https://wechat.api.kohaku.xin:11731/getuserbyid',
-										data: {
-											openID: friendid,
-										},
-
-										success(res) {
-											if(that.isclicked){
-												console.log(res.data);
-												that.avatar = res.data.avater;
-												that.$refs.matchfriendimg.$el.style.opacity = '100';
-												that.$refs.matchinfo.$el.style.opacity = '100';
+						if (this.isclicked) {
+							uni.request({
+								method: 'GET',
+								url: 'https://wechat.api.kohaku.xin:11731/match',
+								data: {
+									openid: getApp().globalData.userID
+								},
+								success(res) {
+									console.log(res);
+									var friendid = res.data.uuid;
+									that.toid = friendid;
+									if (res.data.uuid != '') {
+										uni.request({
+											method: 'GET',
+											url: 'https://wechat.api.kohaku.xin:11731/getuserbyid',
+											data: {
+												openID: friendid,
+											},
+							
+											success(res) {
+												if (that.isclicked) {
+													console.log(res.data);
+													that.avatar = res.data.avater;
+													that.$refs.matchfriendimg.$el.style.opacity =
+													'100';
+													that.$refs.matchinfo.$el.style.opacity = '100';
+													that.$refs.buttonwait.$el.style.opacity = '0';
+												}
+							
 											}
-											
-										}
-									})
-								}else{
-									//匹配失败
-									uni.showToast({
-										title: "匹配失败"
-									})
+										})
+									} else {
+										//匹配失败
+										uni.showToast({
+											title: "匹配失败"
+										})
+									}
+							
 								}
-
-							}
-						})
+							})
+						}
+						
+						
 
 
 					}, 6000)
 					this.isclicked = true;
 				} else {
+					uni.request({
+						method: 'GET',
+						url: 'https://wechat.api.kohaku.xin:11731/stopmatch',
+						data: {
+							openid: getApp().globalData.userID,
+						},
+						success(res) {
+							console.log(res);
+						}
+					})
 					this.$refs.buttoncontent3.$el.style.height = '0px';
 					this.$refs.buttonwait.$el.style.opacity = '0';
 					setTimeout(() => {
@@ -245,6 +266,7 @@
 		width: 80px;
 		height: 80px;
 		border: 1px solid #ffffff99;
+		transition: all .5s ease-in-out;
 		border-radius: 40px;
 	}
 
@@ -256,6 +278,7 @@
 		width: 100vw;
 		margin-top: 390px;
 		text-align: center;
+		transition: all .5s ease-in-out;
 		animation: textsw 3s alternate infinite ease-in-out;
 	}
 

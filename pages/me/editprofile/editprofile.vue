@@ -58,6 +58,7 @@
 
 <script>
 	import kpsImageCutter from "@/components/ksp-image-cutter/ksp-image-cutter.vue";
+	import IMService from "../../../lib/imservice";
 	export default {
 		components: {
 			kpsImageCutter
@@ -69,13 +70,13 @@
 				tempurl: '',
 				array: [{
 					name: '未定义',
-					value:'u'
+					value: 'u'
 				}, {
 					name: '男',
-					value:'m'
+					value: 'm'
 				}, {
 					name: '女',
-					value:'f'
+					value: 'f'
 				}],
 				index: 0,
 				formData: {
@@ -143,20 +144,20 @@
 			this.avatarUrl = getApp().globalData.avaterUrl;
 			this.userName = getApp().globalData.userName;
 		},
-		onShow(){
-			if(getApp().globalData.sex==='u'){
-				this.index=0;
+		onShow() {
+			if (getApp().globalData.sex === 'u') {
+				this.index = 0;
 			}
-			if(getApp().globalData.sex==='m'){
-				this.index=1;
+			if (getApp().globalData.sex === 'm') {
+				this.index = 1;
 			}
-			if(getApp().globalData.sex==='f'){
-				this.index=2;
+			if (getApp().globalData.sex === 'f') {
+				this.index = 2;
 			}
-			if(getApp().globalData.pre!=''){
-				this.formData.hobby=JSON.parse(getApp().globalData.pre);
+			if (getApp().globalData.pre != '') {
+				this.formData.hobby = JSON.parse(getApp().globalData.pre);
 			}
-			
+
 		},
 		methods: {
 			bindPickerChange: function(e) {
@@ -176,15 +177,15 @@
 				console.log(this.avatarUrl);
 				this.tempurl = "";
 				uniCloud.uploadFile({
-					filePath:this.avatarUrl,
-					cloudPath:getApp().globalData.openID+".jpg",
+					filePath: this.avatarUrl,
+					cloudPath: getApp().globalData.openID + ".jpg",
 					onUploadProgress: function(progressEvent) {
-					          console.log(progressEvent);
-							  },
-					success(res){
+						console.log(progressEvent);
+					},
+					success(res) {
 						console.log(res);
-						this.avatarUrl=res.fileID;
-						getApp().globalData.avaterUrl=this.avatarUrl;
+						this.avatarUrl = res.fileID;
+						getApp().globalData.avaterUrl = this.avatarUrl;
 						uni.showToast({
 							title: "上传成功"
 						})
@@ -223,37 +224,47 @@
 					});
 					return;
 				}
-				let that=this;
+				let that = this;
 				uni.request({
 					method: 'GET',
 					url: 'https://wechat.api.kohaku.xin:11731/updateprofile',
 					data: {
 						openid: getApp().globalData.userID,
 						username: this.userName,
-						sex:this.array[this.index].value,
-						pre:JSON.stringify(this.formData.hobby),
+						sex: this.array[this.index].value,
+						pre: JSON.stringify(this.formData.hobby),
 						avatar: getApp().globalData.avaterUrl
-						
+
 					},
 
 					success(res) {
 						console.log(res);
-						getApp().globalData.userName=that.userName;
-						getApp().globalData.sex=that.sex;
-						getApp().globalData.pre=JSON.stringify(that.formData.hobby);
+						getApp().globalData.userName = that.userName;
+						getApp().globalData.sex = that.sex;
+						getApp().globalData.pre = JSON.stringify(that.formData.hobby);
 						if (that.goEasy.getConnectionStatus() === 'connected') {
-							getApp().globalData.imService = new IMService(that.goEasy, that
-								.GoEasy);
-							getApp().globalData.imService.connect({
-								uuid: getApp().globalData.userID,
-								avatar: getApp().globalData.avaterUrl,
-								name: getApp().globalData.userName
+							that.goEasy.disconnect({
+								onSuccess: function() {
+									getApp().globalData.imService = new IMService(that.goEasy, that
+										.GoEasy);
+									getApp().globalData.imService.connect({
+										uuid: getApp().globalData.userID,
+										avatar: getApp().globalData.avaterUrl,
+										name: getApp().globalData.userName
+									});
+									uni.setStorageSync('currentUser', {
+										uuid: getApp().globalData.userID,
+										avatar: getApp().globalData.avaterUrl,
+										name: getApp().globalData.userName
+									});
+								},
+								onFailed: function(error) {
+									uni.showToast({
+										title: '断连失败'
+									})
+								}
 							});
-							uni.setStorageSync('currentUser', {
-								uuid: getApp().globalData.userID,
-								avatar: getApp().globalData.avaterUrl,
-								name: getApp().globalData.userName
-							});
+
 						}
 						uni.showToast({
 							title: "保存成功"
