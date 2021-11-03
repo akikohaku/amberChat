@@ -39,7 +39,7 @@
 		    "style" :                                                                                    
 		    {
 		        "navigationBarTitleText": "",
-		        "enablePullDownRefresh": false
+				"enablePullDownRefresh":true
 		    }
 		    
 		}
@@ -48,6 +48,15 @@
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/me/setting/setting",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "匹配设置",
                 "enablePullDownRefresh": false
             }
             

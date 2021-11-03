@@ -12,10 +12,10 @@
 		</view>
 		<view class="me-menu">
 			<view class="me-menu-item" @click="toprofile()">编辑个人资料</view>
-			<view class="me-menu-item">设置</view>
-			<view class="me-menu-item red">登出</view>
+			<!-- <view class="me-menu-item" @click="toset()">设置</view> -->
+			<!-- <view class="me-menu-item red">登出</view> -->
 			<view class="me-menu-line"></view>
-			<view class="me-menu-item" @click="login()">id1</view>
+			<view class="me-menu-item" @click="login1()">id1</view>
 			<view class="me-menu-item" @click="login2()">id2</view>
 		</view>
 
@@ -54,7 +54,14 @@
 			return {
 				userID: '',
 				userName: '',
-				avatarUrl: ''
+				avatarUrl: '',
+				codeurl:'',
+				code:'',
+				accessToken:'',
+				openid:'',
+				username:'',
+				headImage:''
+				
 			}
 		},
 		onReady() {
@@ -70,6 +77,11 @@
 			that.avatarUrl = getApp().globalData.avaterUrl;
 		},
 		methods: {
+			toset() {
+				uni.navigateTo({
+					url: '/pages/me/setting/setting'
+				});
+			},
 			setid() {
 				let that = this;
 				if (that.userID != "" && that.userName != "") {
@@ -100,7 +112,7 @@
 					url: '/pages/me/editprofile/editprofile'
 				});
 			},
-			login() {
+			login1() {
 				let that = this;
 				getApp().globalData.userID = "08c0a6ec-a42b";
 				getApp().globalData.userName = 'Mattie';
@@ -115,71 +127,112 @@
 				getApp().globalData.avaterUrl = '/static/images/Avatar-2.png';
 				that.userID = getApp().globalData.userID;
 			},
-			loginmain() {
-				let that = this;
-				uni.request({
-					method: 'GET',
-					url: 'https://wechat.api.kohaku.xin:11731/login',
-					data: {
-						openID: getApp().globalData.userID,
-						username: getApp().globalData.userName,
-						avater: getApp().globalData.avaterUrl
-					},
-
-					success(res) {
-						// console.log(res.data.token);
-						// getApp().globalData.token=res.data.token;
-						uni.request({
-							method: 'GET',
-							url: 'https://wechat.api.kohaku.xin:11731/getprofile',
-							data: {
-								openid: getApp().globalData.userID
-							},
-
-							success(res) {
-								console.log(res);
-
-								getApp().globalData.userName = res.data.name;
-								getApp().globalData.avaterUrl = res.data.avatar;
-								getApp().globalData.sex = res.data.sex;
-								getApp().globalData.pre = res.data.pre;
-								that.userName = getApp().globalData.userName;
-								that.avatarUrl = getApp().globalData.avaterUrl;
-								if (that.goEasy.getConnectionStatus() === 'disconnected') {
-									getApp().globalData.imService = new IMService(that.goEasy, that
-										.GoEasy);
-									getApp().globalData.imService.connect({
-										uuid: getApp().globalData.userID,
-										avatar: getApp().globalData.avaterUrl,
-										name: getApp().globalData.userName
-									});
-									uni.setStorageSync('currentUser', {
-										uuid: getApp().globalData.userID,
-										avatar: getApp().globalData.avaterUrl,
-										name: getApp().globalData.userName
-									});
-								}
-								if (getApp().globalData.pre === '') {
-									uni.showModal({
-										content: "看来您是首次登录匿名聊天\n先来设置个人资料吧",
-										showCancel: false,
-										confirmText: "好耶！",
-										success: function(res) {
-											if (res.confirm) {
-												uni.navigateTo({
-													url: '/pages/me/editprofile/editprofile'
-												});
-											}
-										}
-									})
-								}
-								// getApp().globalData.token=res.data.token;
-
-							}
-						})
-
+			getCode() {
+				this.code = '';
+				let origin = 'https://static-3b99f1ce-2c10-40e8-a123-d1899ddca653.bspapp.com/#/pages/me/me'; //网页授权的回调域名，这里设置的是本地端口
+				let urlNow = encodeURIComponent(origin); //处理域名
+				let scope = "snsapi_userinfo"; //弹框显示授权
+				let appid = "wx4bdc8bb9523c1735";
+				this.code = this.codeurl;
+				// 截取code
+				if (this.code == null || this.code === '') { //未授权qu授权
+					let url =
+						`https://open.weixin.qq.com/connect/oauth2/authorize?
+							appid=${appid}&redirect_uri=${urlNow}&
+							response_type=code&scope=${scope}&
+							state=123#wechat_redirect`;
+					window.location.href = url;
+				}
+			},
+			getUrlCode() { // 截取url中的code方法
+				var url = location.search;
+				var theRequest = new Object();
+				if (url.indexOf("?") != -1) {
+					var str = url.substr(1);
+					var strs = str.split("&");
+					for (var i = 0; i < strs.length; i++) {
+						theRequest[strs[i].split("=")[0]] = (strs[i].split("=")[1]);
 					}
-				})
+				}
+				return theRequest;
+			},
+
+
+			codecreated() {
+				this.codeurl = this.getUrlCode().code; //获取code
+				this.getCode();
+			},
+			loginmain() {
+				let ua = window.navigator.userAgent.toLowerCase();
+				if (ua.match(/MicroMessenger/i) == 'micromessenger') {
+					console.log("检测到微信浏览器");
+				}else{
+					let that = this;
+					uni.request({
+						method: 'GET',
+						url: 'https://wechat.api.kohaku.xin:11731/login',
+						data: {
+							openID: getApp().globalData.userID,
+							username: getApp().globalData.userName,
+							avater: getApp().globalData.avaterUrl
+						},
+					
+						success(res) {
+							// console.log(res.data.token);
+							// getApp().globalData.token=res.data.token;
+							uni.request({
+								method: 'GET',
+								url: 'https://wechat.api.kohaku.xin:11731/getprofile',
+								data: {
+									openid: getApp().globalData.userID
+								},
+					
+								success(res) {
+									console.log(res);
+					
+									getApp().globalData.userName = res.data.name;
+									getApp().globalData.avaterUrl = res.data.avatar;
+									getApp().globalData.sex = res.data.sex;
+									getApp().globalData.pre = res.data.pre;
+									that.userName = getApp().globalData.userName;
+									that.avatarUrl = getApp().globalData.avaterUrl;
+									if (that.goEasy.getConnectionStatus() === 'disconnected') {
+										getApp().globalData.imService = new IMService(that.goEasy, that
+											.GoEasy);
+										getApp().globalData.imService.connect({
+											uuid: getApp().globalData.userID,
+											avatar: getApp().globalData.avaterUrl,
+											name: getApp().globalData.userName
+										});
+										uni.setStorageSync('currentUser', {
+											uuid: getApp().globalData.userID,
+											avatar: getApp().globalData.avaterUrl,
+											name: getApp().globalData.userName
+										});
+									}
+									if (getApp().globalData.pre === '') {
+										uni.showModal({
+											content: "看来您是首次登录匿名聊天\n先来设置个人资料吧",
+											showCancel: false,
+											confirmText: "好耶！",
+											success: function(res) {
+												if (res.confirm) {
+													uni.navigateTo({
+														url: '/pages/me/editprofile/editprofile'
+													});
+												}
+											}
+										})
+									}
+									// getApp().globalData.token=res.data.token;
+					
+								}
+							})
+					
+						}
+					})
+				}
+
 			}
 		}
 	}
