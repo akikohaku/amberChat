@@ -48,6 +48,16 @@
 					</uni-data-checkbox>
 				</view>
 			</view>
+			<view class="uni-list-cell">
+				<view class="uni-list-cell-left">
+					匹配设置
+				</view>
+				<view class="uni-list-cell-db">
+					<picker @change="bindPickerChange2" :value="index2" :range="array2" range-key="name">
+						<view class="uni-input">{{array2[index2].name}}</view>
+					</picker>
+				</view>
+			</view>
 		</view>
 		<view class="upload" @click="uploadprofile">保存</view>
 		<kps-image-cutter @ok="onok" @cancel="oncancle" :url="tempurl" :fixed="false" :width="200" :height="200"
@@ -79,6 +89,17 @@
 					value: 'f'
 				}],
 				index: 0,
+				array2: [{
+					name: '仅限异性',
+					value: 'e'
+				}, {
+					name: '男',
+					value: 'm'
+				}, {
+					name: '女',
+					value: 'f'
+				}],
+				index2: 0,
 				formData: {
 					value: 1,
 					hobby: []
@@ -141,10 +162,21 @@
 			}
 		},
 		onReady() {
-			this.avatarUrl = getApp().globalData.avaterUrl;
-			this.userName = getApp().globalData.userName;
+			
 		},
 		onShow() {
+			this.avatarUrl = getApp().globalData.avaterUrl;
+			this.userName = getApp().globalData.userName;
+			if (getApp().globalData.tosex === 'e') {
+				this.index2 = 0;
+			}
+			if (getApp().globalData.tosex === 'm') {
+				this.index2 = 1;
+			}
+			if (getApp().globalData.tosex === 'f') {
+				this.index2 = 2;
+			}
+			
 			if (getApp().globalData.sex === 'u') {
 				this.index = 0;
 			}
@@ -163,6 +195,10 @@
 			bindPickerChange: function(e) {
 				console.log('picker发送选择改变，携带值为：' + e.detail.value)
 				this.index = e.detail.value
+			},
+			bindPickerChange2: function(e) {
+				console.log('picker发送选择改变，携带值为：' + e.detail.value)
+				this.index2 = e.detail.value
 			},
 			chooseImage() {
 				uni.chooseImage({
@@ -193,7 +229,8 @@
 					fail(res) {
 						console.log(res);
 						uni.showToast({
-							title: "上传失败"
+							title: "上传失败",
+							icon: "error"
 						})
 					},
 				});
@@ -224,6 +261,13 @@
 					});
 					return;
 				}
+				if (this.index == 0) {
+					uni.showToast({
+						title: "设定性别",
+						icon: "error"
+					});
+					return;
+				}
 				let that = this;
 				uni.request({
 					method: 'GET',
@@ -233,7 +277,8 @@
 						username: this.userName,
 						sex: this.array[this.index].value,
 						pre: JSON.stringify(this.formData.hobby),
-						avatar: getApp().globalData.avaterUrl
+						avatar: getApp().globalData.avaterUrl,
+						tosex:this.array2[this.index2].value
 
 					},
 
@@ -242,6 +287,7 @@
 						getApp().globalData.userName = that.userName;
 						getApp().globalData.sex = that.sex;
 						getApp().globalData.pre = JSON.stringify(that.formData.hobby);
+						getApp().globalData.tosex=that.array2[that.index2].value;
 						if (that.goEasy.getConnectionStatus() === 'connected') {
 							that.goEasy.disconnect({
 								onSuccess: function() {
@@ -260,7 +306,8 @@
 								},
 								onFailed: function(error) {
 									uni.showToast({
-										title: '断连失败'
+										title: '断连失败',
+										icon: "error"
 									})
 								}
 							});
@@ -393,6 +440,7 @@
 
 	.me-hobby-list {
 		margin-left: 30rpx;
+		margin-bottom: 20rpx;
 	}
 
 	.uni-list {
@@ -462,7 +510,8 @@
 
 	.uni-list-cell-db,
 	.uni-list-cell-right {
-		margin-left: 45px;
+		position: absolute;
+		left: 110px;
 		flex: 1;
 	}
 

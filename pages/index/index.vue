@@ -66,6 +66,7 @@
 </template>
 
 <script>
+	import IMService from "../../lib/imservice";
 	export default {
 		data() {
 			return {
@@ -78,10 +79,90 @@
 		onLoad() {
 
 		},
+		onReady(){
+			var openid=uni.getStorageSync('openid');
+			if(openid.id!=undefined){
+				getApp().globalData.userID=openid.id;
+				let that = this;
+				uni.request({
+					method: 'GET',
+					url: 'https://wechat.api.kohaku.xin:11731/login',
+					data: {
+						openID: getApp().globalData.userID,
+						username: getApp().globalData.userName,
+						avater: getApp().globalData.avaterUrl
+					},
+				
+					success(res) {
+						// console.log(res.data.token);
+						// getApp().globalData.token=res.data.token;
+						uni.request({
+							method: 'GET',
+							url: 'https://wechat.api.kohaku.xin:11731/getprofile',
+							data: {
+								openid: getApp().globalData.userID
+							},
+				
+							success(res) {
+								console.log(res);
+				
+								getApp().globalData.userName = res.data.name;
+								getApp().globalData.avaterUrl = res.data.avatar;
+								getApp().globalData.sex = res.data.sex;
+								getApp().globalData.pre = res.data.pre;
+								getApp().globalData.tosex = res.data.tosex;
+								that.userName = getApp().globalData.userName;
+								that.avatarUrl = getApp().globalData.avaterUrl;
+								if (that.goEasy.getConnectionStatus() === 'disconnected') {
+									getApp().globalData.imService = new IMService(that.goEasy, that
+										.GoEasy);
+									getApp().globalData.imService.connect({
+										uuid: getApp().globalData.userID,
+										avatar: getApp().globalData.avaterUrl,
+										name: getApp().globalData.userName
+									});
+									uni.setStorageSync('currentUser', {
+										uuid: getApp().globalData.userID,
+										avatar: getApp().globalData.avaterUrl,
+										name: getApp().globalData.userName
+									});
+								}
+								if (getApp().globalData.pre === '[]') {
+									uni.showModal({
+										content: "看来您是首次登录匿名聊天\n先来设置个人资料吧",
+										showCancel: false,
+										confirmText: "好耶！",
+										success: function(res) {
+											if (res.confirm) {
+												uni.navigateTo({
+													url: '/pages/me/editprofile/editprofile'
+												});
+											}
+										}
+									})
+								}
+								// getApp().globalData.token=res.data.token;
+				
+							}
+						})
+				
+					}
+				})
+			}
+		},
 		onshow() {
 			if (this.goEasy.getConnectionStatus() === 'disconnected') {
 				getApp().globalData.imService = new IMService(this.goEasy, this.GoEasy);
 				getApp().globalData.imService.connect(getApp().globalData.userID);
+			}
+			if(!getApp().globalData.islogin){
+				uni.showToast({
+					title: "未登录",
+					icon:'error'
+				})
+				uni.switchTab({
+					url: '/pages/me/me'
+				});
 			}
 		},
 		methods: {
@@ -114,14 +195,55 @@
 			},
 			enterChat(uuid) { //进入私聊
 				let path = '/pages/privateChat/privateChat?to=' + uuid;
-				uni.navigateTo({
-					url: path
+				uni.request({
+					method: 'GET',
+					url: 'https://wechat.api.kohaku.xin:11731/startchat',
+					data: {
+						openid: getApp().globalData.userID,
+						toopenid:uuid
+					},
+					success(res) {
+						uni.navigateTo({
+							url: path
+						})
+					}
 				})
+				
 			},
 			matchClick() {
 				if (this.goEasy.getConnectionStatus() === 'disconnected') {
 					uni.switchTab({
 						url: '../../pages/me/me'
+					});
+					return;
+				}
+				if(getApp().globalData.userID==''){
+					uni.showToast({
+						title: "未登录",
+						icon:'error'
+					})
+					uni.switchTab({
+						url: '/pages/me/me'
+					});
+					return;
+				}
+				if(getApp().globalData.pre=='[]'){
+					uni.showToast({
+						title: "请设置爱好",
+						icon:'error'
+					})
+					uni.switchTab({
+						url: '/pages/me/me'
+					});
+					return;
+				}
+				if(getApp().globalData.sex=='u'){
+					uni.showToast({
+						title: "请设置性别",
+						icon:'error'
+					})
+					uni.switchTab({
+						url: '/pages/me/me'
 					});
 					return;
 				}
@@ -192,7 +314,8 @@
 									} else {
 										//匹配失败
 										uni.showToast({
-											title: "匹配失败"
+											title: "匹配失败",
+											icon:'error'
 										})
 									}
 							

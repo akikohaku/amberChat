@@ -55,13 +55,14 @@
 				userID: '',
 				userName: '',
 				avatarUrl: '',
-				codeurl:'',
-				code:'',
-				accessToken:'',
-				openid:'',
-				username:'',
-				headImage:''
+				codeurl: '',
+				code: '',
+				accessToken: '',
+				openid: '',
+				username: '',
+				headImage: '',
 				
+
 			}
 		},
 		onReady() {
@@ -70,7 +71,14 @@
 			that.userName = getApp().globalData.userName;
 			that.avatarUrl = getApp().globalData.avaterUrl;
 		},
+		onload(){
+			
+		},
 		onShow() {
+			if(!getApp().globalData.islogin){
+				this.loginmain();
+			}
+			
 			let that = this;
 			that.userID = getApp().globalData.userID;
 			that.userName = getApp().globalData.userName;
@@ -129,7 +137,8 @@
 			},
 			getCode() {
 				this.code = '';
-				let origin = 'https://static-3b99f1ce-2c10-40e8-a123-d1899ddca653.bspapp.com/#/pages/me/me'; //网页授权的回调域名，这里设置的是本地端口
+				let origin =
+				'https://static-3b99f1ce-2c10-40e8-a123-d1899ddca653.bspapp.com/#/pages/me/me'; //网页授权的回调域名，这里设置的是本地端口
 				let urlNow = encodeURIComponent(origin); //处理域名
 				let scope = "snsapi_userinfo"; //弹框显示授权
 				let appid = "wx4bdc8bb9523c1735";
@@ -166,7 +175,163 @@
 				let ua = window.navigator.userAgent.toLowerCase();
 				if (ua.match(/MicroMessenger/i) == 'micromessenger') {
 					console.log("检测到微信浏览器");
-				}else{
+					var openid=uni.getStorageSync('openid');
+					console.log(openid);
+					console.log(openid.data);
+					console.log(openid.id);
+					if(openid.id==undefined){
+						this.codecreated();
+						var url = "https://wechat.api.kohaku.xin:11731/weixinlogin?code=" + this.code;
+						let that = this;
+						uni.request({
+							url: url,
+							success(res) {
+								console.log("请求到了", res);
+								
+								getApp().globalData.userID = res.data.data.openid;
+								getApp().globalData.avaterUrl = res.data.data.headimgurl;
+								getApp().globalData.userName = res.data.data.nickname;
+								uni.setStorageSync('openid', {id:res.data.data.openid});
+								// console.log("用户id", useropenId);
+								// console.log("用户头像", avatarUrl);
+								// console.log("用户名称", username);
+								uni.request({
+									method: 'GET',
+									url: 'https://wechat.api.kohaku.xin:11731/login',
+									data: {
+										openID: getApp().globalData.userID,
+										username: getApp().globalData.userName,
+										avater: getApp().globalData.avaterUrl
+									},
+								
+									success(res) {
+										// console.log(res.data.token);
+										// getApp().globalData.token=res.data.token;
+										uni.request({
+											method: 'GET',
+											url: 'https://wechat.api.kohaku.xin:11731/getprofile',
+											data: {
+												openid: getApp().globalData.userID
+											},
+								
+											success(res) {
+												console.log(res);
+								
+												getApp().globalData.userName = res.data.name;
+												getApp().globalData.avaterUrl = res.data.avatar;
+												getApp().globalData.sex = res.data.sex;
+												getApp().globalData.pre = res.data.pre;
+												getApp().globalData.tosex = res.data.tosex;
+												that.userName = getApp().globalData.userName;
+												that.avatarUrl = getApp().globalData.avaterUrl;
+												if (that.goEasy.getConnectionStatus() === 'disconnected') {
+													getApp().globalData.imService = new IMService(that.goEasy, that
+														.GoEasy);
+													getApp().globalData.imService.connect({
+														uuid: getApp().globalData.userID,
+														avatar: getApp().globalData.avaterUrl,
+														name: getApp().globalData.userName
+													});
+													uni.setStorageSync('currentUser', {
+														uuid: getApp().globalData.userID,
+														avatar: getApp().globalData.avaterUrl,
+														name: getApp().globalData.userName
+													});
+												}
+												getApp().globalData.islogin=true;
+												if (getApp().globalData.pre === '[]') {
+													uni.showModal({
+														content: "看来您是首次登录匿名聊天\n先来设置个人资料吧",
+														showCancel: false,
+														confirmText: "好耶！",
+														success: function(res) {
+															if (res.confirm) {
+																uni.navigateTo({
+																	url: '/pages/me/editprofile/editprofile'
+																});
+															}
+														}
+													})
+												}
+												// getApp().globalData.token=res.data.token;
+								
+											}
+										})
+								
+									}
+								})
+							}
+						})
+					}else{
+						getApp().globalData.userID=openid.id;
+						let that = this;
+						uni.request({
+							method: 'GET',
+							url: 'https://wechat.api.kohaku.xin:11731/login',
+							data: {
+								openID: getApp().globalData.userID,
+								username: getApp().globalData.userName,
+								avater: getApp().globalData.avaterUrl
+							},
+						
+							success(res) {
+								// console.log(res.data.token);
+								// getApp().globalData.token=res.data.token;
+								uni.request({
+									method: 'GET',
+									url: 'https://wechat.api.kohaku.xin:11731/getprofile',
+									data: {
+										openid: getApp().globalData.userID
+									},
+						
+									success(res) {
+										console.log(res);
+						
+										getApp().globalData.userName = res.data.name;
+										getApp().globalData.avaterUrl = res.data.avatar;
+										getApp().globalData.sex = res.data.sex;
+										getApp().globalData.pre = res.data.pre;
+										getApp().globalData.tosex = res.data.tosex;
+										that.userName = getApp().globalData.userName;
+										that.avatarUrl = getApp().globalData.avaterUrl;
+										if (that.goEasy.getConnectionStatus() === 'disconnected') {
+											getApp().globalData.imService = new IMService(that.goEasy, that
+												.GoEasy);
+											getApp().globalData.imService.connect({
+												uuid: getApp().globalData.userID,
+												avatar: getApp().globalData.avaterUrl,
+												name: getApp().globalData.userName
+											});
+											uni.setStorageSync('currentUser', {
+												uuid: getApp().globalData.userID,
+												avatar: getApp().globalData.avaterUrl,
+												name: getApp().globalData.userName
+											});
+										}
+										if (getApp().globalData.pre === '[]') {
+											uni.showModal({
+												content: "看来您是首次登录匿名聊天\n先来设置个人资料吧",
+												showCancel: false,
+												confirmText: "好耶！",
+												success: function(res) {
+													if (res.confirm) {
+														uni.navigateTo({
+															url: '/pages/me/editprofile/editprofile'
+														});
+													}
+												}
+											})
+										}
+										// getApp().globalData.token=res.data.token;
+						
+									}
+								})
+						
+							}
+						})
+					}
+					
+				} else {
 					let that = this;
 					uni.request({
 						method: 'GET',
@@ -176,7 +341,7 @@
 							username: getApp().globalData.userName,
 							avater: getApp().globalData.avaterUrl
 						},
-					
+
 						success(res) {
 							// console.log(res.data.token);
 							// getApp().globalData.token=res.data.token;
@@ -186,14 +351,15 @@
 								data: {
 									openid: getApp().globalData.userID
 								},
-					
+
 								success(res) {
 									console.log(res);
-					
+
 									getApp().globalData.userName = res.data.name;
 									getApp().globalData.avaterUrl = res.data.avatar;
 									getApp().globalData.sex = res.data.sex;
 									getApp().globalData.pre = res.data.pre;
+									getApp().globalData.tosex = res.data.tosex;
 									that.userName = getApp().globalData.userName;
 									that.avatarUrl = getApp().globalData.avaterUrl;
 									if (that.goEasy.getConnectionStatus() === 'disconnected') {
@@ -225,10 +391,10 @@
 										})
 									}
 									// getApp().globalData.token=res.data.token;
-					
+
 								}
 							})
-					
+
 						}
 					})
 				}

@@ -17,6 +17,8 @@
 			avaterUrl: '',
 			sex:'u',
 			pre:'',
+			tosex:'e',
+			islogin:false,
 			token:0
 		}
 	}
