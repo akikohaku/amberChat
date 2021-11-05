@@ -12,17 +12,18 @@
 		</view>
 		<view class="me-menu">
 			<view class="me-menu-item" @click="toprofile()">编辑个人资料</view>
+			<view class="me-menu-item red" @click="cleancache()">清除缓存</view>
 			<!-- <view class="me-menu-item" @click="toset()">设置</view> -->
 			<!-- <view class="me-menu-item red">登出</view> -->
 			<view class="me-menu-line"></view>
-			<view class="me-menu-item" @click="login1()">id1</view>
-			<view class="me-menu-item" @click="login2()">id2</view>
+			<!-- <view class="me-menu-item" @click="login1()">id1</view>
+			<view class="me-menu-item" @click="login2()">id2</view> -->
 		</view>
 
 		<!-- 		<hr/>
 		<view>{{userID}}</view>
 		<view>{{userName}}</view> -->
-		<view class="uni-list-cell">
+<!-- 		<view class="uni-list-cell">
 			<view class="uni-list-cell-left-2">
 				id
 			</view>
@@ -41,8 +42,8 @@
 			</view>
 		</view>
 		<!-- <view @click="connect()">连接</view> -->
-		<view class="login" @click="setid()">设定id</view>
-		<view class="login" @click="loginmain()">登录</view>
+<!-- 		<view class="login" @click="setid()">设定id</view>
+		<view class="login" @click="loginmain()">登录</view> -->
 	</view>
 </template>
 
@@ -171,6 +172,23 @@
 				this.codeurl = this.getUrlCode().code; //获取code
 				this.getCode();
 			},
+			cleancache(){
+				uni.showModal({
+					title:"不好！",
+					content: "您似乎是要清除缓存\n这合理吗？",
+					confirmText: "合理！",
+					cancelText:"不对！",
+					success: function(res) {
+						if (res.confirm) {
+							uni.clearStorage();
+							uni.showToast({
+								title: "EXEC_CLEAN"
+							})
+						}
+					}
+				})
+				
+			},
 			loginmain() {
 				let ua = window.navigator.userAgent.toLowerCase();
 				if (ua.match(/MicroMessenger/i) == 'micromessenger') {
@@ -191,7 +209,11 @@
 								getApp().globalData.userID = res.data.data.openid;
 								getApp().globalData.avaterUrl = res.data.data.headimgurl;
 								getApp().globalData.userName = res.data.data.nickname;
-								uni.setStorageSync('openid', {id:res.data.data.openid});
+								uni.setStorageSync('openid', {
+									id:res.data.data.openid,
+									name:res.data.data.nickname,
+									avatar:res.data.data.headimgurl
+									});
 								// console.log("用户id", useropenId);
 								// console.log("用户头像", avatarUrl);
 								// console.log("用户名称", username);
@@ -241,6 +263,7 @@
 												getApp().globalData.islogin=true;
 												if (getApp().globalData.pre === '[]') {
 													uni.showModal({
+														title:"哇哦！",
 														content: "看来您是首次登录匿名聊天\n先来设置个人资料吧",
 														showCancel: false,
 														confirmText: "好耶！",
@@ -310,6 +333,7 @@
 										}
 										if (getApp().globalData.pre === '[]') {
 											uni.showModal({
+												title:"哇哦！",
 												content: "看来您是首次登录匿名聊天\n先来设置个人资料吧",
 												showCancel: false,
 												confirmText: "好耶！",
@@ -332,6 +356,15 @@
 					}
 					
 				} else {
+					uni.showModal({
+						title:"啊哦？",
+						content: "只支持在微信登录哟",
+						showCancel: false,
+						confirmText: "好吧qwq",
+						success: function(res) {
+						}
+					})
+					return;
 					let that = this;
 					uni.request({
 						method: 'GET',
@@ -376,8 +409,9 @@
 											name: getApp().globalData.userName
 										});
 									}
-									if (getApp().globalData.pre === '') {
+									if (getApp().globalData.pre === '[]') {
 										uni.showModal({
+											title:"哇哦！",
 											content: "看来您是首次登录匿名聊天\n先来设置个人资料吧",
 											showCancel: false,
 											confirmText: "好耶！",

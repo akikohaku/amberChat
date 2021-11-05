@@ -73,16 +73,17 @@
 				title: 'Hello',
 				avatar: '',
 				isclicked: false,
-				toid: ''
+				toid: '',
+				isconform: false
 			}
 		},
 		onLoad() {
 
 		},
-		onReady(){
-			var openid=uni.getStorageSync('openid');
-			if(openid.id!=undefined){
-				getApp().globalData.userID=openid.id;
+		onReady() {
+			var openid = uni.getStorageSync('openid');
+			if (openid.id != undefined) {
+				getApp().globalData.userID = openid.id;
 				let that = this;
 				uni.request({
 					method: 'GET',
@@ -92,7 +93,7 @@
 						username: getApp().globalData.userName,
 						avater: getApp().globalData.avaterUrl
 					},
-				
+
 					success(res) {
 						// console.log(res.data.token);
 						// getApp().globalData.token=res.data.token;
@@ -102,10 +103,10 @@
 							data: {
 								openid: getApp().globalData.userID
 							},
-				
+
 							success(res) {
 								console.log(res);
-				
+
 								getApp().globalData.userName = res.data.name;
 								getApp().globalData.avaterUrl = res.data.avatar;
 								getApp().globalData.sex = res.data.sex;
@@ -129,6 +130,7 @@
 								}
 								if (getApp().globalData.pre === '[]') {
 									uni.showModal({
+										title: "哇哦！",
 										content: "看来您是首次登录匿名聊天\n先来设置个人资料吧",
 										showCancel: false,
 										confirmText: "好耶！",
@@ -142,23 +144,39 @@
 									})
 								}
 								// getApp().globalData.token=res.data.token;
-				
+
 							}
 						})
-				
+
+					}
+				})
+			} else {
+				uni.showModal({
+					title: "等等！",
+					content: "您还没有登录吧？",
+					confirmText: "这就去！",
+					showCancel: false,
+					success: function(res) {
+						if (res.confirm) {
+							uni.switchTab({
+								url: '/pages/me/me'
+							});
+							return;
+						}
 					}
 				})
 			}
 		},
 		onshow() {
+			this.isconform = false;
 			if (this.goEasy.getConnectionStatus() === 'disconnected') {
 				getApp().globalData.imService = new IMService(this.goEasy, this.GoEasy);
 				getApp().globalData.imService.connect(getApp().globalData.userID);
 			}
-			if(!getApp().globalData.islogin){
+			if (!getApp().globalData.islogin) {
 				uni.showToast({
 					title: "未登录",
-					icon:'error'
+					icon: 'error'
 				})
 				uni.switchTab({
 					url: '/pages/me/me'
@@ -200,7 +218,7 @@
 					url: 'https://wechat.api.kohaku.xin:11731/startchat',
 					data: {
 						openid: getApp().globalData.userID,
-						toopenid:uuid
+						toopenid: uuid
 					},
 					success(res) {
 						uni.navigateTo({
@@ -208,46 +226,75 @@
 						})
 					}
 				})
-				
+
 			},
 			matchClick() {
 				if (this.goEasy.getConnectionStatus() === 'disconnected') {
 					uni.switchTab({
-						url: '../../pages/me/me'
+						url: 'pages/me/me'
 					});
 					return;
 				}
-				if(getApp().globalData.userID==''){
+				if (getApp().globalData.userID == '') {
 					uni.showToast({
 						title: "未登录",
-						icon:'error'
+						icon: 'error'
 					})
 					uni.switchTab({
 						url: '/pages/me/me'
 					});
 					return;
 				}
-				if(getApp().globalData.pre=='[]'){
+				if (getApp().globalData.pre == '[]') {
 					uni.showToast({
 						title: "请设置爱好",
-						icon:'error'
+						icon: 'error'
 					})
 					uni.switchTab({
 						url: '/pages/me/me'
 					});
 					return;
 				}
-				if(getApp().globalData.sex=='u'){
+				if (getApp().globalData.sex == 'u') {
 					uni.showToast({
 						title: "请设置性别",
-						icon:'error'
+						icon: 'error'
 					})
 					uni.switchTab({
 						url: '/pages/me/me'
 					});
 					return;
 				}
+				var openid = uni.getStorageSync('openid');
+				let that = this;
 				if (!this.isclicked) {
+					if (openid.name == getApp().globalData.userName || openid.avatar == getApp().globalData.avaterUrl) {
+						uni.showModal({
+							title: "等等！",
+							content: "您似乎使用的是微信的昵称或头像\n这值得吗？",
+							confirmText: "这就改掉！",
+							cancelText: "值得！",
+							success: function(res) {
+								if (res.confirm) {
+									uni.navigateTo({
+										url: '/pages/me/editprofile/editprofile'
+									});
+									that.isconform = true;
+
+								} else {
+									that.isconform = false;
+									that.match();
+								}
+							}
+						})
+					}
+				}else{
+					this.match();
+				}
+
+			},
+			match() {
+				if (!this.isclicked && !this.isconform) {
 					console.log("clicked");
 					console.log(this.goEasy.getConnectionStatus());
 					uni.request({
@@ -273,14 +320,14 @@
 					this.$refs.mfz.$el.style.display = 'block';
 					this.$refs.mfz2.$el.style.display = 'block';
 					setTimeout(() => {
-						if (this.isclicked) {
+						if (this.isclicked && !this.isconform) {
 							this.$refs.buttoncontent3.$el.style.height = '100px';
 							this.$refs.buttonwait.$el.style.opacity = '100';
 						}
 					}, 400)
 					setTimeout(() => {
 						let that = this;
-						if (this.isclicked) {
+						if (this.isclicked && !this.isconform) {
 							uni.request({
 								method: 'GET',
 								url: 'https://wechat.api.kohaku.xin:11731/match',
@@ -298,32 +345,67 @@
 											data: {
 												openID: friendid,
 											},
-							
+
 											success(res) {
-												if (that.isclicked) {
+												if (that.isclicked && !that.isconform) {
 													console.log(res.data);
 													that.avatar = res.data.avater;
 													that.$refs.matchfriendimg.$el.style.opacity =
-													'100';
+														'100';
 													that.$refs.matchinfo.$el.style.opacity = '100';
 													that.$refs.buttonwait.$el.style.opacity = '0';
 												}
-							
+
 											}
 										})
 									} else {
 										//匹配失败
-										uni.showToast({
-											title: "匹配失败",
-											icon:'error'
+										uni.showModal({
+											title: "诶？",
+											content: "匹配失败了\n好像是这样的？",
+											showCancel: false,
+											confirmText: "(´；ω；｀)",
+											success: function(res) {
+												uni.request({
+													method: 'GET',
+													url: 'https://wechat.api.kohaku.xin:11731/stopmatch',
+													data: {
+														openid: getApp().globalData.userID,
+													},
+													success(res) {
+														console.log(res);
+													}
+												})
+												this.$refs.buttoncontent3.$el.style.height = '0px';
+												this.$refs.buttonwait.$el.style.opacity = '0';
+												setTimeout(() => {
+													if (!this.isclicked && !this.isconform) {
+														this.$refs.mfz.$el.style.display = 'none';
+														this.$refs.mfz2.$el.style.display = 'none';
+														this.$refs.buttonstart.$el.style.width = '40px';
+														this.$refs.buttonstart3.$el.style.height = '40px';
+														this.$refs.buttonstart2.$el.style.height = '45px';
+														this.$refs.buttonstart2.$el.style.margin = '65px 0 0 255px';
+														this.$refs.buttonstart4.$el.style.width = '45px';
+														this.$refs.buttonstart4.$el.style.margin = '105px 0 0 215px';
+														this.$refs.buttonstart5.$el.style.width = '40px';
+														this.$refs.buttoncontent1.$el.style.width = '50px';
+														this.$refs.buttoncontent2.$el.style.height = '110px';
+														this.$refs.matchingcircle.$el.style.opacity = '0';
+														this.$refs.matchfriendimg.$el.style.opacity = '0';
+														this.$refs.matchinfo.$el.style.opacity = '0';
+													}
+												}, 400)
+												this.isclicked = false;
+											}
 										})
 									}
-							
+
 								}
 							})
 						}
-						
-						
+
+
 
 
 					}, 6000)
@@ -342,7 +424,7 @@
 					this.$refs.buttoncontent3.$el.style.height = '0px';
 					this.$refs.buttonwait.$el.style.opacity = '0';
 					setTimeout(() => {
-						if (!this.isclicked) {
+						if (!this.isclicked && !this.isconform) {
 							this.$refs.mfz.$el.style.display = 'none';
 							this.$refs.mfz2.$el.style.display = 'none';
 							this.$refs.buttonstart.$el.style.width = '40px';
@@ -361,7 +443,6 @@
 					}, 400)
 					this.isclicked = false;
 				}
-
 			},
 			moveHandle() {}
 		}

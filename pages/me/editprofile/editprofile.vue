@@ -285,7 +285,7 @@
 					success(res) {
 						console.log(res);
 						getApp().globalData.userName = that.userName;
-						getApp().globalData.sex = that.sex;
+						getApp().globalData.sex = that.array[that.index].value;
 						getApp().globalData.pre = JSON.stringify(that.formData.hobby);
 						getApp().globalData.tosex=that.array2[that.index2].value;
 						if (that.goEasy.getConnectionStatus() === 'connected') {
@@ -449,6 +449,7 @@
 		width: 100%;
 		display: flex;
 		flex-direction: column;
+		margin-bottom: 100px;
 	}
 
 	.uni-list:after {
@@ -651,7 +652,7 @@
 	.upload {
 		width: 100vw;
 		height: 50px;
-		position: absolute;
+		position: fixed;
 		bottom: 0rpx;
 		text-align: center;
 		padding-top: 10px;

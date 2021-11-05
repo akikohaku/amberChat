@@ -1,7 +1,7 @@
 <template>
     <scroll-view class="conversations" scroll-y="true">
 		<view v-if="conversations.length !=0">
-			<view class="scroll-item" v-for="(conversation, key) in conversations" :key="key">
+			<view class="scroll-item" v-for="(conversation, key) in conversations" :key="key" @click="navigateToChat(conversation)">
 				<view class="item-head">
 					<image :src="conversation.data.avatar" class="head-icon"></image>
 					<view class="item-head_unread" v-if="conversation.unread">{{conversation.unread}}</view>
@@ -12,7 +12,7 @@
 						<view class="item-info-top_time">{{formatDate(conversation.lastMessage.timestamp)}}</view>
 					</view>
 					<view class="item-info-bottom">
-						<view class="item-info-bottom-item" @click="navigateToChat(conversation)">
+						<view class="item-info-bottom-item" >
 							<view class="item-info-top_content" v-if="conversation.lastMessage.type == 'text'">{{conversation.lastMessage.payload.text}}</view>
 							<view class="item-info-top_content" v-else-if="conversation.lastMessage.type == 'video'">[视频消息]</view>
 							<view class="item-info-top_content" v-else-if="conversation.lastMessage.type == 'audio'">[语音消息]</view>
@@ -119,6 +119,93 @@
 				}
 			});
 		},
+		onReady() {
+			var openid = uni.getStorageSync('openid');
+			if (openid.id != undefined) {
+				getApp().globalData.userID = openid.id;
+				let that = this;
+				uni.request({
+					method: 'GET',
+					url: 'https://wechat.api.kohaku.xin:11731/login',
+					data: {
+						openID: getApp().globalData.userID,
+						username: getApp().globalData.userName,
+						avater: getApp().globalData.avaterUrl
+					},
+		
+					success(res) {
+						// console.log(res.data.token);
+						// getApp().globalData.token=res.data.token;
+						uni.request({
+							method: 'GET',
+							url: 'https://wechat.api.kohaku.xin:11731/getprofile',
+							data: {
+								openid: getApp().globalData.userID
+							},
+		
+							success(res) {
+								console.log(res);
+		
+								getApp().globalData.userName = res.data.name;
+								getApp().globalData.avaterUrl = res.data.avatar;
+								getApp().globalData.sex = res.data.sex;
+								getApp().globalData.pre = res.data.pre;
+								getApp().globalData.tosex = res.data.tosex;
+								that.userName = getApp().globalData.userName;
+								that.avatarUrl = getApp().globalData.avaterUrl;
+								if (that.goEasy.getConnectionStatus() === 'disconnected') {
+									getApp().globalData.imService = new IMService(that.goEasy, that
+										.GoEasy);
+									getApp().globalData.imService.connect({
+										uuid: getApp().globalData.userID,
+										avatar: getApp().globalData.avaterUrl,
+										name: getApp().globalData.userName
+									});
+									uni.setStorageSync('currentUser', {
+										uuid: getApp().globalData.userID,
+										avatar: getApp().globalData.avaterUrl,
+										name: getApp().globalData.userName
+									});
+								}
+								if (getApp().globalData.pre === '[]') {
+									uni.showModal({
+										title: "哇哦！",
+										content: "看来您是首次登录匿名聊天\n先来设置个人资料吧",
+										showCancel: false,
+										confirmText: "好耶！",
+										success: function(res) {
+											if (res.confirm) {
+												uni.navigateTo({
+													url: '/pages/me/editprofile/editprofile'
+												});
+											}
+										}
+									})
+								}
+								// getApp().globalData.token=res.data.token;
+		
+							}
+						})
+		
+					}
+				})
+			} else {
+				uni.showModal({
+					title: "等等！",
+					content: "您还没有登录吧？",
+					confirmText: "这就去！",
+					showCancel: false,
+					success: function(res) {
+						if (res.confirm) {
+							uni.switchTab({
+								url: '/pages/me/me'
+							});
+							return;
+						}
+					}
+				})
+			}
+		},
 		methods : {
 			topConversation() {
 				uni.showLoading({
@@ -163,44 +250,55 @@
 				}
 			},
 			removeConversation() {
-				uni.showLoading({
-					title:"加载中...",
-					mask: true
-				});
-				let failedDescription = "删除失败";
-				let conversation = this.action.conversation;
-				this.action.show = false;
-				if(conversation.type === this.GoEasy.IM_SCENE.PRIVATE){
-					this.goEasy.im.removePrivateConversation({
-						userId: conversation.userId,
-						onSuccess: function () {
-							uni.hideLoading();
-						},
-						onFailed: function (error) {
-							uni.hideLoading();
-							uni.showToast({
-								title: failedDescription,
-								icon: "none"
+				uni.showModal({
+					title: "等等！",
+					content: "这一去便是永别\n您想好了吗？",
+					confirmText: "是的！",
+					cancelText: "不对！",
+					success: function(res) {
+						if (res.confirm) {
+							uni.showLoading({
+								title:"加载中...",
+								mask: true
 							});
-							console.log(error);
-						}
-					});
-				}else {
-					this.goEasy.im.removeGroupConversation({
-						groupId: conversation.groupId,
-						onSuccess: function () {
-							uni.hideLoading()
-						},
-						onFailed: function (error) {
-							uni.hideLoading();
-							uni.showToast({
-								title: failedDescription,
-								icon: "none"
-							});
-							console.log(error);
-						}
-					});
-				}
+							let failedDescription = "删除失败";
+							let conversation = this.action.conversation;
+							this.action.show = false;
+							if(conversation.type === this.GoEasy.IM_SCENE.PRIVATE){
+								this.goEasy.im.removePrivateConversation({
+									userId: conversation.userId,
+									onSuccess: function () {
+										uni.hideLoading();
+									},
+									onFailed: function (error) {
+										uni.hideLoading();
+										uni.showToast({
+											title: failedDescription,
+											icon: "none"
+										});
+										console.log(error);
+									}
+								});
+							}else {
+								this.goEasy.im.removeGroupConversation({
+									groupId: conversation.groupId,
+									onSuccess: function () {
+										uni.hideLoading()
+									},
+									onFailed: function (error) {
+										uni.hideLoading();
+										uni.showToast({
+											title: failedDescription,
+											icon: "none"
+										});
+										console.log(error);
+									}
+								});
+							}
+						} 
+					}
+				})
+				
 			},
 			renderConversations(content){
 				this.conversations = content.conversations || [];
@@ -212,19 +310,18 @@
 				this.unreadTotal = unreadTotal;
 				if(this.unreadTotal > 0) {
 					uni.setTabBarBadge({
-						index: 0,
+						index: 1,
 						text: this.unreadTotal.toString()
 					});
 				}else{
 					uni.removeTabBarBadge({
-						index: 0
+						index: 1
 					});
 				}
 			},
 			navigateToChat (conversation) {
-				let path = conversation.type === this.GoEasy.IM_SCENE.PRIVATE
-						? '/pages/privateChat/privateChat?to=' + conversation.userId
-						: '../chat/groupChat/groupChat?to=' + conversation.groupId;
+				let path = '/pages/privateChat/privateChat?to=' + conversation.userId
+
 				uni.navigateTo({
 					url: path
 				});

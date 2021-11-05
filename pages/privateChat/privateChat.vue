@@ -1,6 +1,6 @@
 <template>
 	<view class="chatInterface">
-		<view class="scroll-view">
+		<view class="scroll-view" ref="scrollview">
 			<view class="all-history-loaded">
 				{{allHistoryLoaded ? '已经没有更多的历史消息' : '下拉获取历史消息'}}
 			</view>
@@ -11,8 +11,7 @@
 					{{renderMessageDate(message, index)}}
 				</view>
 				<view class="message-item" :class="{'self' : message.senderId == (currentUser && currentUser.uuid)}">
-					<view class="avatar"
-						  v-if="message.senderId != (currentUser && currentUser.uuid)">
+					<view class="avatar" v-if="message.senderId != (currentUser && currentUser.uuid)">
 						<image :src="friend.avatar"></image>
 					</view>
 					<view class="avatar" v-else>
@@ -22,13 +21,16 @@
 						<b class="pending" v-if="message.status == 'sending'"></b>
 						<b class="send-fail" v-if="message.status == 'fail'"></b>
 						<view v-if="message.type == 'text'" v-html="renderTextMessage(message)"></view>
-						<image class="image-content" v-if="message.type == 'image'" :src="message.payload.url" :data-url="message.payload.url" @click="showImageFullScreen" mode="widthFix"></image>
-						<view class="video-snapshot"  v-if="message.type == 'video'" :data-url="message.payload.video.url" @click="playVideo">
+						<image class="image-content" v-if="message.type == 'image'" :src="message.payload.url"
+							:data-url="message.payload.url" @click="showImageFullScreen" mode="widthFix"></image>
+						<view class="video-snapshot" v-if="message.type == 'video'"
+							:data-url="message.payload.video.url" @click="playVideo">
 							<image :src="message.payload.thumbnail.url" mode="aspectFit"></image>
 							<view class="video-play-icon"></view>
 						</view>
-						<GoEasyAudioPlayer v-if="message.type =='audio'" :src="message.payload.url" :duration="message.payload.duration" />
-						<view class="custom-message" v-if="message.type == 'order'">
+						<GoEasyAudioPlayer v-if="message.type =='audio'" :src="message.payload.url"
+							:duration="message.payload.duration" />
+						<!-- <view class="custom-message" v-if="message.type == 'order'">
 							<view class="title">
 								<image src="../../static/images/dingdan.png"></image>
 								<text>自定义消息</text>
@@ -36,18 +38,21 @@
 							<view class="custom-message-item">编号：{{message.payload.number}}</view>
 							<view class="custom-message-item">商品: {{message.payload.goods}}</view>
 							<view class="custom-message-item">金额: {{message.payload.price}}</view>
-						</view>
+						</view> -->
 					</view>
 				</view>
 			</view>
 		</view>
 		<view class="action-box" v-if="!video.visible">
 			<view class="action-top">
-				<view :class="[audio.visible ? 'record-icon record-open':'record-icon']" @click="switchAudioKeyboard"></view>
-				<view class="record-input" @touchstart="onRecordStart" @touchend="onRecordEnd" v-if="audio.visible" >{{audio.recording ? '松开发送' : '按住录音'}}</view>
+				<!-- <view :class="[audio.visible ? 'record-icon record-open':'record-icon']" @click="switchAudioKeyboard"></view> -->
+				<view class="record-input" @touchstart="onRecordStart" @touchend="onRecordEnd" v-if="audio.visible">
+					{{audio.recording ? '松开发送' : '按住录音'}}
+				</view>
 				<view class="message-input" v-else>
 					<!-- GoEasyIM最大支持3k的文本消息，如需发送长文本，需调整输入框maxlength值 -->
-					<input type="text" maxlength="700" placeholder="发送消息" v-model="content" @focus="messageInputFocusin">
+					<textarea type="text" rows="1"maxlength="1000"  v-model="content"
+						@focus="messageInputFocusin()" onscroll="this.rows++;"></textarea>
 				</view>
 				<view class="file-icon emoji-icon" @click="showEmoji"></view>
 				<view class="file-icon more-icon" @click="showMore"></view>
@@ -55,7 +60,8 @@
 			</view>
 			<!--展示表情列表-->
 			<view class="action-bottom" v-if="emoji.show" style="justify-content: space-around">
-				<image class="emoji-item" v-for="(emojiItem, emojiKey, index) in emoji.map" :key="index" :src="emoji.url + emojiItem" @click="selectEmoji(emojiKey)"></image>
+				<image class="emoji-item" v-for="(emojiItem, emojiKey, index) in emoji.map" :key="index"
+					:src="emoji.url + emojiItem" @click="selectEmoji(emojiKey)"></image>
 			</view>
 			<!--更多-->
 			<view class="action-bottom" v-if="more.show">
@@ -67,14 +73,15 @@
 					<image src="../../static/images/shipin.png"></image>
 					<text>视频</text>
 				</view>
-				<view class="more-item" @click="showCustomMessageForm">
+				<!-- 				<view class="more-item" @click="showCustomMessageForm">
 					<image src="../../static/images/zidingyi.png"></image>
 					<text>自定义消息</text>
-				</view>
+				</view> -->
 			</view>
 		</view>
 		<view class="record-loading" v-if="audio.recording"></view>
-		<video v-if="video.visible" :src="video.url" id="videoPlayer" @fullscreenchange="onVideoFullScreenChange"></video>
+		<video v-if="video.visible" :src="video.url" id="videoPlayer"
+			@fullscreenchange="onVideoFullScreenChange"></video>
 	</view>
 </template>
 
@@ -85,7 +92,7 @@
 
 	export default {
 		name: "privateChat",
-		components : {
+		components: {
 			GoEasyAudioPlayer,
 		},
 		data() {
@@ -109,75 +116,76 @@
 				allHistoryLoaded: false,
 
 				//定义表情列表
-				emoji : {
-					url : emojiUrl,
-					map : emojiMap,
-                    show: false,
-                    decoder:  new EmojiDecoder(emojiUrl, emojiMap),
+				emoji: {
+					url: emojiUrl,
+					map: emojiMap,
+					show: false,
+					decoder: new EmojiDecoder(emojiUrl, emojiMap),
 				},
-				more : {//更多按钮
-					show : false
+				more: { //更多按钮
+					show: false
 				},
-				audio : {
+				audio: {
 					//语音录音中
-					recording : false,
+					recording: false,
 					//录音按钮展示
-					visible : false
+					visible: false
 				},
-				video : {
-					visible : false,
-					url : '',
-					context : null
+				video: {
+					visible: false,
+					url: '',
+					context: null
 				}
 			}
 		},
-		onReady () {
-			this.video.context = uni.createVideoContext('videoPlayer',this);
+		onReady() {
+			this.video.context = uni.createVideoContext('videoPlayer', this);
 			// https://uniapp.dcloud.io/api/ui/navigationbar?id=setnavigationbartitle
-			
+
 		},
-		onShow () {
+		onShow() {
 			this.more.show = false;
 			this.emoji.show = false;
+			this.scrollToBottom();
 		},
 		onLoad(options) {
-			var that=this;
+			var that = this;
 			let imService = getApp().globalData.imService;
 			this.currentUser = uni.getStorageSync('currentUser');
 			//聊天对象
-            let friendId = options.to;
+			let friendId = options.to;
 			console.log(friendId);
-			
-            //从服务器获取最新的好友信息
+
+			//从服务器获取最新的好友信息
 			uni.request({
-			  method: 'GET',
-			  url: 'https://wechat.api.kohaku.xin:11731/getuserbyid',
-			  data:{
-					openID:friendId,
-			  },
-			  
-			  success(res) {
-			    console.log(res.data);
-				that.friend={
-					uuid:res.data.uuid,
-					name:res.data.name,
-					avatar:res.data.avater
+				method: 'GET',
+				url: 'https://wechat.api.kohaku.xin:11731/getuserbyid',
+				data: {
+					openID: friendId,
+				},
+
+				success(res) {
+					console.log(res.data);
+					that.friend = {
+						uuid: res.data.uuid,
+						name: res.data.name,
+						avatar: res.data.avater
+					}
+					console.log('onLoad friend - ', that.friend);
+					that.scrollToBottom();
+					//监听新消息
+
+					uni.setNavigationBarTitle({
+						title: that.friend.name
+					});
+
 				}
-				console.log('onLoad friend - ', that.friend);
-				
-				//监听新消息
-				
-				uni.setNavigationBarTitle({
-					title : that.friend.name
-				});
-				
-			  }
 			})
-            // this.friend = imService.findFriendById(friendId);
+			// this.friend = imService.findFriendById(friendId);
 			this.messages = imService.getPrivateMessages(friendId);
-			imService.onNewPrivateMessageReceive =  (friendId, message)=> {
+			imService.onNewPrivateMessageReceive = (friendId, message) => {
 				if (friendId === this.friend.uuid) {
-			        //聊天时，收到消息标记为已读
+					//聊天时，收到消息标记为已读
 					this.markPrivateMessageAsRead(friendId);
 					//收到新消息，是滚动到最底部
 					thia.scrollToBottom();
@@ -188,7 +196,7 @@
 			// 录音监听器
 			this.initRecorderListeners();
 			//收到的消息设置为已读
-			if(this.messages.length !==0){
+			if (this.messages.length !== 0) {
 				this.markPrivateMessageAsRead(friendId);
 			}
 		},
@@ -198,29 +206,30 @@
 		onUnload() {
 			//退出聊天页面之前，清空页面传入的监听器
 			let imService = getApp().globalData.imService;
-			if(imService) {
-				imService.onNewPrivateMessageReceive =  (friendId, message)=> {};
+			if (imService) {
+				imService.onNewPrivateMessageReceive = (friendId, message) => {};
 			}
 		},
 		methods: {
-            //渲染文本消息，如果包含表情，替换为图片
-		    //todo:本不需要该方法，可以在标签里完成，但小程序有兼容性问题，被迫这样实现
-            renderTextMessage(message) {
+			//渲染文本消息，如果包含表情，替换为图片
+			//todo:本不需要该方法，可以在标签里完成，但小程序有兼容性问题，被迫这样实现
+			renderTextMessage(message) {
+				console.log(message.payload.text);
 				return '<span class="text-content">' + this.emoji.decoder.decode(message.payload.text) + '</span>'
-            },
-            //像微信那样显示时间，如果有几分钟没发消息了，才显示时间
-            //todo:本不需要该方法，可以在标签里完成，但小程序有兼容性问题，被迫这样实现
-            renderMessageDate(message, index) {
-                if (index === 0) {
-                    return this.formatDate(message.timestamp)
-                } else {
-                    if (message.timestamp - this.messages[index - 1].timestamp > 5 * 60 * 1000) {
-                        return this.formatDate(message.timestamp)
-                    }
-                }
-                return '';
-            },
-			initRecorderListeners(){
+			},
+			//像微信那样显示时间，如果有几分钟没发消息了，才显示时间
+			//todo:本不需要该方法，可以在标签里完成，但小程序有兼容性问题，被迫这样实现
+			renderMessageDate(message, index) {
+				if (index === 0) {
+					return this.formatDate(message.timestamp)
+				} else {
+					if (message.timestamp - this.messages[index - 1].timestamp > 5 * 60 * 1000) {
+						return this.formatDate(message.timestamp)
+					}
+				}
+				return '';
+			},
+			initRecorderListeners() {
 				// 监听录音开始
 				recorderManager.onStart(() => {
 					this.audio.recording = true;
@@ -229,64 +238,64 @@
 				recorderManager.onStop((res) => {
 					this.audio.recording = false;
 					let audioMessage = this.goEasy.im.createAudioMessage({
-						to : {
-							id : this.friend.uuid,
-							type : this.GoEasy.IM_SCENE.PRIVATE,
-							data : {
-								name:this.friend.name,
-								avatar:this.friend.avatar
+						to: {
+							id: this.friend.uuid,
+							type: this.GoEasy.IM_SCENE.PRIVATE,
+							data: {
+								name: this.friend.name,
+								avatar: this.friend.avatar
 							}
 						},
 						file: res,
-						onProgress :function (progress) {
+						onProgress: function(progress) {
 							console.log(progress)
 						},
-						notification : {
-							title : this.currentUser.name + '发来一段语音',
-							body : '[语音消息]'		// 字段最长 50 字符
+						notification: {
+							title: this.currentUser.name + '发来一段语音',
+							body: '[语音消息]' // 字段最长 50 字符
 						}
 					});
 					this.sendMessage(audioMessage);
 				});
 				// 监听录音报错
-				recorderManager.onError(function(res){
-					console.log("录音报错：",res);
+				recorderManager.onError(function(res) {
+					console.log("录音报错：", res);
 				})
 			},
-			sendMessage(message){
-            	let toId = message.to.id;
+			sendMessage(message) {
+				let toId = message.to.id;
 				let imService = getApp().globalData.imService;
-            	let localHistory = imService.getPrivateMessages(toId);
+				let localHistory = imService.getPrivateMessages(toId);
 				localHistory.push(message);
 				this.goEasy.im.sendMessage({
 					message: message,
-					onSuccess: function (message) {
+					onSuccess: function(message) {
 						console.log("发送成功.", message);
 					},
-					onFailed: function (error) {
-						console.log("发送失败:",error);
+					onFailed: function(error) {
+						console.log("发送失败:", error);
 					}
 				});
 			},
-			sendTextMessage() {//发送消息
+			sendTextMessage() { //发送消息
 				if (this.content.trim() !== '') {
 					let body = this.content;
-					if(this.content.length >= 50){
-						body = this.content.substring(0,30)+"...";
+					if (this.content.length >= 50) {
+						body = this.content.substring(0, 30) + "...";
 					}
 					let textMessage = this.goEasy.im.createTextMessage({
 						text: this.content,
-						to : {
-							id : this.friend.uuid,
-							type : this.GoEasy.IM_SCENE.PRIVATE,
-							data : {
-								name:this.friend.name,
-								avatar:this.friend.avatar
+						to: {
+							id: this.friend.uuid,
+							type: this.GoEasy.IM_SCENE.PRIVATE,
+							data: {
+								name: this.friend.name,
+								avatar: this.friend.avatar
 							}
 						},
-						notification : {
-							title : this.currentUser.name + '发来一段文字',
-							body : body
+						notification: {
+							title: this.currentUser.name + '发来一段文字',
+							body: body
 						}
 					});
 					this.sendMessage(textMessage);
@@ -294,7 +303,7 @@
 				this.scrollToBottom();
 				this.content = "";
 			},
-			loadMoreHistoryMessage() {//历史消息
+			loadMoreHistoryMessage() { //历史消息
 				let self = this;
 				let lastMessageTimeStamp = Date.now();
 				let lastMessage = this.messages[0];
@@ -305,7 +314,7 @@
 				this.goEasy.im.history({
 					userId: self.friend.uuid,
 					lastTimestamp: lastMessageTimeStamp,
-					onSuccess: function (result) {
+					onSuccess: function(result) {
 						//获取本地记录
 						let imService = getApp().globalData.imService;
 						let localHistory = imService.getPrivateMessages(self.friend.uuid);
@@ -320,11 +329,11 @@
 						self.messages = localHistory;
 						uni.stopPullDownRefresh();
 					},
-					onFailed: function (error) {
+					onFailed: function(error) {
 						//获取失败
-						if(error.code === 401){
+						if (error.code === 401) {
 							console.log("获取历史消息失败,默认不开通，付费应用，可以在我的应用->查看详情，高级功能里自助开通");
-						}else{
+						} else {
 							console.log("获取历史消息失败, code:" + error.code + ",错误信息:" + error.content);
 						}
 						uni.stopPullDownRefresh();
@@ -334,48 +343,48 @@
 			//语音录制按钮和键盘输入的切换
 			switchAudioKeyboard() {
 				this.audio.visible = !this.audio.visible;
-				if(uni.authorize){
+				if (uni.authorize) {
 					uni.authorize({
-						scope : 'scope.record'
+						scope: 'scope.record'
 					})
 				}
 			},
-			onRecordStart () {
-				try{
+			onRecordStart() {
+				try {
 					recorderManager.start();
-				}catch(e){
+				} catch (e) {
 					uni.showModal({
 						title: '录音错误',
-						content : '请在app和小程序端体验录音，Uni官方明确H5不支持getRecorderManager, 详情查看Uni官方文档'
+						content: '请在app和小程序端体验录音，Uni官方明确H5不支持getRecorderManager, 详情查看Uni官方文档'
 					});
 				}
 			},
-			onRecordEnd () {
-				try{
+			onRecordEnd() {
+				try {
 					recorderManager.stop();
-				}catch(e){
+				} catch (e) {
 					console.log(e)
 				}
 			},
-			sendVideo () {//发送文件
+			sendVideo() { //发送文件
 				uni.chooseVideo({
-					success : (res) => {
+					success: (res) => {
 						let videoMessage = this.goEasy.im.createVideoMessage({
-							to : {
-								id : this.friend.uuid,
-								type : this.GoEasy.IM_SCENE.PRIVATE,
-								data : {
-									name:this.friend.name,
-									avatar:this.friend.avatar
+							to: {
+								id: this.friend.uuid,
+								type: this.GoEasy.IM_SCENE.PRIVATE,
+								data: {
+									name: this.friend.name,
+									avatar: this.friend.avatar
 								}
 							},
 							file: res,
-							onProgress :function (progress) {
+							onProgress: function(progress) {
 								console.log(progress)
 							},
-							notification : {
-								title : this.currentUser.name + '发来一个视频',
-								body : '[视频消息]'		// 字段最长 50 字符
+							notification: {
+								title: this.currentUser.name + '发来一个视频',
+								body: '[视频消息]' // 字段最长 50 字符
 							}
 						});
 						this.sendMessage(videoMessage);
@@ -384,94 +393,114 @@
 			},
 			sendImage() {
 				uni.chooseImage({
-					count :1,
-					success :(res) => {
+					count: 1,
+					success: (res) => {
 						let imageMessage = this.goEasy.im.createImageMessage({
-							to : {
-								id : this.friend.uuid,
-								type : this.GoEasy.IM_SCENE.PRIVATE,
-								data : {
-									name:this.friend.name,
-									avatar:this.friend.avatar
+							to: {
+								id: this.friend.uuid,
+								type: this.GoEasy.IM_SCENE.PRIVATE,
+								data: {
+									name: this.friend.name,
+									avatar: this.friend.avatar
 								}
 							},
 							file: res,
-							onProgress :function (progress) {
+							onProgress: function(progress) {
 								console.log(progress)
 							},
-							notification : {
-								title : this.currentUser.name + '发来一张图片',
-								body : '[图片消息]'		// 字段最长 50 字符
+							notification: {
+								title: this.currentUser.name + '发来一张图片',
+								body: '[图片消息]' // 字段最长 50 字符
 							}
 						});
 						this.sendMessage(imageMessage);
 					}
 				});
 			},
-			showImageFullScreen (e) {
+			showImageFullScreen(e) {
 				var imagesUrl = [e.currentTarget.dataset.url];
 				uni.previewImage({
 					urls: imagesUrl
 				});
 			},
-			playVideo (e) {
+			playVideo(e) {
 				this.video.visible = true;
 				this.video.url = e.currentTarget.dataset.url;
 				this.$nextTick(() => {
 					this.video.context.requestFullScreen({
-						direction : 0
+						direction: 0
 					});
 					this.video.context.play();
 				});
 			},
-			onVideoFullScreenChange (e) {
+			onVideoFullScreenChange(e) {
 				//当退出全屏播放时，隐藏播放器
-				if(this.video.visible && !e.detail.fullScreen){
-				    this.video.visible = false;
-				    this.video.context.stop();
+				if (this.video.visible && !e.detail.fullScreen) {
+					this.video.visible = false;
+					this.video.context.stop();
 				}
 			},
-			messageInputFocusin () {
+			messageInputFocusin() {
 				this.more.show = false;
-				this.emoji.show = false
+				this.emoji.show = false;
+				setTimeout(() => {
+					this.$refs.scrollview.$el.style.margin = "0 0 0 0";
+					this.scrollToBottom();
+					},200)
+				
 			},
-			showEmoji () {
+			showEmoji() {
+				if (!this.emoji.show) {
+					this.$refs.scrollview.$el.style.margin = "0 0 170px 0";
+					this.scrollToBottom();
+				} else {
+					this.$refs.scrollview.$el.style.margin = "0 0 0 0";
+					this.scrollToBottom();
+				}
 				this.emoji.show = !this.emoji.show;
 				this.more.show = false;
 			},
-			showMore () {
+			showMore() {
+				if (!this.more.show) {
+					this.$refs.scrollview.$el.style.margin = "0 0 170px 0";
+					this.scrollToBottom();
+				} else {
+					this.$refs.scrollview.$el.style.margin = "0 0 0 0";
+					this.scrollToBottom();
+				}
 				this.more.show = !this.more.show;
+
 				this.emoji.show = false
 			},
-			selectEmoji (emojiKey) {
-				this.content +=emojiKey
+			selectEmoji(emojiKey) {
+				this.content += emojiKey
 			},
-			showCustomMessageForm () {
-            	let to = {
-            		id : this.friend.uuid,
-					name : this.friend.name,
-					avatar : this.friend.avatar,
-					type : this.GoEasy.IM_SCENE.PRIVATE
+			showCustomMessageForm() {
+				let to = {
+					id: this.friend.uuid,
+					name: this.friend.name,
+					avatar: this.friend.avatar,
+					type: this.GoEasy.IM_SCENE.PRIVATE
 				};
 				uni.navigateTo({
 					url: '../customMessage/customMessage?to=' + JSON.stringify(to)
 				});
 			},
-			scrollToBottom () {
-				this.$nextTick(function(){
+			scrollToBottom() {
+				this.$nextTick(function() {
 					uni.pageScrollTo({
 						scrollTop: 2000000,
-						duration : 10
+						duration: 10
 					})
 				});
 			},
-			markPrivateMessageAsRead (friendId) {
+			markPrivateMessageAsRead(friendId) {
 				this.goEasy.im.markPrivateMessageAsRead({
 					userId: friendId,
-					onSuccess: function () {
+					onSuccess: function() {
 						console.log('标记为已读成功')
 					},
-					onFailed: function (error) {
+					onFailed: function(error) {
 						console.log(error);
 					}
 				});
@@ -480,18 +509,19 @@
 	}
 </script>
 
-<style >
-	.chatInterface{
-	
-	}
-	.chatInterface .scroll-view{
+<style>
+	.chatInterface {}
+
+	.chatInterface .scroll-view {
+		/* height: auto; */
 		padding-left: 20rpx;
 		padding-right: 20rpx;
 		box-sizing: border-box;
 		-webkit-overflow-scrolling: touch;
 		padding-bottom: 120rpx;
 	}
-	.chatInterface .scroll-view .all-history-loaded{
+
+	.chatInterface .scroll-view .all-history-loaded {
 		font-size: 24rpx;
 		height: 90rpx;
 		line-height: 90rpx;
@@ -499,42 +529,44 @@
 		text-align: center;
 		color: grey;
 	}
-	
-	.chatInterface .scroll-view .message-item{
+
+	.chatInterface .scroll-view .message-item {
 		max-height: 400rpx;
 		margin-top: 30rpx;
 		margin-bottom: 30rpx;
 		overflow: hidden;
 		display: flex;
 	}
-	.chatInterface .scroll-view .message-item.self{
+
+	.chatInterface .scroll-view .message-item.self {
 		overflow: hidden;
 		display: flex;
 		justify-content: flex-start;
 		flex-direction: row-reverse;
 	}
-	.chatInterface .scroll-view .message-item .avatar{
+
+	.chatInterface .scroll-view .message-item .avatar {
 		width: 100rpx;
 		height: 100rpx;
-		margin-right:20rpx ;
+		margin-right: 20rpx;
 		flex-shrink: 0;
 		flex-grow: 0;
 		border-radius: 40rpx;
 	}
-	
-	.chatInterface .scroll-view .message-item .avatar image{
+
+	.chatInterface .scroll-view .message-item .avatar image {
 		width: 100%;
 		height: 100%;
 		border-radius: 25px;
 	}
-	
-	.chatInterface .scroll-view .message-item.self .avatar{
+
+	.chatInterface .scroll-view .message-item.self .avatar {
 		margin-left: 20rpx;
 		margin-right: 0;
 	}
-	
-	
-	.chatInterface .scroll-view .content{
+
+
+	.chatInterface .scroll-view .content {
 		font-size: 34rpx;
 		line-height: 44rpx;
 		max-height: 400rpx;
@@ -543,31 +575,39 @@
 		justify-content: right;
 		text-align: right;
 	}
-	.chatInterface .scroll-view .content .image-content{
+
+	.chatInterface .scroll-view .content .image-content {
 		padding: 16rpx;
 		border-radius: 12rpx;
 		width: 300rpx;
 		height: 300rpx;
 	}
-	.chatInterface .scroll-view .content .text-content{
+
+	.chatInterface .scroll-view .content .text-content {
 		padding: 16rpx;
 		border-radius: 12rpx;
 		color: #ffffff;
-		background:#618DFF;
-		word-break: break-all;
+		background: #618DFF;
+		/* word-break: break-all; */
+
+		word-break: normal;
 		text-align: left;
 		vertical-align: center;
 		display: block;
+		white-space: pre-wrap;
+		word-wrap: break-word;
 	}
-	.chatInterface .scroll-view .content .text-content img{
+
+	.chatInterface .scroll-view .content .text-content img {
 		width: 50rpx;
 		height: 50rpx;
 	}
-	.chatInterface .scroll-view .content .red-packet{
+
+	.chatInterface .scroll-view .content .red-packet {
 		background-color: orange;
 		color: #FFFFFF;
 		font-size: 30rpx;
-		width:400rpx;
+		width: 400rpx;
 		height: 150rpx;
 		border-radius: 10rpx;
 		line-height: 80rpx;
@@ -576,11 +616,13 @@
 		display: flex;
 		justify-content: space-between;
 	}
-	.chatInterface .scroll-view .content .red-packet image{
-		width:70rpx;
+
+	.chatInterface .scroll-view .content .red-packet image {
+		width: 70rpx;
 		height: 80rpx;
 	}
-	.chatInterface .scroll-view .content .pending{
+
+	.chatInterface .scroll-view .content .pending {
 		background: url("../../static/images/pending.gif") no-repeat center;
 		background-size: 30rpx;
 		width: 30rpx;
@@ -589,8 +631,8 @@
 		flex-grow: 0;
 		flex-shrink: 0;
 	}
-	
-	.chatInterface .scroll-view .content .send-fail{
+
+	.chatInterface .scroll-view .content .send-fail {
 		background: url("../../static/images/failed.png") no-repeat center;
 		background-size: 30rpx;
 		width: 30rpx;
@@ -599,8 +641,9 @@
 		flex-grow: 0;
 		flex-shrink: 0;
 	}
-	
-	.chatInterface .action-box{
+
+	.chatInterface .action-box {
+
 		display: flex;
 		backdrop-filter: blur(0.27rpx);
 		width: 100%;
@@ -610,16 +653,18 @@
 		flex-direction: column;
 		background-color: #FFFFFF;
 	}
-	.chatInterface .action-box .action-top{
+
+	.chatInterface .action-box .action-top {
 		display: flex;
 		padding-top: 20rpx;
 		padding-bottom: 20rpx;
 		backdrop-filter: blur(0.27rem);
 		height: 100rpx;
-		background:#FAFAFA;
+		background: #FAFAFA;
 		width: 100%;
 	}
-	.chatInterface .action-box .action-top .record-icon{
+
+	.chatInterface .action-box .action-top .record-icon {
 		font-size: 32rpx;
 		width: 80rpx;
 		height: 80rpx;
@@ -627,36 +672,42 @@
 		text-align: center;
 		background: url("../../static/images/record-appearance-icon.png") no-repeat center;
 		background-size: 50%;
-		-webkit-tap-highlight-color:rgba(0,0,0,0);
+		-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 	}
-	.chatInterface .action-box .action-top .file-icon{
+
+	.chatInterface .action-box .action-top .file-icon {
 		background: url("../../static/images/video.png") no-repeat center;
 		background-size: 70%;
 		color: #9D9D9D;
 		position: relative;
-		width:80rpx;
+		width: 80rpx;
 		height: 80rpx;
 		line-height: 80rpx;
-		-webkit-tap-highlight-color:rgba(0,0,0,0);
+		-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 	}
-	.chatInterface .action-box .record-icon.record-open{
+
+	.chatInterface .action-box .record-icon.record-open {
 		background: url("../../static/images/jianpan.png") no-repeat center;
 		background-size: 70%;
-		-webkit-tap-highlight-color:rgba(0,0,0,0);
+		-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 	}
-	.chatInterface .action-box .action-top .img-video{
+
+	.chatInterface .action-box .action-top .img-video {
 		background: url("../../static/images/file.png") no-repeat center;
 		background-size: 73%;
 	}
-	.chatInterface .action-box .action-top .emoji-icon{
+
+	.chatInterface .action-box .action-top .emoji-icon {
 		background: url("../../static/images/emoji.png") no-repeat center;
 		background-size: 60%;
 	}
-	.chatInterface .action-box .action-top .more-icon{
+
+	.chatInterface .action-box .action-top .more-icon {
 		background: url("../../static/images/more.png") no-repeat center;
 		background-size: 70%;
 	}
-	.chatInterface .action-box .action-bottom .more-item{
+
+	.chatInterface .action-box .action-bottom .more-item {
 		display: flex;
 		flex-direction: column;
 		width: 150rpx;
@@ -664,16 +715,19 @@
 		margin-right: 20rpx;
 		align-items: center;
 	}
-	.chatInterface .action-box .action-bottom .more-item image{
+
+	.chatInterface .action-box .action-bottom .more-item image {
 		height: 100rpx;
 		width: 100rpx;
 	}
-	.chatInterface .action-box .action-bottom .more-item text{
+
+	.chatInterface .action-box .action-bottom .more-item text {
 		font-size: 20rpx;
 		text-align: center;
 		line-height: 50rpx;
 	}
-	.chatInterface .action-box .action-top .record-input{
+
+	.chatInterface .action-box .action-top .record-input {
 		width: 460rpx;
 		height: 80rpx;
 		line-height: 80rpx;
@@ -683,40 +737,63 @@
 		color: #ffffff;
 		text-align: center;
 	}
-	.chatInterface .action-box .action-top .message-input{
+
+	.chatInterface .action-box .action-top .message-input {
 		border-radius: 12rpx;
 		background: #EFEFEF;
 		height: 80rpx;
+		align-items: center;
+		justify-content: center;
 	}
-	.chatInterface .action-box .action-top .message-input input{
-		width: 420rpx;
+
+	.message-input {
+		margin-left: 10rpx;
+		display: table-cell;
+		vertical-align: middle;
+	}
+
+	.chatInterface .action-box .action-top .message-input input {
+		width: 480rpx;
 		height: 80rpx;
 		line-height: 80rpx;
 		padding-left: 20rpx;
 		font-size: 28rpx;
 	}
-	.chatInterface .action-box .action-top .send-message-btn{
+	.chatInterface .action-box .action-top .message-input textarea {
+		padding-top: 20rpx;
+		width: 480rpx;
+		height: 60rpx;
+		line-height: 40rpx;
+		padding-left: 20rpx;
+		font-size: 28rpx;
+		outline: none;
+		overflow: hidden;
+	}
+
+	.chatInterface .action-box .action-top .send-message-btn {
 		font-size: 30rpx;
 		width: 80rpx;
 		line-height: 80rpx;
-		color:#82868E ;
+		color: #82868E;
 	}
-	.chatInterface .action-bottom{
+
+	.chatInterface .action-bottom {
 		height: 300rpx;
-		width:100%;
+		width: 100%;
 		padding: 20rpx;
 		box-sizing: border-box;
 		display: flex;
 	}
-	.chatInterface .action-bottom image{
-		width:100rpx;
+
+	.chatInterface .action-bottom image {
+		width: 100rpx;
 		height: 100rpx;
 	}
-	
-	
-	.chatInterface .record-loading{
+
+
+	.chatInterface .record-loading {
 		position: fixed;
-		top:50%;
+		top: 50%;
 		left: 50%;
 		width: 300rpx;
 		height: 300rpx;
@@ -726,7 +803,8 @@
 		background-size: 100%;
 		border-radius: 40rpx;
 	}
-	.chatInterface .img-layer{
+
+	.chatInterface .img-layer {
 		position: absolute;
 		top: 0;
 		left: 0;
@@ -739,23 +817,26 @@
 		justify-content: center;
 		align-items: center;
 	}
+
 	.chatInterface .img-layer uni-image {
-		height: 100%!important;
+		height: 100% !important;
 	}
+
 	.chatInterface .img-layer {
-		height: 100%!important;
-		width: 100%!important;
+		height: 100% !important;
+		width: 100% !important;
 	}
-	
-	
-	.chatInterface .content .file-content .file-info{
+
+
+	.chatInterface .content .file-content .file-info {
 		height: 0.5rem;
 		width: 1.5rem;
 		display: flex;
 		flex-direction: column;
 		padding: 0 0.1rem;
 	}
-	.chatInterface .content .file-content .file-info .title{
+
+	.chatInterface .content .file-content .file-info .title {
 		height: 0.3rem;
 		line-height: 0.3rem;
 		overflow: hidden;
@@ -767,7 +848,8 @@
 		color: #262628;
 		text-align: left;
 	}
-	.chatInterface .content .file-content .file-info .size{
+
+	.chatInterface .content .file-content .file-info .size {
 		font-size: 0.14rem;
 		height: 0.2rem;
 		line-height: 0.2rem;
@@ -779,53 +861,59 @@
 		color: #999999;
 		text-align: left;
 	}
-	.chatInterface .video-snapshot{
+
+	.chatInterface .video-snapshot {
 		position: relative;
 		height: 300rpx;
 		max-width: 400rpx;
 		background: #000000;
 	}
-	.chatInterface .video-snapshot image{
+
+	.chatInterface .video-snapshot image {
 		max-height: 300rpx;
 		max-width: 400rpx;
 	}
-	.chatInterface .video-snapshot video{
+
+	.chatInterface .video-snapshot video {
 		max-height: 300rpx;
 		max-width: 400rpx;
 	}
-	
-	.chatInterface .video-snapshot .video-play-icon{
+
+	.chatInterface .video-snapshot .video-play-icon {
 		position: absolute;
 		width: 40rpx;
 		height: 40rpx;
 		border-radius: 20rpx;
-		background:url("../../static/images/play.png") no-repeat center;
+		background: url("../../static/images/play.png") no-repeat center;
 		background-size: 100%;
-		top:50%;
+		top: 50%;
 		left: 50%;
-		margin:-20rpx;
+		margin: -20rpx;
 	}
-	
-	.chatInterface .group-icon{
+
+	.chatInterface .group-icon {
 		right: 20rpx;
 		width: 60rpx;
 		height: 60rpx;
-		top:14rpx;
+		top: 14rpx;
 		position: fixed;
 		right: 20rpx;
-		top:120rpx;
+		top: 120rpx;
 		background-color: #C4C4C4;
 		z-index: 2;
 		border-radius: 60rpx;
 	}
-	.uni-toast{
-		background-color: #ffffff!important;
+
+	.uni-toast {
+		background-color: #ffffff !important;
 	}
-	.time-lag{
+
+	.time-lag {
 		font-size: 20rpx;
 		text-align: center;
 	}
-	.chatInterface .custom-message{
+
+	.chatInterface .custom-message {
 		width: 400rpx;
 		height: 260rpx;
 		display: flex;
@@ -838,24 +926,25 @@
 		box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.1);
 		border-radius: 20rpx;
 	}
-	.chatInterface .custom-message .title{
+
+	.chatInterface .custom-message .title {
 		width: 100%;
 		display: flex;
 		align-items: center;
 		font-size: 30rpx;
 	}
-	.chatInterface .custom-message .title image{
+
+	.chatInterface .custom-message .title image {
 		width: 40rpx;
 		height: 40rpx;
 	}
-	.chatInterface .custom-message .custom-message-item{
+
+	.chatInterface .custom-message .custom-message-item {
 		text-align: left;
 		font-size: 28rpx;
 		overflow: hidden;
 		width: 100%;
-		text-overflow:ellipsis;
+		text-overflow: ellipsis;
 		white-space: nowrap;
 	}
-	
-	
 </style>
