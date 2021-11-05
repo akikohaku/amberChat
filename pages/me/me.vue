@@ -139,7 +139,7 @@
 			getCode() {
 				this.code = '';
 				let origin =
-				'https://static-3b99f1ce-2c10-40e8-a123-d1899ddca653.bspapp.com/#/pages/me/me'; //网页授权的回调域名，这里设置的是本地端口
+				'http://chat.nanju.work/#/pages/me/me'; //网页授权的回调域名，这里设置的是本地端口
 				let urlNow = encodeURIComponent(origin); //处理域名
 				let scope = "snsapi_userinfo"; //弹框显示授权
 				let appid = "wx4bdc8bb9523c1735";

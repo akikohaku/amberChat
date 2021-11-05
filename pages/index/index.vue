@@ -112,8 +112,6 @@
 								getApp().globalData.sex = res.data.sex;
 								getApp().globalData.pre = res.data.pre;
 								getApp().globalData.tosex = res.data.tosex;
-								that.userName = getApp().globalData.userName;
-								that.avatarUrl = getApp().globalData.avaterUrl;
 								if (that.goEasy.getConnectionStatus() === 'disconnected') {
 									getApp().globalData.imService = new IMService(that.goEasy, that
 										.GoEasy);
@@ -229,6 +227,7 @@
 
 			},
 			matchClick() {
+				this.isconform = false;
 				if (this.goEasy.getConnectionStatus() === 'disconnected') {
 					uni.switchTab({
 						url: 'pages/me/me'
@@ -236,9 +235,14 @@
 					return;
 				}
 				if (getApp().globalData.userID == '') {
-					uni.showToast({
-						title: "未登录",
-						icon: 'error'
+					uni.showModal({
+						title:"欸？",
+						content: "您好像还没有登录？！",
+						confirmText: "啊这",
+						showCancel:false,
+						success: function(res) {
+							
+						}
 					})
 					uni.switchTab({
 						url: '/pages/me/me'
@@ -246,9 +250,14 @@
 					return;
 				}
 				if (getApp().globalData.pre == '[]') {
-					uni.showToast({
-						title: "请设置爱好",
-						icon: 'error'
+					uni.showModal({
+						title:"欸？",
+						content: "您好像还没有设置爱好？",
+						confirmText: "啊这",
+						showCancel:false,
+						success: function(res) {
+							
+						}
 					})
 					uni.switchTab({
 						url: '/pages/me/me'
@@ -256,9 +265,14 @@
 					return;
 				}
 				if (getApp().globalData.sex == 'u') {
-					uni.showToast({
-						title: "请设置性别",
-						icon: 'error'
+					uni.showModal({
+						title:"欸？",
+						content: "您好像还没有设置性别？",
+						confirmText: "啊这",
+						showCancel:false,
+						success: function(res) {
+							
+						}
 					})
 					uni.switchTab({
 						url: '/pages/me/me'
@@ -287,6 +301,8 @@
 								}
 							}
 						})
+					}else{
+						that.match();
 					}
 				}else{
 					this.match();

@@ -250,6 +250,7 @@
 				}
 			},
 			removeConversation() {
+				let that=this;
 				uni.showModal({
 					title: "等等！",
 					content: "这一去便是永别\n您想好了吗？",
@@ -262,10 +263,10 @@
 								mask: true
 							});
 							let failedDescription = "删除失败";
-							let conversation = this.action.conversation;
-							this.action.show = false;
-							if(conversation.type === this.GoEasy.IM_SCENE.PRIVATE){
-								this.goEasy.im.removePrivateConversation({
+							let conversation = that.action.conversation;
+							that.action.show = false;
+							if(conversation.type === that.GoEasy.IM_SCENE.PRIVATE){
+								that.goEasy.im.removePrivateConversation({
 									userId: conversation.userId,
 									onSuccess: function () {
 										uni.hideLoading();
@@ -280,7 +281,7 @@
 									}
 								});
 							}else {
-								this.goEasy.im.removeGroupConversation({
+								that.goEasy.im.removeGroupConversation({
 									groupId: conversation.groupId,
 									onSuccess: function () {
 										uni.hideLoading()

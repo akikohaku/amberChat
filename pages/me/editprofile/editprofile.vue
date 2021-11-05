@@ -222,15 +222,25 @@
 						console.log(res);
 						this.avatarUrl = res.fileID;
 						getApp().globalData.avaterUrl = this.avatarUrl;
-						uni.showToast({
-							title: "上传成功"
-						})
+						// uni.showModal({
+						// 	title:"上传成功！",
+						// 	content: "",
+						// 	confirmText: "好耶！",
+						// 	showCancel:false,
+						// 	success: function(res) {
+								
+						// 	}
+						// })
 					},
 					fail(res) {
-						console.log(res);
-						uni.showToast({
-							title: "上传失败",
-							icon: "error"
+						uni.showModal({
+							title:"欸？",
+							content: "上传失败了\n这合理吗？",
+							confirmText: "啊这",
+							showCancel:false,
+							success: function(res) {
+								
+							}
 						})
 					},
 				});
@@ -241,31 +251,51 @@
 			},
 			uploadprofile() {
 				if (this.formData.hobby.length == 0) {
-					uni.showToast({
-						title: "请选择爱好",
-						icon: "error"
-					});
+					uni.showModal({
+						title:"欸？",
+						content: "您好像还没有设置爱好？",
+						confirmText: "啊这",
+						showCancel:false,
+						success: function(res) {
+							
+						}
+					})
 					return;
 				}
 				if (this.userName == "") {
-					uni.showToast({
-						title: "请输入昵称",
-						icon: "error"
-					});
+					uni.showModal({
+						title:"欸？",
+						content: "您好像还没有设置昵称？",
+						confirmText: "啊这",
+						showCancel:false,
+						success: function(res) {
+							
+						}
+					})
 					return;
 				}
 				if (this.avatarUrl == "") {
-					uni.showToast({
-						title: "请选择头像",
-						icon: "error"
-					});
+					uni.showModal({
+						title:"欸？",
+						content: "您好像还没有设置头像？",
+						confirmText: "啊这",
+						showCancel:false,
+						success: function(res) {
+							
+						}
+					})
 					return;
 				}
 				if (this.index == 0) {
-					uni.showToast({
-						title: "设定性别",
-						icon: "error"
-					});
+					uni.showModal({
+						title:"欸？",
+						content: "您好像还没有设置性别？",
+						confirmText: "啊这",
+						showCancel:false,
+						success: function(res) {
+							
+						}
+					})
 					return;
 				}
 				let that = this;
@@ -313,8 +343,14 @@
 							});
 
 						}
-						uni.showToast({
-							title: "保存成功"
+						uni.showModal({
+							title:"保存成功了！",
+							content: "",
+							confirmText: "好耶！",
+							showCancel:false,
+							success: function(res) {
+								
+							}
 						})
 					}
 				})
