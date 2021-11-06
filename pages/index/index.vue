@@ -223,7 +223,7 @@
 							method:'GET',
 							url:'https://wechat.api.kohaku.xin:11731/Weixinhuifu',
 							data:{
-								openid:getApp().globalData.userID
+								openid:uuid
 							},
 							success(res){
 								

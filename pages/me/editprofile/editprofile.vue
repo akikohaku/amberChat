@@ -99,7 +99,11 @@
 				}, {
 					name: '女',
 					value: 'f'
-				}],
+				},{
+					name: '无所谓',
+					value: 'u'
+				}
+				],
 				index2: 0,
 				formData: {
 					value: 1,
@@ -176,6 +180,9 @@
 			}
 			if (getApp().globalData.tosex === 'f') {
 				this.index2 = 2;
+			}
+			if (getApp().globalData.tosex === 'u') {
+				this.index2 = 3;
 			}
 			
 			if (getApp().globalData.sex === 'u') {
