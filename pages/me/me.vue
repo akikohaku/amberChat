@@ -12,8 +12,9 @@
 		</view>
 		<view class="me-menu">
 			<view class="me-menu-item" @click="toprofile()">编辑个人资料</view>
+			<view class="me-menu-item" @click="toset()">聊天设置</view>
 			<view class="me-menu-item red" @click="cleancache()">清除缓存</view>
-			<!-- <view class="me-menu-item" @click="toset()">设置</view> -->
+			
 			<!-- <view class="me-menu-item red">登出</view> -->
 			<view class="me-menu-line"></view>
 			<!-- <view class="me-menu-item" @click="login1()">id1</view>

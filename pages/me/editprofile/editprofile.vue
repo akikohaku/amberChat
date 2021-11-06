@@ -2,7 +2,7 @@
 	<view>
 		<view class="me-head">
 			<view class="me-head-pic">
-				<image :src="avatarUrl"></image>
+				<image :src="avatarUrl" @tap="chooseImage()"></image>
 			</view>
 			<view class="me-head-id">
 				{{userName}}

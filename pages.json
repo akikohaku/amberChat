@@ -64,6 +64,15 @@
             }
             
         }
+        ,{
+            "path" : "pages/me/report/report",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
