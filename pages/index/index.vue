@@ -219,6 +219,16 @@
 						toopenid: uuid
 					},
 					success(res) {
+						uni.request({
+							method:'GET',
+							url:'https://wechat.api.kohaku.xin:11731/Weixinhuifu',
+							data:{
+								openid:getApp().globalData.userID
+							},
+							success(res){
+								
+							}
+						})
 						uni.navigateTo({
 							url: path
 						})
@@ -395,7 +405,7 @@
 												this.$refs.buttoncontent3.$el.style.height = '0px';
 												this.$refs.buttonwait.$el.style.opacity = '0';
 												setTimeout(() => {
-													if (!this.isclicked && !this.isconform) {
+													
 														this.$refs.mfz.$el.style.display = 'none';
 														this.$refs.mfz2.$el.style.display = 'none';
 														this.$refs.buttonstart.$el.style.width = '40px';
@@ -410,7 +420,7 @@
 														this.$refs.matchingcircle.$el.style.opacity = '0';
 														this.$refs.matchfriendimg.$el.style.opacity = '0';
 														this.$refs.matchinfo.$el.style.opacity = '0';
-													}
+													
 												}, 400)
 												this.isclicked = false;
 											}

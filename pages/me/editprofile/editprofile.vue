@@ -59,6 +59,7 @@
 				</view>
 			</view>
 		</view>
+		<view class="white"></view>
 		<view class="upload" @click="uploadprofile">保存</view>
 		<kps-image-cutter @ok="onok" @cancel="oncancle" :url="tempurl" :fixed="false" :width="200" :height="200"
 			:blob="true">
@@ -349,7 +350,11 @@
 							confirmText: "好耶！",
 							showCancel:false,
 							success: function(res) {
-								
+								if(res.confirm){
+									uni.switchTab({
+										url:"/pages/index/index"
+									})
+								}
 							}
 						})
 					}
@@ -360,6 +365,10 @@
 </script>
 
 <style>
+	.white{
+		height: 20vh;
+		width: 100vw;
+	}
 	.uni-input-wrapper {
 		/* #ifndef APP-NVUE */
 		display: inline-flex;
