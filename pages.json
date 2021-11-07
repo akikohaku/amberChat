@@ -42,7 +42,9 @@
 		    "style" :                                                                                    
 		    {
 		        "navigationBarTitleText": "",
-				"enablePullDownRefresh":true
+				"enablePullDownRefresh":true,
+				"navigationStyle":"custom",
+				"backgroundColor":"#F5F5F5"
 		    }
 		    
 		}
@@ -60,7 +62,8 @@
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "匹配设置",
-                "enablePullDownRefresh": false
+                "enablePullDownRefresh": false,
+				"navigationStyle":"custom"
             }
             
         }
@@ -69,7 +72,8 @@
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
+                "enablePullDownRefresh": false,
+				"navigationStyle":"custom"
             }
             
         }
@@ -85,15 +89,24 @@
 		"selectedColor": "#3cc51f",
 		"borderStyle": "black",
 		"backgroundColor": "#ffffff",
+		"selectedColor":"pink",
 		"list": [{
 			"pagePath": "pages/index/index",
-			"text": "匹配"
+			"text": "匹配",
+			"iconPath":"static/images/pipei.png",
+			"selectedIconPath":"static/images/pepeihou.png"
+			
 		},{
 			"pagePath": "pages/chatlist/chatlist",
-			"text": "聊天"
+			"text": "聊天",
+			"iconPath":"static/images/liaotian.png",
+			"selectedIconPath":"static/images/liaotianhou.png"
 		},{
 			"pagePath": "pages/me/me",
-			"text": "个人"
+			"text": "个人",
+			"iconPath":"static/images/me.png",
+			"selectedIconPath":"static/images/mehou.png"
+			
 		}]
 	}
 }

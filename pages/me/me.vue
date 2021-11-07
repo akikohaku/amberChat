@@ -18,14 +18,14 @@
 			
 			<!-- <view class="me-menu-item red">登出</view> -->
 			<view class="me-menu-line"></view>
-			<!-- <view class="me-menu-item" @click="login1()">id1</view>
+<!-- 			<view class="me-menu-item" @click="login1()">id1</view>
 			<view class="me-menu-item" @click="login2()">id2</view> -->
 		</view>
 
-		<!-- 		<hr/>
+<!-- 				<hr/>
 		<view>{{userID}}</view>
-		<view>{{userName}}</view> -->
-<!-- 		<view class="uni-list-cell">
+		<view>{{userName}}</view>
+		<view class="uni-list-cell">
 			<view class="uni-list-cell-left-2">
 				id
 			</view>
@@ -43,8 +43,8 @@
 				<input class="uni-input" v-model="userName" maxlength="10" placeholder="最大输入长度为10" />
 			</view>
 		</view>
-		<!-- <view @click="connect()">连接</view> -->
-<!-- 		<view class="login" @click="setid()">设定id</view>
+		<view @click="connect()">连接</view>
+		<view class="login" @click="setid()">设定id</view>
 		<view class="login" @click="loginmain()">登录</view> -->
 	</view>
 </template>
@@ -519,8 +519,8 @@
 		height: 80px;
 		/* 		width: 100%;
 		height: 100%; */
-		border: 2px solid #000000;
-		background-color: #ffffff;
+		/* border: 2px solid #000000; */
+		/* background-color: #ffffff; */
 		border-radius: 50px;
 	}
 

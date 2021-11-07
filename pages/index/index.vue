@@ -530,7 +530,7 @@
 		width: 100vw;
 		height: 100vh;
 		background-color: black;
-		background-image: url(https://pic.kohaku.xin/images/2021/10/26/7.jpg);
+		background-image: url(https://pic.kohaku.xin/images/2021/11/07/_f82801b608ef8ac35500eb4932ccfc83_64467.jpg);
 		background-size: 100% auto;
 		background-repeat: no-repeat;
 		text-align: center;

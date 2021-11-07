@@ -1,7 +1,7 @@
 <template>
     <scroll-view class="conversations" scroll-y="true">
 		<view v-if="conversations.length !=0">
-			<view class="scroll-item" v-for="(conversation, key) in conversations" :key="key" @click="navigateToChat(conversation)">
+			<view :class="conversation.top?'scroll-item ontop':'scroll-item'" v-for="(conversation, key) in conversations" :key="key" @click="navigateToChat(conversation)">
 				<view class="item-head">
 					<image :src="conversation.data.avatar" class="head-icon"></image>
 					<view class="item-head_unread" v-if="conversation.unread">{{conversation.unread}}</view>
@@ -336,7 +336,10 @@
 </script>
 
 <style>
-	page{ height: 100%; }
+	page{ 
+		height: 100%; 
+		background-color: #F5F5F5;
+		}
 	.conversations{
 		width: 750rpx;
 		overflow-x: hidden;
@@ -346,6 +349,20 @@
 		height: 100%;
 	}
 	.conversations .scroll-item{
+		height: 152rpx;
+		display: flex;
+		align-items: center;
+		padding-left: 32rpx;
+		
+	}
+	.ontop{
+		height: 152rpx;
+		display: flex;
+		align-items: center;
+		padding-left: 32rpx;
+		background-color: #eeeeee;
+	}
+	.notontop{
 		height: 152rpx;
 		display: flex;
 		align-items: center;

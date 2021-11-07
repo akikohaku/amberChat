@@ -1,5 +1,6 @@
 <template>
 	<view class="chatInterface">
+		
 		<view class="scroll-view" ref="scrollview">
 			<view class="all-history-loaded">
 				{{allHistoryLoaded ? '已经没有更多的历史消息' : '下拉获取历史消息'}}
@@ -59,10 +60,13 @@
 				<span class="send-message-btn" @click="sendTextMessage">发送</span>
 			</view>
 			<!--展示表情列表-->
-			<view class="action-bottom" v-if="emoji.show" style="justify-content: space-around">
-				<image class="emoji-item" v-for="(emojiItem, emojiKey, index) in emoji.map" :key="index"
-					:src="emoji.url + emojiItem" @click="selectEmoji(emojiKey)"></image>
-			</view>
+			<scroll-view class="action-bottom-out" scroll-y="true" v-if="emoji.show">
+				<view class="action-bottom" v-if="emoji.show" style="justify-content: space-around">
+					<image class="emoji-item" v-for="(emojiItem, emojiKey, index) in emoji.map" :key="index"
+						:src="emoji.url + emojiItem" @click="selectEmoji(emojiKey)"></image>
+				</view>
+			</scroll-view>
+			
 			<!--更多-->
 			<view class="action-bottom" v-if="more.show">
 				<view class="more-item" @click="sendImage">
@@ -96,14 +100,104 @@
 			GoEasyAudioPlayer,
 		},
 		data() {
-			let emojiUrl = 'https://imgcache.qq.com/open/qcloud/tim/assets/emoji/';
+			let emojiUrl = 'https://zhoukaiwen.com/img/icon/emojj1/';
 			let emojiMap = {
-				'[么么哒]': 'emoji_3@2x.png',
-				'[乒乓]': 'emoji_4@2x.png',
-				'[便便]': 'emoji_5@2x.png',
-				'[信封]': 'emoji_6@2x.png',
-				'[偷笑]': 'emoji_7@2x.png',
-				'[傲慢]': 'emoji_8@2x.png'
+				"[微笑]": "1.png",
+				"[生气]": "2.png",
+				"[坏笑]": "3.png",
+				"[难受]": "4.png",
+				"[困]": "5.png",
+				"[偷看]": "6.png",
+				"[难过]":"7.png",
+				"[斜眼]":"8.png",
+				"[委屈]":"9.png",
+				"[害羞]":"10.png",
+				"[裂开]":"11.png",
+				"[偷笑]":"12.png",
+				"[痛苦]":"13.png",
+				"[白眼]":"14.png",
+				"[丑]":"15.png",
+				"[哇哇哭]": "16.png",
+				"[笑嘻嘻]":"17.png",
+				"[盯着你]":"18.png",
+				"[啊哈]":"19.png",
+				"[吃瓜]":"20.png",
+				"[哦吼]":"21.png",
+				"[哭死]":"22.png",
+				"[打脸]":"23.png",
+				"[斗鸡眼]":"24.png",
+				"[发呆]":"25.png",
+				"[憨笑]":"26.png",
+				"[无语]":"27.png",
+				"[鸡贼]":"28.png",
+				"[大无语]":"29.png",
+				"[哭吐了]":"30.png",
+				"[呲牙笑]":"31.png",
+				"[奸笑]":"32.png",
+				"[啊啊啊]":"33.png",
+				"[哈嘿]":"34.png",
+				"[惊讶]":"35.png",
+				"[指你]":"36.png",
+				"[可爱型]":"37.png",
+				"[快哭了]":"38.png",
+				"[抠鼻屎]":"39.png",
+				"[酷酷]":"40.png",
+				"[笑汗]":"41.png",
+				"[算命]":"42.png",
+				"[红脸坏笑]":"43.png",
+				"[委屈死了]":"44.png",
+				"[爆炸]":"45.png",
+				"[吐了]":"46.png",
+				"[么么哒]":"47.png",
+				"[吐血]":"48.png",
+				"[面无表情]":"49.png",
+				"[捂嘴吐]":"50.png",
+				"[斜眼看]":"51.png",
+				"[花痴]":"52.png",
+				"[被打]":"53.png",
+				"[瞌睡]":"54.png",
+				"[冥想]":"55.png",
+				"[俏皮]":"56.png",
+				"[戳手委屈]":"57.png",
+				"[端庄]":"58.png",
+				"[emmm]":"59.png",
+				"[欢呼]":"60.png",
+				"[笑哭了]":"61.png",
+				"[抱抱]":"62.png",
+				"[闭眼笑]":"63.png",
+				"[捂嘴微笑]":"64.png",
+				"[笑哭2]":"65.png",
+				"[笑嘻嘻]":"66.png",
+				"[笑露齿]":"67.png",
+				"[阴脸笑]":"68.png",
+				"[问号脸]":"69.png",
+				"[拜拜]":"70.png",
+				"[难受2]":"71.png",
+				"[傻笑2]":"72.png",
+				"[爆炸2]":"73.png",
+				"[二哈]":"74.png",
+				"[二哈吐舌]":"75.png",
+				"[狗狗笑哭]":"76.png",
+				"[狗狗绿帽]":"77.png",
+				"[狗狗张嘴]":"78.png",
+				"[狗狗绿扇]":"79.png",
+				"[狗狗]":"80.png",
+				"[猫咪]":"81.png",
+				"[牛啊]":"82.png",
+				"[爱心]":"83.png",
+				"[心裂开]":"84.png",
+				"[玫瑰花]":"85.png",
+				"[枯萎]":"86.png",
+				"[棒]":"87.png",
+				"[差]":"88.png",
+				"[红药]":"89.png",
+				"[绿药]":"90.png",
+				"[抱拳]":"91.png",
+				"[ok]":"92.png",
+				"[pk]":"93.png",
+				"[绿帽子]":"94.png",
+				"[菜刀]":"95.png"
+				
 			};
 			return {
 				//聊天文本框
@@ -446,7 +540,7 @@
 				setTimeout(() => {
 					this.$refs.scrollview.$el.style.margin = "0 0 0 0";
 					this.scrollToBottom();
-					},200)
+					},400)
 				
 			},
 			showEmoji() {
@@ -510,7 +604,17 @@
 </script>
 
 <style>
-	.chatInterface {}
+	page{
+		background: #F5F5F5;
+	}
+	.chatInterface {
+		background-color: #F5F5F5;
+	}
+	.emoji-item{
+		height: 50rpx;
+		width: 50rpx;
+		/* display: inline-block; */
+	}
 
 	.chatInterface .scroll-view {
 		/* height: auto; */
@@ -519,6 +623,7 @@
 		box-sizing: border-box;
 		-webkit-overflow-scrolling: touch;
 		padding-bottom: 120rpx;
+		
 	}
 
 	.chatInterface .scroll-view .all-history-loaded {
@@ -651,7 +756,7 @@
 		bottom: 0;
 		left: 0;
 		flex-direction: column;
-		background-color: #FFFFFF;
+		background-color: #F5F5F5;
 	}
 
 	.chatInterface .action-box .action-top {
@@ -659,8 +764,8 @@
 		padding-top: 20rpx;
 		padding-bottom: 20rpx;
 		backdrop-filter: blur(0.27rem);
-		height: 100rpx;
-		background: #FAFAFA;
+		height: 80rpx;
+		background: #F0F0F0;
 		width: 100%;
 	}
 
@@ -698,12 +803,12 @@
 	}
 
 	.chatInterface .action-box .action-top .emoji-icon {
-		background: url("../../static/images/emoji.png") no-repeat center;
-		background-size: 60%;
+		background: url("/static/images/biaoqing.png") no-repeat center;
+		background-size: 90%;
 	}
 
 	.chatInterface .action-box .action-top .more-icon {
-		background: url("../../static/images/more.png") no-repeat center;
+		background: url("/static/images/jiahao.png") no-repeat center;
 		background-size: 70%;
 	}
 
@@ -739,15 +844,15 @@
 	}
 
 	.chatInterface .action-box .action-top .message-input {
-		border-radius: 12rpx;
-		background: #EFEFEF;
+		border-radius: 30rpx;
+		background: #FEFEFE;
 		height: 80rpx;
 		align-items: center;
 		justify-content: center;
 	}
 
 	.message-input {
-		margin-left: 10rpx;
+		margin-left: 15rpx;
 		display: table-cell;
 		vertical-align: middle;
 	}
@@ -761,7 +866,7 @@
 	}
 	.chatInterface .action-box .action-top .message-input textarea {
 		padding-top: 20rpx;
-		width: 480rpx;
+		width: 450rpx;
 		height: 60rpx;
 		line-height: 40rpx;
 		padding-left: 20rpx;
@@ -772,22 +877,38 @@
 
 	.chatInterface .action-box .action-top .send-message-btn {
 		font-size: 30rpx;
-		width: 80rpx;
-		line-height: 80rpx;
-		color: #82868E;
+		margin-top: 10rpx;
+		text-align: center;
+		/* padding-left: 18rpx; */
+		margin-right: 10rpx;
+		width: 100rpx;
+		line-height: 57rpx;
+		height: 60rpx;
+		color: #ffffffdd;
+		border: 1px solid #A4AAFF;
+		background-color: #A4AAFF;
+		border-radius: 10rpx;
 	}
-
-	.chatInterface .action-bottom {
+	.action-bottom-out{
+		-webkit-overflow-scrolling: touch;
 		height: 300rpx;
+
+		box-sizing: border-box;
+	}
+	.chatInterface .action-bottom {
+		height: auto;
 		width: 100%;
 		padding: 20rpx;
 		box-sizing: border-box;
-		display: flex;
+		/* display: flex; */
+		
 	}
 
 	.chatInterface .action-bottom image {
-		width: 100rpx;
-		height: 100rpx;
+		width: 70rpx;
+		height: 70rpx;
+		display: inline-block;
+		
 	}
 
 
