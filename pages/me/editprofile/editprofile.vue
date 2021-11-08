@@ -76,6 +76,7 @@
 		},
 		data() {
 			return {
+				isavatarsaved:true,
 				avatarUrl: '',
 				userName: '',
 				tempurl: '',
@@ -220,16 +221,19 @@
 				this.avatarUrl = ev.path.replace(/[\r\n]/g, "");
 				console.log(this.avatarUrl);
 				this.tempurl = "";
+				this.isavatarsaved=false;
+				var that=this;
 				uniCloud.uploadFile({
-					filePath: this.avatarUrl,
+					filePath: that.avatarUrl,
 					cloudPath: getApp().globalData.openID + ".jpg",
 					onUploadProgress: function(progressEvent) {
 						console.log(progressEvent);
 					},
 					success(res) {
 						console.log(res);
-						this.avatarUrl = res.fileID;
-						getApp().globalData.avaterUrl = this.avatarUrl;
+						that.avatarUrl = res.fileID;
+						getApp().globalData.avaterUrl = that.avatarUrl;
+						that.isavatarsaved=ture;
 						// uni.showModal({
 						// 	title:"上传成功！",
 						// 	content: "",
@@ -299,6 +303,18 @@
 						title:"欸？",
 						content: "您好像还没有设置性别？",
 						confirmText: "啊这",
+						showCancel:false,
+						success: function(res) {
+							
+						}
+					})
+					return;
+				}
+				if(!this.isavatarsaved){
+					uni.showModal({
+						title:"嗯哼？",
+						content: "图片还在上传哦~",
+						confirmText: "好吧",
 						showCancel:false,
 						success: function(res) {
 							
