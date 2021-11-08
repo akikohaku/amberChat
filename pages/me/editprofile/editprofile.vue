@@ -388,6 +388,9 @@
 </script>
 
 <style>
+	page{
+		background-color: #f5f5f5;
+	}
 	.white{
 		height: 20vh;
 		width: 100vw;
@@ -565,7 +568,7 @@
 	.uni-list-cell-left {
 		white-space: nowrap;
 		font-size: 34rpx;
-		font-weight: 600;
+		font-weight: 550;
 		padding: 10px 30rpx;
 	}
 
@@ -573,7 +576,7 @@
 		display: inline-flex;
 		white-space: nowrap;
 		font-size: 34rpx;
-		font-weight: 600;
+		font-weight: 550;
 		padding: 10px 30rpx;
 	}
 
@@ -719,11 +722,11 @@
 
 	.upload {
 		width: 100vw;
-		height: 50px;
+		height: 45px;
 		position: fixed;
 		bottom: 0rpx;
 		text-align: center;
-		padding-top: 10px;
+		padding-top: 5px;
 		font-size: 60rpx;
 		background-color: orange;
 		color: white;

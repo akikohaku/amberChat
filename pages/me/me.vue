@@ -446,6 +446,7 @@
 </script>
 
 <style>
+	
 	.uni-list-cell {
 		position: relative;
 		display: flex;
@@ -586,10 +587,10 @@
 	}
 
 	.me-menu-item {
-		padding-top: 8px;
+		padding-top: 10px;
 		padding-left: 10px;
-		padding-bottom: 8px;
-		font-size: 17px;
+		padding-bottom: 10px;
+		font-size: 18px;
 	}
 
 	.me-menu-item::before {
