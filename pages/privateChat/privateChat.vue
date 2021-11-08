@@ -813,7 +813,7 @@
 	}
 
 	.chatInterface .action-box .action-bottom .more-item {
-		display: flex;
+		display: inline-flex;
 		flex-direction: column;
 		width: 150rpx;
 		height: 150rpx;
@@ -894,12 +894,14 @@
 		height: 300rpx;
 
 		box-sizing: border-box;
+		background-color: #F0F0F0;
 	}
 	.chatInterface .action-bottom {
-		height: auto;
+		height: 300rpx;
 		width: 100%;
 		padding: 20rpx;
 		box-sizing: border-box;
+		background-color: #F0F0F0;
 		/* display: flex; */
 		
 	}

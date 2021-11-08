@@ -185,7 +185,7 @@
 				},
 				isLocal:true,
 				styles: {
-					selectedColor: '#007aff',
+					selectedColor: '#5fadff',
 					selectedTextColor: '#333',
 				},
 				isTop:0
@@ -454,7 +454,7 @@
 </script>
 
 <style lang="scss">
-	$checked-color: #007aff;
+	$checked-color: #5fadff;
 	$border-color: #DCDFE6;
 	$disable:0.4;
 
