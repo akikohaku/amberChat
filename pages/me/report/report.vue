@@ -8,7 +8,7 @@
 		<view class="mail text">邮箱：i@kohaku.xin</view>
 		<hr/>
 		<view class="moreinfo text">或者直接点击下方与客服沟通，客服将在24小时内回复</view>
-		<view class="contect" @click="">客服</view>
+		<view class="contect" @click="clickc()">客服</view>
 	</view>
 </template>
 
@@ -20,7 +20,7 @@
 			}
 		},
 		methods: {
-			click(){
+			clickc(){
 				uni.navigateTo({
 					url: '/pages/privateChat/privateChat?to=oROSF5rwGFoHUhpU4kqN-LU_k2hc'
 				})
