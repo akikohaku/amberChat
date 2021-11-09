@@ -112,6 +112,7 @@
 								getApp().globalData.sex = res.data.sex;
 								getApp().globalData.pre = res.data.pre;
 								getApp().globalData.tosex = res.data.tosex;
+								getApp().globalData.bematch = res.data.bematch;
 								if (that.goEasy.getConnectionStatus() === 'disconnected') {
 									getApp().globalData.imService = new IMService(that.goEasy, that
 										.GoEasy);

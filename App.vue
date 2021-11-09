@@ -19,7 +19,8 @@
 			pre:'',
 			tosex:'e',
 			islogin:false,
-			token:0
+			token:0,
+			bematch:''
 		}
 	}
 </script>

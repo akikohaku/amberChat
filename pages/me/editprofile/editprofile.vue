@@ -58,8 +58,19 @@
 					</picker>
 				</view>
 			</view>
+			<view class="uni-list-cell">
+				<view class="uni-list-cell-left">
+					被匹配
+				</view>
+				<view class="uni-list-cell-db">
+					<picker @change="bindPickerChange3" :value="index3" :range="array3" range-key="name">
+						<view class="uni-input">{{array3[index3].name}}</view>
+					</picker>
+				</view>
+			</view>
 		</view>
 		<view class="white"></view>
+		<view class="progressbar" ref="progressbar"></view>
 		<view class="upload" @click="uploadprofile">保存</view>
 		<kps-image-cutter @ok="onok" @cancel="oncancle" :url="tempurl" :fixed="false" :width="200" :height="200"
 			:blob="true">
@@ -105,7 +116,15 @@
 					value: 'u'
 				}
 				],
+				array3: [{
+					name: '允许',
+					value: 'y'
+				}, {
+					name: '拒绝',
+					value: 'n'
+				}],
 				index2: 0,
+				index3:0,
 				formData: {
 					value: 1,
 					hobby: []
@@ -195,6 +214,13 @@
 			if (getApp().globalData.sex === 'f') {
 				this.index = 2;
 			}
+			// console.log(getApp().globalData.bematch);
+			if (getApp().globalData.bematch === 'y') {
+				this.index3 = 0;
+			}
+			if (getApp().globalData.bematch === 'n') {
+				this.index3 = 1;
+			}
 			if (getApp().globalData.pre != '') {
 				this.formData.hobby = JSON.parse(getApp().globalData.pre);
 			}
@@ -208,6 +234,10 @@
 			bindPickerChange2: function(e) {
 				console.log('picker发送选择改变，携带值为：' + e.detail.value)
 				this.index2 = e.detail.value
+			},
+			bindPickerChange3: function(e) {
+				console.log('picker发送选择改变，携带值为：' + e.detail.value)
+				this.index3 = e.detail.value
 			},
 			chooseImage() {
 				uni.chooseImage({
@@ -228,12 +258,18 @@
 					cloudPath: getApp().globalData.openID + ".jpg",
 					onUploadProgress: function(progressEvent) {
 						console.log(progressEvent);
+						that.$refs.progressbar.$el.style.opacity=100;
+						that.$refs.progressbar.$el.style.width=progressEvent.loaded/progressEvent.total*100+'vw';
 					},
 					success(res) {
 						console.log(res);
 						that.avatarUrl = res.fileID;
 						getApp().globalData.avaterUrl = that.avatarUrl;
-						that.isavatarsaved=ture;
+						that.isavatarsaved=true;
+						setTimeout(()=>{
+							that.$refs.progressbar.$el.style.opacity=0;
+							that.$refs.progressbar.$el.style.width='0vw';
+						},5000)
 						// uni.showModal({
 						// 	title:"上传成功！",
 						// 	content: "",
@@ -245,6 +281,7 @@
 						// })
 					},
 					fail(res) {
+						console.log(res);
 						uni.showModal({
 							title:"欸？",
 							content: "上传失败了\n这合理吗？",
@@ -332,7 +369,8 @@
 						sex: this.array[this.index].value,
 						pre: JSON.stringify(this.formData.hobby),
 						avatar: getApp().globalData.avaterUrl,
-						tosex:this.array2[this.index2].value
+						tosex:this.array2[this.index2].value,
+						bematch:this.array3[this.index3].value
 
 					},
 
@@ -342,6 +380,7 @@
 						getApp().globalData.sex = that.array[that.index].value;
 						getApp().globalData.pre = JSON.stringify(that.formData.hobby);
 						getApp().globalData.tosex=that.array2[that.index2].value;
+						getApp().globalData.bematch = that.array3[that.index3].value;
 						if (that.goEasy.getConnectionStatus() === 'connected') {
 							that.goEasy.disconnect({
 								onSuccess: function() {
@@ -391,6 +430,7 @@
 	page{
 		background-color: #f5f5f5;
 	}
+
 	.white{
 		height: 20vh;
 		width: 100vw;
@@ -719,7 +759,15 @@
 	.uni-list.uni-active {
 		height: auto;
 	}
-
+	.progressbar{
+		position: fixed;
+		width: 0vw;
+		height:3px;
+		background-color: #007AFF;
+		bottom: 0rpx;
+		margin-bottom: 50px;
+		transition: all .5s ease-in-out;
+	}
 	.upload {
 		width: 100vw;
 		height: 45px;

@@ -251,6 +251,7 @@
 												getApp().globalData.sex = res.data.sex;
 												getApp().globalData.pre = res.data.pre;
 												getApp().globalData.tosex = res.data.tosex;
+												getApp().globalData.bematch = res.data.bematch;
 												that.userName = getApp().globalData.userName;
 												that.avatarUrl = getApp().globalData.avaterUrl;
 												if (that.goEasy.getConnectionStatus() === 'disconnected') {
@@ -322,6 +323,7 @@
 										getApp().globalData.sex = res.data.sex;
 										getApp().globalData.pre = res.data.pre;
 										getApp().globalData.tosex = res.data.tosex;
+										getApp().globalData.bematch = res.data.bematch;
 										that.userName = getApp().globalData.userName;
 										that.avatarUrl = getApp().globalData.avaterUrl;
 										if (that.goEasy.getConnectionStatus() === 'disconnected') {
@@ -400,6 +402,7 @@
 									getApp().globalData.sex = res.data.sex;
 									getApp().globalData.pre = res.data.pre;
 									getApp().globalData.tosex = res.data.tosex;
+									getApp().globalData.bematch = res.data.bematch;
 									that.userName = getApp().globalData.userName;
 									that.avatarUrl = getApp().globalData.avaterUrl;
 									if (that.goEasy.getConnectionStatus() === 'disconnected') {
