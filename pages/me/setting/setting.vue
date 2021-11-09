@@ -11,39 +11,59 @@
 			<view class="me-head-wave-1"></view>
 			<view class="me-head-wave-2"></view>
 		</view>
-		<view class="text">聊天背景</view>
+		<view class="text">主题</view>
 		<view class="uni-list">
 			<radio-group @change="radioChange">
 				<label
 					:class="item.value===current?'uni-list-cell uni-list-cell-pd select':'uni-list-cell uni-list-cell-pd'"
 					v-for="(item, index) in colorsec" :key="colorsec.text">
-					<view>
+					<view v-if="item.value!=usernum">
 						<radio class="radiobox" :value="item.text" :checked="index === current"
 							style="transform:scale(0.7)" color="#A4AAFF" />
 					</view>
-					<view class="itemtext">{{item.text}}</view>
-					<view class="colorbox" :style="'background:'+color[item.value].value"></view>
+					<view class="itemtext" v-if="item.value!=usernum">{{item.text}}</view>
+					<view class="colorout" v-if="item.value!=usernum">
+						<view class="colorbox" v-for="co in color[item.value].value" :key="co.id">
+							<view class="colorboxin" :style="'background:'+co.color"></view>
+						</view>
+					</view>
+					<view v-if="item.value==usernum">
+						<radio class="radiobox" :value="item.text" :checked="index === current"
+							style="transform:scale(0.7)" color="#A4AAFF" />
+					</view>
+					<view class="itemtext" v-if="item.value==usernum">{{item.text}}</view>
+					<view class="colorout" v-if="item.value==usernum">
+						<view class="colorbox" v-for="co in color[item.value].value" :key="co.id">
+							<view class="colorboxin" :style="'background:'+co.color"></view>
+						</view>
+						<view class="colorpik" @click="opencolor()">副颜色</view>
+					</view>
 				</label>
 			</radio-group>
 		</view>
 		<kps-image-cutter @ok="onok" @cancel="oncancle" :url="tempurl" :fixed="false" :width="200" :height="200"
 			:blob="true">
 		</kps-image-cutter>
+		<t-color-picker ref="colorPicker" @confirm="confirm"></t-color-picker>
 	</view>
 </template>
 
 <script>
 	import kpsImageCutter from "@/components/ksp-image-cutter/ksp-image-cutter.vue";
+	import tColorPicker from '@/components/t-color-picker/t-color-picker.vue';
 	export default {
 		components: {
+			tColorPicker,
+
 			kpsImageCutter
 		},
 		data() {
 			return {
-				tempurl:'',
+				tempurl: '',
 				current: 0,
-				backgroundimg:'',
-				isavatarsaved:true,
+				backgroundimg: '',
+				isavatarsaved: true,
+				usernum: 5,
 				formData: {
 					value: 0,
 					hobby: [1]
@@ -61,21 +81,72 @@
 					text: '巧克力',
 					value: 3
 				}, {
-					text: '自定义',
+					text: '夜间',
 					value: 4
+				}, {
+					text: '自定义',
+					value: 5
 				}],
 				color: [{
 					text: '默认',
-					value: '#f5f5f5'
+					value: [{
+						id: 0,
+						color: '#f5f5f5'
+					}, {
+						id: 1,
+						color: '#F0F0F0'
+					}, {
+						id: 2,
+						color: '#A4AAFF'
+					}]
 				}, {
 					text: '羊皮纸',
-					value: '#F8F4E9'
+					value: [{
+						id: 0,
+						color: '#F8F4E9'
+					}, {
+						id: 1,
+						color: '#D8D4C9'
+					}, {
+						id: 2,
+						color: '#552830'
+					}]
 				}, {
 					text: '暗黑',
-					value: '#333333'
+					value: [{
+						id: 0,
+						color: '#333333'
+					}, {
+						id: 1,
+						color: '#444444'
+					}, {
+						id: 2,
+						color: '#DDDDDD'
+					}]
 				}, {
 					text: '巧克力',
-					value: '#DDAF99'
+					value: [{
+						id: 0,
+						color: '#3A2519'
+					}, {
+						id: 1,
+						color: '#2E1C11'
+					}, {
+						id: 2,
+						color: '#DDAF99'
+					}]
+				}, {
+					text: '夜间',
+					value: [{
+						id: 0,
+						color: '#38404D'
+					}, {
+						id: 1,
+						color: '#272B36'
+					}, {
+						id: 2,
+						color: '#DDDDDD'
+					}]
 				}, {
 					text: '自定义',
 					value: 0
@@ -85,8 +156,24 @@
 		onShow() {
 			this.avatarUrl = getApp().globalData.avaterUrl;
 			this.userName = getApp().globalData.userName;
+			uni.showModal({
+				title:"dame！",
+				content: "开发中，还不能用哦",
+				confirmText: "欸？",
+				showCancel:false,
+				success: function(res) {
+
+				}
+			})
 		},
 		methods: {
+			opencolor(item) {
+				// 打开颜色选择器
+				this.$refs.colorPicker.open();
+			},
+			confirm(e) {
+				console.log('颜色选择器返回值：' + e.hex)
+			},
 			chooseImage() {
 				uni.chooseImage({
 					success: (res) => {
@@ -96,7 +183,7 @@
 				});
 			},
 			onok(ev) {
-				this.backgroundimg=this.tempurl;
+				this.backgroundimg = this.tempurl;
 				this.tempurl = "";
 				this.isavatarsaved = false;
 				var that = this;
@@ -142,8 +229,8 @@
 				for (let i = 0; i < this.colorsec.length; i++) {
 					if (this.colorsec[i].text === evt.detail.value) {
 						this.current = i;
-						if (i == 4) {
-							this.chooseImage();
+						if (i == 5) {
+							// this.chooseImage();
 						}
 						break;
 					}
@@ -158,12 +245,24 @@
 		background-color: #f5f5f5;
 	}
 
+	.colorout {
+		margin-top: 5px;
+		display: flex;
+		width: 80vw;
+	}
+
 	.colorbox {
+		/* display: table; */
+
+	}
+
+	.colorboxin {
 		margin-top: 10px;
 		margin-left: 5px;
-		width: 85vw;
+		width: 100vw;
 		height: 10px;
-		display: block;
+		display: table-cell;
+		text-indent: 0;
 	}
 
 	.select {

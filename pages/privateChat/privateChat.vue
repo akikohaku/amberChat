@@ -1,6 +1,6 @@
 <template>
 	<view class="chatInterface">
-		
+
 		<view class="scroll-view" ref="scrollview">
 			<view class="all-history-loaded">
 				{{allHistoryLoaded ? '已经没有更多的历史消息' : '下拉获取历史消息'}}
@@ -52,8 +52,8 @@
 				</view>
 				<view class="message-input" v-else>
 					<!-- GoEasyIM最大支持3k的文本消息，如需发送长文本，需调整输入框maxlength值 -->
-					<textarea type="text" rows="1"maxlength="1000"  v-model="content"
-						@focus="messageInputFocusin()" onscroll="this.rows++;"></textarea>
+					<textarea type="text" rows="1" maxlength="1000" v-model="content" @focus="messageInputFocusin()"
+						onscroll="this.rows++;"></textarea>
 				</view>
 				<view class="file-icon emoji-icon" @click="showEmoji"></view>
 				<view class="file-icon more-icon" @click="showMore"></view>
@@ -66,7 +66,7 @@
 						:src="emoji.url + emojiItem" @click="selectEmoji(emojiKey)"></image>
 				</view>
 			</scroll-view>
-			
+
 			<!--更多-->
 			<view class="action-bottom" v-if="more.show">
 				<view class="more-item" @click="sendImage">
@@ -108,102 +108,103 @@
 				"[难受]": "4.png",
 				"[困]": "5.png",
 				"[偷看]": "6.png",
-				"[难过]":"7.png",
-				"[斜眼]":"8.png",
-				"[委屈]":"9.png",
-				"[害羞]":"10.png",
-				"[裂开]":"11.png",
-				"[偷笑]":"12.png",
-				"[痛苦]":"13.png",
-				"[白眼]":"14.png",
-				"[丑]":"15.png",
+				"[难过]": "7.png",
+				"[斜眼]": "8.png",
+				"[委屈]": "9.png",
+				"[害羞]": "10.png",
+				"[裂开]": "11.png",
+				"[偷笑]": "12.png",
+				"[痛苦]": "13.png",
+				"[白眼]": "14.png",
+				"[丑]": "15.png",
 				"[哇哇哭]": "16.png",
-				"[笑嘻嘻]":"17.png",
-				"[盯着你]":"18.png",
-				"[啊哈]":"19.png",
-				"[吃瓜]":"20.png",
-				"[哦吼]":"21.png",
-				"[哭死]":"22.png",
-				"[打脸]":"23.png",
-				"[斗鸡眼]":"24.png",
-				"[发呆]":"25.png",
-				"[憨笑]":"26.png",
-				"[无语]":"27.png",
-				"[鸡贼]":"28.png",
-				"[大无语]":"29.png",
-				"[哭吐了]":"30.png",
-				"[呲牙笑]":"31.png",
-				"[奸笑]":"32.png",
-				"[啊啊啊]":"33.png",
-				"[哈嘿]":"34.png",
-				"[惊讶]":"35.png",
-				"[指你]":"36.png",
-				"[可爱型]":"37.png",
-				"[快哭了]":"38.png",
-				"[抠鼻屎]":"39.png",
-				"[酷酷]":"40.png",
-				"[笑汗]":"41.png",
-				"[算命]":"42.png",
-				"[红脸坏笑]":"43.png",
-				"[委屈死了]":"44.png",
-				"[爆炸]":"45.png",
-				"[吐了]":"46.png",
-				"[么么哒]":"47.png",
-				"[吐血]":"48.png",
-				"[面无表情]":"49.png",
-				"[捂嘴吐]":"50.png",
-				"[斜眼看]":"51.png",
-				"[花痴]":"52.png",
-				"[被打]":"53.png",
-				"[瞌睡]":"54.png",
-				"[冥想]":"55.png",
-				"[俏皮]":"56.png",
-				"[戳手委屈]":"57.png",
-				"[端庄]":"58.png",
-				"[emmm]":"59.png",
-				"[欢呼]":"60.png",
-				"[笑哭了]":"61.png",
-				"[抱抱]":"62.png",
-				"[闭眼笑]":"63.png",
-				"[捂嘴微笑]":"64.png",
-				"[笑哭2]":"65.png",
-				"[笑嘻嘻]":"66.png",
-				"[笑露齿]":"67.png",
-				"[阴脸笑]":"68.png",
-				"[问号脸]":"69.png",
-				"[拜拜]":"70.png",
-				"[难受2]":"71.png",
-				"[傻笑2]":"72.png",
-				"[爆炸2]":"73.png",
-				"[二哈]":"74.png",
-				"[二哈吐舌]":"75.png",
-				"[狗狗笑哭]":"76.png",
-				"[狗狗绿帽]":"77.png",
-				"[狗狗张嘴]":"78.png",
-				"[狗狗绿扇]":"79.png",
-				"[狗狗]":"80.png",
-				"[猫咪]":"81.png",
-				"[牛啊]":"82.png",
-				"[爱心]":"83.png",
-				"[心裂开]":"84.png",
-				"[玫瑰花]":"85.png",
-				"[枯萎]":"86.png",
-				"[棒]":"87.png",
-				"[差]":"88.png",
-				"[红药]":"89.png",
-				"[绿药]":"90.png",
-				"[抱拳]":"91.png",
-				"[ok]":"92.png",
-				"[pk]":"93.png",
-				"[绿帽子]":"94.png",
-				"[菜刀]":"95.png"
-				
+				"[笑嘻嘻]": "17.png",
+				"[盯着你]": "18.png",
+				"[啊哈]": "19.png",
+				"[吃瓜]": "20.png",
+				"[哦吼]": "21.png",
+				"[哭死]": "22.png",
+				"[打脸]": "23.png",
+				"[斗鸡眼]": "24.png",
+				"[发呆]": "25.png",
+				"[憨笑]": "26.png",
+				"[无语]": "27.png",
+				"[鸡贼]": "28.png",
+				"[大无语]": "29.png",
+				"[哭吐了]": "30.png",
+				"[呲牙笑]": "31.png",
+				"[奸笑]": "32.png",
+				"[啊啊啊]": "33.png",
+				"[哈嘿]": "34.png",
+				"[惊讶]": "35.png",
+				"[指你]": "36.png",
+				"[可爱型]": "37.png",
+				"[快哭了]": "38.png",
+				"[抠鼻屎]": "39.png",
+				"[酷酷]": "40.png",
+				"[笑汗]": "41.png",
+				"[算命]": "42.png",
+				"[红脸坏笑]": "43.png",
+				"[委屈死了]": "44.png",
+				"[爆炸]": "45.png",
+				"[吐了]": "46.png",
+				"[么么哒]": "47.png",
+				"[吐血]": "48.png",
+				"[面无表情]": "49.png",
+				"[捂嘴吐]": "50.png",
+				"[斜眼看]": "51.png",
+				"[花痴]": "52.png",
+				"[被打]": "53.png",
+				"[瞌睡]": "54.png",
+				"[冥想]": "55.png",
+				"[俏皮]": "56.png",
+				"[戳手委屈]": "57.png",
+				"[端庄]": "58.png",
+				"[emmm]": "59.png",
+				"[欢呼]": "60.png",
+				"[笑哭了]": "61.png",
+				"[抱抱]": "62.png",
+				"[闭眼笑]": "63.png",
+				"[捂嘴微笑]": "64.png",
+				"[笑哭2]": "65.png",
+				"[笑嘻嘻]": "66.png",
+				"[笑露齿]": "67.png",
+				"[阴脸笑]": "68.png",
+				"[问号脸]": "69.png",
+				"[拜拜]": "70.png",
+				"[难受2]": "71.png",
+				"[傻笑2]": "72.png",
+				"[爆炸2]": "73.png",
+				"[二哈]": "74.png",
+				"[二哈吐舌]": "75.png",
+				"[狗狗笑哭]": "76.png",
+				"[狗狗绿帽]": "77.png",
+				"[狗狗张嘴]": "78.png",
+				"[狗狗绿扇]": "79.png",
+				"[狗狗]": "80.png",
+				"[猫咪]": "81.png",
+				"[牛啊]": "82.png",
+				"[爱心]": "83.png",
+				"[心裂开]": "84.png",
+				"[玫瑰花]": "85.png",
+				"[枯萎]": "86.png",
+				"[棒]": "87.png",
+				"[差]": "88.png",
+				"[红药]": "89.png",
+				"[绿药]": "90.png",
+				"[抱拳]": "91.png",
+				"[ok]": "92.png",
+				"[pk]": "93.png",
+				"[绿帽子]": "94.png",
+				"[菜刀]": "95.png"
+
 			};
 			return {
 				//聊天文本框
 				content: '',
 				friend: null,
 				currentUser: null,
+				friendid:'',
 				//已经接收到的消息
 				messages: [],
 				//已经加载完所有历史消息
@@ -248,6 +249,7 @@
 			this.currentUser = uni.getStorageSync('currentUser');
 			//聊天对象
 			let friendId = options.to;
+			this.friendid=friendId;
 			console.log(friendId);
 
 			//从服务器获取最新的好友信息
@@ -285,6 +287,30 @@
 					thia.scrollToBottom();
 				}
 			};
+			// var onUserPresence = function(event) {
+			// 	//被监听的用户有上线或者下线行为，就会触发本方法
+			// 	//单聊用户上下线event示例
+			// 	// {
+			// 	//     "time": 1592807533798,
+			// 	//     "action": "online",
+			// 	//     "id": "user002",
+			// 	//     "data": {"avatar":"/images/Avatar-2.png","name":"Wallace"}
+			// 	// }
+			// 	console.log("online/offline event:" + JSON.stringify(event));
+			// };
+			// //接受用户上下线状态变化
+			// this.goEasy.im.on(this.GoEasy.IM_EVENT.USER_PRESENCE, onUserPresence);
+			// var userIds = [friendId];
+			// this.goEasy.im.subscribeUserPresence({
+			// 	userIds: userIds,
+			// 	onSuccess: function() {
+			// 		console.log("Subscribe user presence successfully.");
+			// 	},
+			// 	onFailed: function(error) { //连接失败
+			// 		console.log("Failed to subscribe user presence, code:" + error.code + " content:" + error
+			// 			.content);
+			// 	}
+			// });
 			//每次进入聊天页面，总是滚动到底部
 			this.scrollToBottom();
 			// 录音监听器
@@ -361,6 +387,44 @@
 				let imService = getApp().globalData.imService;
 				let localHistory = imService.getPrivateMessages(toId);
 				localHistory.push(message);
+				var userIds = [this.friendid];
+				let that=this;
+				this.goEasy.im.hereNow({
+					userIds: userIds, //每次查询最多不超过50个
+					onSuccess: function(result) {
+						// result示例
+						// {
+						//     "code": 200,
+						//     "content": [
+						//         {"id": "user001","data": {"name":"Mattie"}},
+						//         {"id": "user002","data": {"name":"Jack"}},
+						//         {"id": "user003","data": {"name":"Mike"}}"
+						//     }]
+						// };    
+						console.log("Query online user list successfully, result:\n " + JSON.stringify(
+						result));
+						console.log(result.content[0]);
+						if(result.content[0]==undefined){
+							//发送离线消息
+							uni.request({
+								method: 'GET',
+								url: 'https://wechat.api.kohaku.xin:11731/offlinemessage',
+								data: {
+									openid: that.friendid,
+								},
+							
+								success(res) {
+							
+								}
+							})
+							
+						}
+					},
+					onFailed: function(error) { //连接失败
+						console.log("Failed to mark as read, code:" + error.code + " content:" + error
+						.content);
+					}
+				});
 				this.goEasy.im.sendMessage({
 					message: message,
 					onSuccess: function(message) {
@@ -540,8 +604,8 @@
 				setTimeout(() => {
 					this.$refs.scrollview.$el.style.margin = "0 0 0 0";
 					this.scrollToBottom();
-					},400)
-				
+				}, 400)
+
 			},
 			showEmoji() {
 				if (!this.emoji.show) {
@@ -604,13 +668,15 @@
 </script>
 
 <style>
-	page{
+	page {
 		background: #F5F5F5;
 	}
+
 	.chatInterface {
-		background-color: #F5F5F5;
+		background-color: #F5F5F500;
 	}
-	.emoji-item{
+
+	.emoji-item {
 		height: 50rpx;
 		width: 50rpx;
 		/* display: inline-block; */
@@ -623,7 +689,7 @@
 		box-sizing: border-box;
 		-webkit-overflow-scrolling: touch;
 		padding-bottom: 120rpx;
-		
+
 	}
 
 	.chatInterface .scroll-view .all-history-loaded {
@@ -864,6 +930,7 @@
 		padding-left: 20rpx;
 		font-size: 28rpx;
 	}
+
 	.chatInterface .action-box .action-top .message-input textarea {
 		padding-top: 20rpx;
 		width: 450rpx;
@@ -889,13 +956,15 @@
 		background-color: #A4AAFF;
 		border-radius: 10rpx;
 	}
-	.action-bottom-out{
+
+	.action-bottom-out {
 		-webkit-overflow-scrolling: touch;
 		height: 300rpx;
 
 		box-sizing: border-box;
 		background-color: #F0F0F0;
 	}
+
 	.chatInterface .action-bottom {
 		height: 300rpx;
 		width: 100%;
@@ -903,14 +972,14 @@
 		box-sizing: border-box;
 		background-color: #F0F0F0;
 		/* display: flex; */
-		
+
 	}
 
 	.chatInterface .action-bottom image {
 		width: 70rpx;
 		height: 70rpx;
 		display: inline-block;
-		
+
 	}
 
 

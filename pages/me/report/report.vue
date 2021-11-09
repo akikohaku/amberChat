@@ -21,8 +21,9 @@
 		},
 		methods: {
 			clickc(){
+				var id='oROSF5rwGFoHUhpU4kqN-LU_k2hc';
 				uni.navigateTo({
-					url: '/pages/privateChat/privateChat?to=oROSF5rwGFoHUhpU4kqN-LU_k2hc'
+					url: '/pages/privateChat/privateChat?to=3bb179af-bcc5'
 				})
 			}
 		}

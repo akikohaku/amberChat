@@ -530,7 +530,7 @@
 		width: 100vw;
 		height: 100vh;
 		background-color: black;
-		background-image: url(https://pic.kohaku.xin/images/2021/11/07/_f82801b608ef8ac35500eb4932ccfc83_64467.jpg);
+		background-image: url(https://pic.kohaku.xin/images/2021/11/09/QQ20211109085204.jpg);
 		background-size: 100% auto;
 		background-repeat: no-repeat;
 		text-align: center;
@@ -724,7 +724,7 @@
 		width: 250px;
 		height: 200px;
 		position: absolute;
-		margin: 0 auto;
+		margin: 90px auto;
 	}
 
 	/* star styling */
