@@ -61,9 +61,8 @@
             "path" : "pages/me/setting/setting",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "匹配设置",
-                "enablePullDownRefresh": false,
-				"navigationStyle":"custom"
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
             }
             
         }
@@ -72,8 +71,7 @@
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "",
-                "enablePullDownRefresh": false,
-				"navigationStyle":"custom"
+                "enablePullDownRefresh": false
             }
             
         }

@@ -14,11 +14,11 @@
 		<uni-section title="消息设置" type="line"></uni-section>
 		<view class="uni-list">
 			<view class="uni-list-cell uni-list-cell-pd">
-				<view class="uni-list-cell-db">接受被匹配消息</view>
+				<view class="uni-list-cell-db">接收被匹配消息推送</view>
 				<switch :checked="sendmatch" @change="switch1Change" />
 			</view>
 			<view class="uni-list-cell uni-list-cell-pd">
-				<view class="uni-list-cell-db">接受聊天消息推送</view>
+				<view class="uni-list-cell-db">接收聊天消息推送</view>
 				<switch :checked="sendmessage" @change="switch2Change" />
 			</view>
 		</view>
@@ -103,9 +103,6 @@
 				}, {
 					text: '夜间',
 					value: 4
-				}, {
-					text: '自定义',
-					value: 5
 				}],
 				color: [{
 					text: '默认',
@@ -178,6 +175,12 @@
 			this.userName = getApp().globalData.userName;
 			this.besendmatch = getApp().globalData.besendmatch;
 			this.besendmessage = getApp().globalData.besendmessage;
+			var theme=uni.getStorageSync('theme');
+			if(theme===''){
+				
+			}else{
+				this.current=theme.color;
+			}
 			if (this.besendmatch === 'y') {
 				this.sendmatch = true;
 			} else {
@@ -216,6 +219,12 @@
 				}
 			},
 			uploadsetting() {
+				uni.setStorageSync('theme', {
+					color:this.current,
+					color1:this.color[this.current].value[0].color,
+					color2:this.color[this.current].value[1].color,
+					color3:this.color[this.current].value[2].color
+				});
 				uni.request({
 					method: 'GET',
 					url: 'https://wechat.api.kohaku.xin:11731/setsettings',
@@ -306,15 +315,15 @@
 							// this.chooseImage();
 
 						}
-						uni.showModal({
-							title:"打咩！",
-							content: "开发中，还不能用哦",
-							confirmText: "欸？",
-							showCancel:false,
-							success: function(res) {
+						// uni.showModal({
+						// 	title:"打咩！",
+						// 	content: "开发中，还不能用哦",
+						// 	confirmText: "欸？",
+						// 	showCancel:false,
+						// 	success: function(res) {
 						
-							}
-						})
+						// 	}
+						// })
 						break;
 					}
 				}

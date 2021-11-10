@@ -1,5 +1,5 @@
 <template>
-	<view class="chatInterface">
+	<view class="chatInterface" ref='chatInterface'>
 
 		<view class="scroll-view" ref="scrollview">
 			<view class="all-history-loaded">
@@ -44,8 +44,8 @@
 				</view>
 			</view>
 		</view>
-		<view class="action-box" v-if="!video.visible">
-			<view class="action-top">
+		<view class="action-box" ref='actionbuttomout' v-if="!video.visible">
+			<view class="action-top" ref='actiontop'>
 				<!-- <view :class="[audio.visible ? 'record-icon record-open':'record-icon']" @click="switchAudioKeyboard"></view> -->
 				<view class="record-input" @touchstart="onRecordStart" @touchend="onRecordEnd" v-if="audio.visible">
 					{{audio.recording ? '松开发送' : '按住录音'}}
@@ -57,7 +57,7 @@
 				</view>
 				<view class="file-icon emoji-icon" @click="showEmoji"></view>
 				<view class="file-icon more-icon" @click="showMore"></view>
-				<span class="send-message-btn" @click="sendTextMessage">发送</span>
+				<view class="send-message-btn" ref='sendmessagebtn' @click="sendTextMessage">发送</view>
 			</view>
 			<!--展示表情列表-->
 			<scroll-view class="action-bottom-out" scroll-y="true" v-if="emoji.show">
@@ -236,12 +236,37 @@
 		onReady() {
 			this.video.context = uni.createVideoContext('videoPlayer', this);
 			// https://uniapp.dcloud.io/api/ui/navigationbar?id=setnavigationbartitle
+			var theme=uni.getStorageSync('theme');
+			console.log(theme);
+			if(theme===''){
+				//do nothing
+			}else{
+				this.$refs.chatInterface.$el.style.backgroundColor=theme.color1;
+				this.$refs.actiontop.$el.style.backgroundColor=theme.color2;
+				this.$refs.sendmessagebtn.$el.style.backgroundColor=theme.color3;
+				this.$refs.sendmessagebtn.$el.style.color=theme.color1;
+				this.$refs.actionbuttomout.$el.style.backgroundColor=theme.color2;
+				
+			}
 
 		},
 		onShow() {
 			this.more.show = false;
 			this.emoji.show = false;
 			this.scrollToBottom();
+			// var theme=uni.getStorageSync('theme');
+			// console.log(theme);
+			// if(theme===''){
+			// 	//do nothing
+			// }else{
+			// 	this.$refs.chatInterface.$el.style.backgroundColor=theme.color1;
+			// 	this.$refs.actiontop.$el.style.backgroundColor=theme.color2;
+			// 	this.$refs.sendmessagebtn.$el.style.backgroundColor=theme.color3;
+			// 	this.$refs.sendmessagebtn.$el.style.color=theme.color1;
+			// 	this.$refs.actionbuttomout.$el.style.backgroundColor=theme.color2;
+				
+			// }
+			
 		},
 		onLoad(options) {
 			var that = this;
@@ -617,6 +642,15 @@
 				}
 				this.emoji.show = !this.emoji.show;
 				this.more.show = false;
+				// var theme=uni.getStorageSync('theme');
+				// console.log(theme);
+				// if(theme===''){
+				// 	//do nothing
+				// }else{
+
+				// 	this.$refs.actionbuttomout.$el.style.backgroundColor=theme.color2;
+					
+				// }
 			},
 			showMore() {
 				if (!this.more.show) {
@@ -629,6 +663,15 @@
 				this.more.show = !this.more.show;
 
 				this.emoji.show = false
+				// var theme=uni.getStorageSync('theme');
+				// console.log(theme);
+				// if(theme===''){
+				// 	//do nothing
+				// }else{
+				
+				// 	this.$refs.actionbuttomout.$el.style.backgroundColor=theme.color2;
+					
+				// }
 			},
 			selectEmoji(emojiKey) {
 				this.content += emojiKey
@@ -673,7 +716,9 @@
 	}
 
 	.chatInterface {
-		background-color: #F5F5F500;
+		background-color: #F5F5F5;
+		height: auto;
+		min-height: 100vh;
 	}
 
 	.emoji-item {
@@ -952,7 +997,7 @@
 		line-height: 57rpx;
 		height: 60rpx;
 		color: #ffffffdd;
-		border: 1px solid #A4AAFF;
+		/* border: 1px solid #A4AAFF; */
 		background-color: #A4AAFF;
 		border-radius: 10rpx;
 	}
@@ -962,7 +1007,7 @@
 		height: 300rpx;
 
 		box-sizing: border-box;
-		background-color: #F0F0F0;
+		background-color: #F0F0F000;
 	}
 
 	.chatInterface .action-bottom {
@@ -970,7 +1015,7 @@
 		width: 100%;
 		padding: 20rpx;
 		box-sizing: border-box;
-		background-color: #F0F0F0;
+		background-color: #F0F0F000;
 		/* display: flex; */
 
 	}

@@ -18,11 +18,11 @@
 			
 			<!-- <view class="me-menu-item red">登出</view> -->
 			<view class="me-menu-line"></view>
-			<view class="me-menu-item" @click="login1()">id1</view>
-			<view class="me-menu-item" @click="login2()">id2</view>
+<!-- 			<view class="me-menu-item" @click="login1()">id1</view>
+			<view class="me-menu-item" @click="login2()">id2</view> -->
 		</view>
 
-				<hr/>
+	<!-- 			<hr/>
 		<view>{{userID}}</view>
 		<view>{{userName}}</view>
 		<view class="uni-list-cell">
@@ -45,7 +45,7 @@
 		</view>
 		<view @click="connect()">连接</view>
 		<view class="login" @click="setid()">设定id</view>
-		<view class="login" @click="loginmain()">登录</view>
+		<view class="login" @click="loginmain()">登录</view> -->
 	</view>
 </template>
 
@@ -369,15 +369,15 @@
 					}
 					
 				} else {
-					// uni.showModal({
-					// 	title:"啊哦？",
-					// 	content: "只支持在微信登录哟",
-					// 	showCancel: false,
-					// 	confirmText: "好吧qwq",
-					// 	success: function(res) {
-					// 	}
-					// })
-					// return;
+					uni.showModal({
+						title:"啊哦？",
+						content: "只支持在微信登录哟",
+						showCancel: false,
+						confirmText: "好吧qwq",
+						success: function(res) {
+						}
+					})
+					return;
 					let that = this;
 					uni.request({
 						method: 'GET',
