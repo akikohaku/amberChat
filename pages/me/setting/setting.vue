@@ -11,7 +11,19 @@
 			<view class="me-head-wave-1"></view>
 			<view class="me-head-wave-2"></view>
 		</view>
-		<view class="text">主题</view>
+		<uni-section title="消息设置" type="line"></uni-section>
+		<view class="uni-list">
+			<view class="uni-list-cell uni-list-cell-pd">
+				<view class="uni-list-cell-db">接受被匹配消息</view>
+				<switch :checked="sendmatch" @change="switch1Change" />
+			</view>
+			<view class="uni-list-cell uni-list-cell-pd">
+				<view class="uni-list-cell-db">接受聊天消息推送</view>
+				<switch :checked="sendmessage" @change="switch2Change" />
+			</view>
+		</view>
+		<!-- <view class="text">主题</view> -->
+		<uni-section title="主题" type="line"></uni-section>
 		<view class="uni-list">
 			<radio-group @change="radioChange">
 				<label
@@ -41,6 +53,8 @@
 				</label>
 			</radio-group>
 		</view>
+		<view class="white"></view>
+		<view class="upload" @click="uploadsetting">保存</view>
 		<kps-image-cutter @ok="onok" @cancel="oncancle" :url="tempurl" :fixed="false" :width="200" :height="200"
 			:blob="true">
 		</kps-image-cutter>
@@ -51,11 +65,13 @@
 <script>
 	import kpsImageCutter from "@/components/ksp-image-cutter/ksp-image-cutter.vue";
 	import tColorPicker from '@/components/t-color-picker/t-color-picker.vue';
+	import UniSection from '@/components/uni-section/uni-section.vue'
 	export default {
 		components: {
 			tColorPicker,
 
-			kpsImageCutter
+			kpsImageCutter,
+			UniSection
 		},
 		data() {
 			return {
@@ -64,6 +80,10 @@
 				backgroundimg: '',
 				isavatarsaved: true,
 				usernum: 5,
+				besendmatch: '',
+				besendmessage: '',
+				sendmatch: true,
+				sendmessage: true,
 				formData: {
 					value: 0,
 					hobby: [1]
@@ -156,17 +176,70 @@
 		onShow() {
 			this.avatarUrl = getApp().globalData.avaterUrl;
 			this.userName = getApp().globalData.userName;
-			uni.showModal({
-				title:"dame！",
-				content: "开发中，还不能用哦",
-				confirmText: "欸？",
-				showCancel:false,
-				success: function(res) {
+			this.besendmatch = getApp().globalData.besendmatch;
+			this.besendmessage = getApp().globalData.besendmessage;
+			if (this.besendmatch === 'y') {
+				this.sendmatch = true;
+			} else {
+				this.sendmatch = false;
+			}
+			if (this.besendmessage === 'y') {
+				this.sendmessage = true;
+			} else {
+				this.sendmessage = false;
+			}
+			// uni.showModal({
+			// 	title:"打咩！",
+			// 	content: "开发中，还不能用哦",
+			// 	confirmText: "欸？",
+			// 	showCancel:false,
+			// 	success: function(res) {
 
-				}
-			})
+			// 	}
+			// })
 		},
 		methods: {
+			switch1Change: function(e) {
+				console.log('switch1 发生 change 事件，携带值为', e.detail.value)
+				if (e.detail.value) {
+					this.besendmatch = 'y';
+				} else {
+					this.besendmatch = 'n';
+				}
+			},
+			switch2Change: function(e) {
+				console.log('switch1 发生 change 事件，携带值为', e.detail.value)
+				if (e.detail.value) {
+					this.besendmessage = 'y';
+				} else {
+					this.besendmessage = 'n';
+				}
+			},
+			uploadsetting() {
+				uni.request({
+					method: 'GET',
+					url: 'https://wechat.api.kohaku.xin:11731/setsettings',
+					data: {
+						openid: getApp().globalData.userID,
+						besendmatch: this.besendmatch,
+						besendmessage: this.besendmessage
+
+					},
+
+					success(res) {
+						getApp().globalData.besendmatch=this.besendmatch;
+						getApp().globalData.besendmessage=this.besendmessage;
+						uni.showModal({
+							title:"保存成功了！",
+							content: "",
+							confirmText: "好耶！",
+							showCancel:false,
+							success: function(res) {
+							}
+						})
+					}
+				})
+			},
 			opencolor(item) {
 				// 打开颜色选择器
 				this.$refs.colorPicker.open();
@@ -231,7 +304,17 @@
 						this.current = i;
 						if (i == 5) {
 							// this.chooseImage();
+
 						}
+						uni.showModal({
+							title:"打咩！",
+							content: "开发中，还不能用哦",
+							confirmText: "欸？",
+							showCancel:false,
+							success: function(res) {
+						
+							}
+						})
 						break;
 					}
 				}
@@ -243,6 +326,25 @@
 <style>
 	page {
 		background-color: #f5f5f5;
+	}
+
+	.white {
+		width: 100vw;
+		height: 20vh;
+	}
+
+	.upload {
+		width: 100vw;
+		height: 50px;
+		position: fixed;
+		bottom: 0rpx;
+		text-align: center;
+		padding-top: 5px;
+		font-size: 60rpx;
+		background-color: orange;
+		color: white;
+		z-index: 999;
+
 	}
 
 	.colorout {
@@ -370,7 +472,7 @@
 		width: 100%;
 		display: flex;
 		flex-direction: column;
-		margin-bottom: 100px;
+		margin-bottom: 20px;
 	}
 
 	.uni-list:after {
@@ -437,9 +539,17 @@
 
 	.uni-list-cell-db,
 	.uni-list-cell-right {
-		position: absolute;
-		left: 110px;
+		/* 		position: absolute;
+		left: 0px; */
+		display: inline-block;
+		margin-top: 5px;
 		flex: 1;
+	}
+
+	switch {
+		display: inline-block;
+		float: right;
+		margin-right: 20px;
 	}
 
 	.uni-list-cell::after {

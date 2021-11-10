@@ -152,6 +152,8 @@
 								getApp().globalData.pre = res.data.pre;
 								getApp().globalData.tosex = res.data.tosex;
 								getApp().globalData.bematch = res.data.bematch;
+								getApp().globalData.besendmatch=res.data.besendmatch;
+								getApp().globalData.besendmessage=res.data.besendmessage
 								if (that.goEasy.getConnectionStatus() === 'disconnected') {
 									getApp().globalData.imService = new IMService(that.goEasy, that
 										.GoEasy);

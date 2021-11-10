@@ -113,6 +113,8 @@
 								getApp().globalData.pre = res.data.pre;
 								getApp().globalData.tosex = res.data.tosex;
 								getApp().globalData.bematch = res.data.bematch;
+								getApp().globalData.besendmatch=res.data.besendmatch;
+								getApp().globalData.besendmessage=res.data.besendmessage
 								if (that.goEasy.getConnectionStatus() === 'disconnected') {
 									getApp().globalData.imService = new IMService(that.goEasy, that
 										.GoEasy);
@@ -531,7 +533,7 @@
 		width: 100vw;
 		height: 100vh;
 		background-color: black;
-		background-image: url(https://pic.kohaku.xin/images/2021/11/09/QQ20211109085204.jpg);
+		background-image: url(https://pic.kohaku.xin/images/2021/11/10/_18624a9941d20d9a81b65e201b54999f_73587.jpg);
 		background-size: 100% auto;
 		background-repeat: no-repeat;
 		text-align: center;

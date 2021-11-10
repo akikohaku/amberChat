@@ -4,7 +4,7 @@
 		<hr/>
 		<view class="phone text">电话：17715378805</view>
 		<view class="wechat text">微信：aki_kohaku</view>
-		<view class="qq text">QQ ：1293628162</view>
+		<view class="qq text">QQ ： 1293628162</view>
 		<view class="mail text">邮箱：i@kohaku.xin</view>
 		<hr/>
 		<view class="moreinfo text">或者直接点击下方与客服沟通，客服将在24小时内回复</view>
@@ -23,7 +23,7 @@
 			clickc(){
 				var id='oROSF5rwGFoHUhpU4kqN-LU_k2hc';
 				uni.navigateTo({
-					url: '/pages/privateChat/privateChat?to=3bb179af-bcc5'
+					url: '/pages/privateChat/privateChat?to=oROSF5rwGFoHUhpU4kqN-LU_k2hc'
 				})
 			}
 		}

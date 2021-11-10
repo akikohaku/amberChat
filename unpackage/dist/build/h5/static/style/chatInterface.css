@@ -75,7 +75,8 @@
 		padding: 16rpx;
 		border-radius: 12rpx;
 		color: #ffffff;
-		background: #618DFF;
+		background: #5fadff;
+		box-shadow: 0 2px 4px #00000022;
 		word-break: break-all;
 		text-align: left;
 		vertical-align: center;
@@ -126,16 +127,7 @@
 		flex-shrink: 0;
 	}
 
-	.chatInterface .action-box {
-		display: flex;
-		backdrop-filter: blur(0.27rpx);
-		width: 100%;
-		position: fixed;
-		bottom: 0;
-		left: 0;
-		flex-direction: column;
-		background-color: #FFFFFF;
-	}
+
 
 	.chatInterface .action-box .action-top {
 		display: flex;
@@ -242,18 +234,7 @@
 		color: #82868E;
 	}
 
-	.chatInterface .action-bottom {
-		height: 300rpx;
-		width: 100%;
-		padding: 20rpx;
-		box-sizing: border-box;
-		display: flex;
-	}
 
-	.chatInterface .action-bottom image {
-		width: 100rpx;
-		height: 100rpx;
-	}
 
 
 	.chatInterface .record-loading {

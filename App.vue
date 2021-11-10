@@ -20,7 +20,9 @@
 			tosex:'e',
 			islogin:false,
 			token:0,
-			bematch:''
+			bematch:'',
+			besendmatch:'',
+			besendmessage:''
 		}
 	}
 </script>

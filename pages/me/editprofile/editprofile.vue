@@ -765,12 +765,12 @@
 		height:3px;
 		background-color: #007AFF;
 		bottom: 0rpx;
-		margin-bottom: 50px;
+		margin-bottom: 55px;
 		transition: all .5s ease-in-out;
 	}
 	.upload {
 		width: 100vw;
-		height: 45px;
+		height: 50px;
 		position: fixed;
 		bottom: 0rpx;
 		text-align: center;
@@ -778,6 +778,6 @@
 		font-size: 60rpx;
 		background-color: orange;
 		color: white;
-
+		z-index: 999;
 	}
 </style>
