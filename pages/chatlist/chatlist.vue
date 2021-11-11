@@ -168,6 +168,7 @@
 										name: getApp().globalData.userName
 									});
 								}
+								getApp().globalData.islogin=true;
 								if (getApp().globalData.pre === '[]') {
 									uni.showModal({
 										title: "哇哦！",

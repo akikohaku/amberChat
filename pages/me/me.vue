@@ -11,18 +11,19 @@
 			<view class="me-head-wave-2"></view>
 		</view>
 		<view class="me-menu">
-			<view class="me-menu-item" @click="toprofile()">编辑个人资料</view>
-			<view class="me-menu-item" @click="toset()">聊天设置</view>
-			<view class="me-menu-item" @click="tocontact()">问题反馈</view>
+			<view class="me-menu-item arror" @click="toprofile()">编辑个人资料</view>
+			<view class="me-menu-item arror" @click="toset()">聊天设置</view>
+			<view class="me-menu-item arror" @click="tocontact()">问题反馈</view>
+			<view class="me-menu-item arror" @click="toabout()">关于</view>
 			<view class="me-menu-item red" @click="cleancache()">清除缓存</view>
-			
+
 			<!-- <view class="me-menu-item red">登出</view> -->
 			<view class="me-menu-line"></view>
-<!-- 			<view class="me-menu-item" @click="login1()">id1</view>
+			<!-- 			<view class="me-menu-item" @click="login1()">id1</view>
 			<view class="me-menu-item" @click="login2()">id2</view> -->
 		</view>
 
-	<!-- 			<hr/>
+		<!-- 			<hr/>
 		<view>{{userID}}</view>
 		<view>{{userName}}</view>
 		<view class="uni-list-cell">
@@ -64,7 +65,7 @@
 				openid: '',
 				username: '',
 				headImage: '',
-				
+
 
 			}
 		},
@@ -74,14 +75,14 @@
 			that.userName = getApp().globalData.userName;
 			that.avatarUrl = getApp().globalData.avaterUrl;
 		},
-		onload(){
-			
+		onload() {
+
 		},
 		onShow() {
-			if(!getApp().globalData.islogin){
+			if (!getApp().globalData.islogin) {
 				this.loginmain();
 			}
-			
+
 			let that = this;
 			that.userID = getApp().globalData.userID;
 			that.userName = getApp().globalData.userName;
@@ -93,9 +94,14 @@
 					url: '/pages/me/setting/setting'
 				});
 			},
-			tocontact(){
+			tocontact() {
 				uni.navigateTo({
 					url: '/pages/me/report/report'
+				});
+			},
+			toabout() {
+				uni.navigateTo({
+					url: '/pages/me/about/about'
 				});
 			},
 			setid() {
@@ -146,7 +152,7 @@
 			getCode() {
 				this.code = '';
 				let origin =
-				'https://chat.nanju.work/#/pages/me/me'; //网页授权的回调域名，这里设置的是本地端口
+					'https://chat.nanju.work/#/pages/me/me'; //网页授权的回调域名，这里设置的是本地端口
 				let urlNow = encodeURIComponent(origin); //处理域名
 				let scope = "snsapi_userinfo"; //弹框显示授权
 				let appid = "";
@@ -179,12 +185,12 @@
 				this.codeurl = this.getUrlCode().code; //获取code
 				this.getCode();
 			},
-			cleancache(){
+			cleancache() {
 				uni.showModal({
-					title:"不好！",
+					title: "不好！",
 					content: "您似乎是要清除缓存\n这合理吗？",
 					confirmText: "合理！",
-					cancelText:"不对！",
+					cancelText: "不对！",
 					success: function(res) {
 						if (res.confirm) {
 							uni.clearStorage();
@@ -194,17 +200,17 @@
 						}
 					}
 				})
-				
+
 			},
 			loginmain() {
 				let ua = window.navigator.userAgent.toLowerCase();
 				if (ua.match(/MicroMessenger/i) == 'micromessenger') {
 					console.log("检测到微信浏览器");
-					var openid=uni.getStorageSync('openid');
+					var openid = uni.getStorageSync('openid');
 					console.log(openid);
 					console.log(openid.data);
 					console.log(openid.id);
-					if(openid.id==undefined){
+					if (openid.id == undefined) {
 						this.codecreated();
 						var url = "https://wechat.api.kohaku.xin:11731/weixinlogin?code=" + this.code;
 						let that = this;
@@ -212,15 +218,15 @@
 							url: url,
 							success(res) {
 								console.log("请求到了", res);
-								
+
 								getApp().globalData.userID = res.data.data.openid;
 								getApp().globalData.avaterUrl = res.data.data.headimgurl;
 								getApp().globalData.userName = res.data.data.nickname;
 								uni.setStorageSync('openid', {
-									id:res.data.data.openid,
-									name:res.data.data.nickname,
-									avatar:res.data.data.headimgurl
-									});
+									id: res.data.data.openid,
+									name: res.data.data.nickname,
+									avatar: res.data.data.headimgurl
+								});
 								// console.log("用户id", useropenId);
 								// console.log("用户头像", avatarUrl);
 								// console.log("用户名称", username);
@@ -232,7 +238,7 @@
 										username: getApp().globalData.userName,
 										avater: getApp().globalData.avaterUrl
 									},
-								
+
 									success(res) {
 										// console.log(res.data.token);
 										// getApp().globalData.token=res.data.token;
@@ -242,38 +248,44 @@
 											data: {
 												openid: getApp().globalData.userID
 											},
-								
+
 											success(res) {
 												console.log(res);
-								
+
 												getApp().globalData.userName = res.data.name;
 												getApp().globalData.avaterUrl = res.data.avatar;
 												getApp().globalData.sex = res.data.sex;
 												getApp().globalData.pre = res.data.pre;
 												getApp().globalData.tosex = res.data.tosex;
 												getApp().globalData.bematch = res.data.bematch;
-												getApp().globalData.besendmatch=res.data.besendmatch;
-												getApp().globalData.besendmessage=res.data.besendmessage;
+												getApp().globalData.besendmatch = res.data
+													.besendmatch;
+												getApp().globalData.besendmessage = res.data
+													.besendmessage;
 												that.userName = getApp().globalData.userName;
 												that.avatarUrl = getApp().globalData.avaterUrl;
-												if (that.goEasy.getConnectionStatus() === 'disconnected') {
-													getApp().globalData.imService = new IMService(that.goEasy, that
+												if (that.goEasy.getConnectionStatus() ===
+													'disconnected') {
+													getApp().globalData.imService = new IMService(
+														that.goEasy, that
 														.GoEasy);
 													getApp().globalData.imService.connect({
 														uuid: getApp().globalData.userID,
-														avatar: getApp().globalData.avaterUrl,
+														avatar: getApp().globalData
+															.avaterUrl,
 														name: getApp().globalData.userName
 													});
 													uni.setStorageSync('currentUser', {
 														uuid: getApp().globalData.userID,
-														avatar: getApp().globalData.avaterUrl,
+														avatar: getApp().globalData
+															.avaterUrl,
 														name: getApp().globalData.userName
 													});
 												}
-												getApp().globalData.islogin=true;
+												getApp().globalData.islogin = true;
 												if (getApp().globalData.pre === '[]') {
 													uni.showModal({
-														title:"哇哦！",
+														title: "哇哦！",
 														content: "看来您是首次登录匿名聊天\n先来设置个人资料吧",
 														showCancel: false,
 														confirmText: "好耶！",
@@ -287,16 +299,16 @@
 													})
 												}
 												// getApp().globalData.token=res.data.token;
-								
+
 											}
 										})
-								
+
 									}
 								})
 							}
 						})
-					}else{
-						getApp().globalData.userID=openid.id;
+					} else {
+						getApp().globalData.userID = openid.id;
 						let that = this;
 						uni.request({
 							method: 'GET',
@@ -306,7 +318,7 @@
 								username: getApp().globalData.userName,
 								avater: getApp().globalData.avaterUrl
 							},
-						
+
 							success(res) {
 								// console.log(res.data.token);
 								// getApp().globalData.token=res.data.token;
@@ -316,18 +328,18 @@
 									data: {
 										openid: getApp().globalData.userID
 									},
-						
+
 									success(res) {
 										console.log(res);
-						
+
 										getApp().globalData.userName = res.data.name;
 										getApp().globalData.avaterUrl = res.data.avatar;
 										getApp().globalData.sex = res.data.sex;
 										getApp().globalData.pre = res.data.pre;
 										getApp().globalData.tosex = res.data.tosex;
 										getApp().globalData.bematch = res.data.bematch;
-										getApp().globalData.besendmatch=res.data.besendmatch;
-										getApp().globalData.besendmessage=res.data.besendmessage
+										getApp().globalData.besendmatch = res.data.besendmatch;
+										getApp().globalData.besendmessage = res.data.besendmessage
 										that.userName = getApp().globalData.userName;
 										that.avatarUrl = getApp().globalData.avaterUrl;
 										if (that.goEasy.getConnectionStatus() === 'disconnected') {
@@ -344,9 +356,10 @@
 												name: getApp().globalData.userName
 											});
 										}
+										getApp().globalData.islogin = true;
 										if (getApp().globalData.pre === '[]') {
 											uni.showModal({
-												title:"哇哦！",
+												title: "哇哦！",
 												content: "看来您是首次登录匿名聊天\n先来设置个人资料吧",
 												showCancel: false,
 												confirmText: "好耶！",
@@ -360,22 +373,21 @@
 											})
 										}
 										// getApp().globalData.token=res.data.token;
-						
+
 									}
 								})
-						
+
 							}
 						})
 					}
-					
+
 				} else {
 					uni.showModal({
-						title:"啊哦？",
+						title: "啊哦？",
 						content: "只支持在微信登录哟",
 						showCancel: false,
 						confirmText: "好吧qwq",
-						success: function(res) {
-						}
+						success: function(res) {}
 					})
 					return;
 					let that = this;
@@ -407,8 +419,8 @@
 									getApp().globalData.pre = res.data.pre;
 									getApp().globalData.tosex = res.data.tosex;
 									getApp().globalData.bematch = res.data.bematch;
-									getApp().globalData.besendmatch=res.data.besendmatch;
-									getApp().globalData.besendmessage=res.data.besendmessage
+									getApp().globalData.besendmatch = res.data.besendmatch;
+									getApp().globalData.besendmessage = res.data.besendmessage
 									that.userName = getApp().globalData.userName;
 									that.avatarUrl = getApp().globalData.avaterUrl;
 									if (that.goEasy.getConnectionStatus() === 'disconnected') {
@@ -425,9 +437,10 @@
 											name: getApp().globalData.userName
 										});
 									}
+									getApp().globalData.islogin = true;
 									if (getApp().globalData.pre === '[]') {
 										uni.showModal({
-											title:"哇哦！",
+											title: "哇哦！",
 											content: "看来您是首次登录匿名聊天\n先来设置个人资料吧",
 											showCancel: false,
 											confirmText: "好耶！",
@@ -455,7 +468,6 @@
 </script>
 
 <style>
-	
 	.uni-list-cell {
 		position: relative;
 		display: flex;
@@ -578,7 +590,7 @@
 		opacity: 1;
 		transiton-property: opacity, bottom;
 		transition-duration: .4s, .4s;
-		animation: wave2 250s alternate infinite;
+		animation: wave2 300s alternate infinite;
 	}
 
 	@keyframes wave2 {
@@ -596,10 +608,19 @@
 	}
 
 	.me-menu-item {
-		padding-top: 11px;
+		padding-top: 13px;
 		padding-left: 20px;
-		padding-bottom: 9px;
+		padding-bottom: 5px;
 		font-size: 17px;
+	}
+
+
+
+	.arror::after {
+		content: '>';
+		float: right;
+		margin-right: 15px;
+		color: #d5d5d5;
 	}
 
 	.me-menu-item::before {
@@ -614,6 +635,7 @@
 
 	.me-menu-line {
 		content: '';
+		margin-top: 5px;
 		height: 1px;
 		width: 100vw;
 		background-color: #00000011;

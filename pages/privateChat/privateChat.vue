@@ -52,8 +52,8 @@
 				</view>
 				<view class="message-input" v-else>
 					<!-- GoEasyIM最大支持3k的文本消息，如需发送长文本，需调整输入框maxlength值 -->
-					<textarea type="text" rows="1" maxlength="1000" v-model="content" @focus="messageInputFocusin()"
-						onscroll="this.rows++;"></textarea>
+					<textarea selectable type="text" rows="1" maxlength="1000" v-model="content"
+						:show-confirm-bar="false" @focus="messageInputFocusin()" onscroll="this.rows++;"></textarea>
 				</view>
 				<view class="file-icon emoji-icon" @click="showEmoji"></view>
 				<view class="file-icon more-icon" @click="showMore"></view>
@@ -204,7 +204,7 @@
 				content: '',
 				friend: null,
 				currentUser: null,
-				friendid:'',
+				friendid: '',
 				//已经接收到的消息
 				messages: [],
 				//已经加载完所有历史消息
@@ -236,17 +236,17 @@
 		onReady() {
 			this.video.context = uni.createVideoContext('videoPlayer', this);
 			// https://uniapp.dcloud.io/api/ui/navigationbar?id=setnavigationbartitle
-			var theme=uni.getStorageSync('theme');
+			var theme = uni.getStorageSync('theme');
 			console.log(theme);
-			if(theme===''){
+			if (theme === '') {
 				//do nothing
-			}else{
-				this.$refs.chatInterface.$el.style.backgroundColor=theme.color1;
-				this.$refs.actiontop.$el.style.backgroundColor=theme.color2;
-				this.$refs.sendmessagebtn.$el.style.backgroundColor=theme.color3;
-				this.$refs.sendmessagebtn.$el.style.color=theme.color1;
-				this.$refs.actionbuttomout.$el.style.backgroundColor=theme.color2;
-				
+			} else {
+				this.$refs.chatInterface.$el.style.backgroundColor = theme.color1;
+				this.$refs.actiontop.$el.style.backgroundColor = theme.color2;
+				this.$refs.sendmessagebtn.$el.style.backgroundColor = theme.color3;
+				this.$refs.sendmessagebtn.$el.style.color = theme.color1;
+				this.$refs.actionbuttomout.$el.style.backgroundColor = theme.color2;
+
 			}
 
 		},
@@ -264,9 +264,9 @@
 			// 	this.$refs.sendmessagebtn.$el.style.backgroundColor=theme.color3;
 			// 	this.$refs.sendmessagebtn.$el.style.color=theme.color1;
 			// 	this.$refs.actionbuttomout.$el.style.backgroundColor=theme.color2;
-				
+
 			// }
-			
+
 		},
 		onLoad(options) {
 			var that = this;
@@ -274,7 +274,7 @@
 			this.currentUser = uni.getStorageSync('currentUser');
 			//聊天对象
 			let friendId = options.to;
-			this.friendid=friendId;
+			this.friendid = friendId;
 			console.log(friendId);
 
 			//从服务器获取最新的好友信息
@@ -309,7 +309,7 @@
 					//聊天时，收到消息标记为已读
 					this.markPrivateMessageAsRead(friendId);
 					//收到新消息，是滚动到最底部
-					thia.scrollToBottom();
+					this.scrollToBottom();
 				}
 			};
 			// var onUserPresence = function(event) {
@@ -413,7 +413,7 @@
 				let localHistory = imService.getPrivateMessages(toId);
 				localHistory.push(message);
 				var userIds = [this.friendid];
-				let that=this;
+				let that = this;
 				this.goEasy.im.hereNow({
 					userIds: userIds, //每次查询最多不超过50个
 					onSuccess: function(result) {
@@ -427,9 +427,9 @@
 						//     }]
 						// };    
 						console.log("Query online user list successfully, result:\n " + JSON.stringify(
-						result));
+							result));
 						console.log(result.content[0]);
-						if(result.content[0]==undefined){
+						if (result.content[0] == undefined) {
 							//发送离线消息
 							uni.request({
 								method: 'GET',
@@ -437,17 +437,17 @@
 								data: {
 									openid: that.friendid,
 								},
-							
+
 								success(res) {
-							
+
 								}
 							})
-							
+
 						}
 					},
 					onFailed: function(error) { //连接失败
 						console.log("Failed to mark as read, code:" + error.code + " content:" + error
-						.content);
+							.content);
 					}
 				});
 				this.goEasy.im.sendMessage({
@@ -649,7 +649,7 @@
 				// }else{
 
 				// 	this.$refs.actionbuttomout.$el.style.backgroundColor=theme.color2;
-					
+
 				// }
 			},
 			showMore() {
@@ -668,9 +668,9 @@
 				// if(theme===''){
 				// 	//do nothing
 				// }else{
-				
+
 				// 	this.$refs.actionbuttomout.$el.style.backgroundColor=theme.color2;
-					
+
 				// }
 			},
 			selectEmoji(emojiKey) {
@@ -790,6 +790,10 @@
 		align-items: center;
 		justify-content: right;
 		text-align: right;
+	}
+
+	.chatInterface .scroll-view .content view {
+		user-select: text; 
 	}
 
 	.chatInterface .scroll-view .content .image-content {
