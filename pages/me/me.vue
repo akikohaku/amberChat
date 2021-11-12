@@ -64,7 +64,7 @@
 				accessToken: '',
 				openid: '',
 				username: '',
-				headImage: '',
+				headImage: ''
 
 
 			}
@@ -221,10 +221,10 @@
 
 								getApp().globalData.userID = res.data.data.openid;
 								getApp().globalData.avaterUrl = res.data.data.headimgurl;
-								getApp().globalData.userName = res.data.data.nickname;
+								getApp().globalData.userName = res.data.data.nickname.replace(/\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F]/g, "");
 								uni.setStorageSync('openid', {
 									id: res.data.data.openid,
-									name: res.data.data.nickname,
+									name: res.data.data.nickname.replace(/\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F]/g, "");,
 									avatar: res.data.data.headimgurl
 								});
 								// console.log("用户id", useropenId);
@@ -339,7 +339,7 @@
 										getApp().globalData.tosex = res.data.tosex;
 										getApp().globalData.bematch = res.data.bematch;
 										getApp().globalData.besendmatch = res.data.besendmatch;
-										getApp().globalData.besendmessage = res.data.besendmessage
+										getApp().globalData.besendmessage = res.data.besendmessage;
 										that.userName = getApp().globalData.userName;
 										that.avatarUrl = getApp().globalData.avaterUrl;
 										if (that.goEasy.getConnectionStatus() === 'disconnected') {

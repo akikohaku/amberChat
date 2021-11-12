@@ -24,7 +24,7 @@ const goEasy = GoEasy.getInstance({
 	appkey:"",	// common key,
     modules:["im"],
 	// true表示支持通知栏提醒，false则表示不需要通知栏提醒
-    allowNotification:true ,//仅有效于app,小程序和H5将会被自动忽略
+    allowNotification:true //仅有效于app,小程序和H5将会被自动忽略
 
 });
 goEasy.onClickNotification((message) => {

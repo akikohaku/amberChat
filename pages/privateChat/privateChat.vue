@@ -629,7 +629,7 @@
 				setTimeout(() => {
 					this.$refs.scrollview.$el.style.margin = "0 0 0 0";
 					this.scrollToBottom();
-				}, 400)
+				}, 300)
 
 			},
 			showEmoji() {
