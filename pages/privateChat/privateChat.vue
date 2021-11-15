@@ -809,6 +809,7 @@
 		color: #ffffff;
 		background: #618DFF;
 		/* word-break: break-all; */
+		user-select:text;
 
 		word-break: normal;
 		text-align: left;

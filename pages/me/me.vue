@@ -19,11 +19,11 @@
 
 			<!-- <view class="me-menu-item red">登出</view> -->
 			<view class="me-menu-line"></view>
-			<!-- 			<view class="me-menu-item" @click="login1()">id1</view>
+<!-- 						<view class="me-menu-item" @click="login1()">id1</view>
 			<view class="me-menu-item" @click="login2()">id2</view> -->
 		</view>
 
-		<!-- 			<hr/>
+<!-- 					<hr/>
 		<view>{{userID}}</view>
 		<view>{{userName}}</view>
 		<view class="uni-list-cell">
@@ -224,7 +224,7 @@
 								getApp().globalData.userName = res.data.data.nickname.replace(/\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F]/g, "");
 								uni.setStorageSync('openid', {
 									id: res.data.data.openid,
-									name: res.data.data.nickname.replace(/\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F]/g, "");,
+									name: res.data.data.nickname.replace(/\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F]/g, ""),
 									avatar: res.data.data.headimgurl
 								});
 								// console.log("用户id", useropenId);
