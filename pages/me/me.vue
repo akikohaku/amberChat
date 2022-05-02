@@ -23,7 +23,7 @@
 			<view class="me-menu-item" @click="login2()">id2</view> -->
 		</view>
 
-<!-- 					<hr/>
+					<hr/>
 		<view>{{userID}}</view>
 		<view>{{userName}}</view>
 		<view class="uni-list-cell">
@@ -46,7 +46,7 @@
 		</view>
 		<view @click="connect()">连接</view>
 		<view class="login" @click="setid()">设定id</view>
-		<view class="login" @click="loginmain()">登录</view> -->
+		<view class="login" @click="loginmain()">登录</view>
 	</view>
 </template>
 
@@ -155,7 +155,7 @@
 					'https://chat.nanju.work/#/pages/me/me'; //网页授权的回调域名，这里设置的是本地端口
 				let urlNow = encodeURIComponent(origin); //处理域名
 				let scope = "snsapi_userinfo"; //弹框显示授权
-				let appid = "";
+				let appid = "wx85711bab02504c2a";
 				this.code = this.codeurl;
 				// 截取code
 				if (this.code == null || this.code === '') { //未授权qu授权
@@ -264,17 +264,12 @@
 													.besendmessage;
 												that.userName = getApp().globalData.userName;
 												that.avatarUrl = getApp().globalData.avaterUrl;
-												if (that.goEasy.getConnectionStatus() ===
-													'disconnected') {
-													getApp().globalData.imService = new IMService(
-														that.goEasy, that
-														.GoEasy);
-													getApp().globalData.imService.connect({
-														uuid: getApp().globalData.userID,
-														avatar: getApp().globalData
-															.avaterUrl,
-														name: getApp().globalData.userName
-													});
+												//console.log(that.redls)
+												if(that.AcService.GetConnectStatus()==="disconnected"){
+													
+													that.AcService.Login(getApp().globalData.userID,(data)=>{
+														console.log(data)
+													})
 													uni.setStorageSync('currentUser', {
 														uuid: getApp().globalData.userID,
 														avatar: getApp().globalData
@@ -282,6 +277,24 @@
 														name: getApp().globalData.userName
 													});
 												}
+												// if (that.goEasy.getConnectionStatus() ===
+												// 	'disconnected') {
+												// 	getApp().globalData.imService = new IMService(
+												// 		that.goEasy, that
+												// 		.GoEasy);
+												// 	getApp().globalData.imService.connect({
+												// 		uuid: getApp().globalData.userID,
+												// 		avatar: getApp().globalData
+												// 			.avaterUrl,
+												// 		name: getApp().globalData.userName
+												// 	});
+												// 	uni.setStorageSync('currentUser', {
+												// 		uuid: getApp().globalData.userID,
+												// 		avatar: getApp().globalData
+												// 			.avaterUrl,
+												// 		name: getApp().globalData.userName
+												// 	});
+												// }
 												getApp().globalData.islogin = true;
 												if (getApp().globalData.pre === '[]') {
 													uni.showModal({
@@ -342,17 +355,14 @@
 										getApp().globalData.besendmessage = res.data.besendmessage;
 										that.userName = getApp().globalData.userName;
 										that.avatarUrl = getApp().globalData.avaterUrl;
-										if (that.goEasy.getConnectionStatus() === 'disconnected') {
-											getApp().globalData.imService = new IMService(that.goEasy, that
-												.GoEasy);
-											getApp().globalData.imService.connect({
-												uuid: getApp().globalData.userID,
-												avatar: getApp().globalData.avaterUrl,
-												name: getApp().globalData.userName
-											});
+										if(that.AcService.GetConnectStatus()==="disconnected"){
+											that.AcService.Login(getApp().globalData.userID,(data)=>{
+												console.log(data)
+											})
 											uni.setStorageSync('currentUser', {
 												uuid: getApp().globalData.userID,
-												avatar: getApp().globalData.avaterUrl,
+												avatar: getApp().globalData
+													.avaterUrl,
 												name: getApp().globalData.userName
 											});
 										}
@@ -382,14 +392,14 @@
 					}
 
 				} else {
-					uni.showModal({
-						title: "啊哦？",
-						content: "只支持在微信登录哟",
-						showCancel: false,
-						confirmText: "好吧qwq",
-						success: function(res) {}
-					})
-					return;
+					// uni.showModal({
+					// 	title: "啊哦？",
+					// 	content: "只支持在微信登录哟",
+					// 	showCancel: false,
+					// 	confirmText: "好吧qwq",
+					// 	success: function(res) {}
+					// })
+					// return;
 					let that = this;
 					uni.request({
 						method: 'GET',
@@ -423,20 +433,17 @@
 									getApp().globalData.besendmessage = res.data.besendmessage
 									that.userName = getApp().globalData.userName;
 									that.avatarUrl = getApp().globalData.avaterUrl;
-									if (that.goEasy.getConnectionStatus() === 'disconnected') {
-										getApp().globalData.imService = new IMService(that.goEasy, that
-											.GoEasy);
-										getApp().globalData.imService.connect({
-											uuid: getApp().globalData.userID,
-											avatar: getApp().globalData.avaterUrl,
-											name: getApp().globalData.userName
-										});
+
+										that.AcService.Login(getApp().globalData.userID,(data)=>{
+											console.log(data)
+										})
 										uni.setStorageSync('currentUser', {
 											uuid: getApp().globalData.userID,
-											avatar: getApp().globalData.avaterUrl,
+											avatar: getApp().globalData
+												.avaterUrl,
 											name: getApp().globalData.userName
 										});
-									}
+									
 									getApp().globalData.islogin = true;
 									if (getApp().globalData.pre === '[]') {
 										uni.showModal({

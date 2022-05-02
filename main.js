@@ -1,5 +1,6 @@
 import App from './App'
 import GoEasy from "./js_sdk/GoEasy-IM/goeasy.min.js";
+import kohakuchat from "./js_sdk/kohakuchat.js"
 // #ifndef VUE3
 import Vue from 'vue'
 Vue.config.productionTip = false
@@ -19,6 +20,11 @@ export function createApp() {
   }
 }
 // #endif
+
+//kohakuchat.Connect();
+const AcService=kohakuchat
+Vue.prototype.AcService = kohakuchat;
+AcService.Connect()
 const goEasy = GoEasy.getInstance({
 	host:"hangzhou.goeasy.io",//应用所在的区域地址: 【hangzhou.goeasy.io |singapore.goeasy.io】
 	appkey:"",	// common key,

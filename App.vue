@@ -22,7 +22,8 @@
 			token:0,
 			bematch:'',
 			besendmatch:'',
-			besendmessage:''
+			besendmessage:'',
+			acService:null,
 		}
 	}
 </script>
