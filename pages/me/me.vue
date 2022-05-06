@@ -212,7 +212,7 @@
 					console.log(openid.id);
 					if (openid.id == undefined) {
 						this.codecreated();
-						var url = "https://wechat.api.kohaku.xin:11731/weixinlogin?code=" + this.code;
+						var url = "https://shixiaozhuback.nanju.work:11731/weixinlogin?code=" + this.code;
 						let that = this;
 						uni.request({
 							url: url,
@@ -232,7 +232,7 @@
 								// console.log("用户名称", username);
 								uni.request({
 									method: 'GET',
-									url: 'https://wechat.api.kohaku.xin:11731/login',
+									url: 'https://shixiaozhuback.nanju.work:11731/login',
 									data: {
 										openID: getApp().globalData.userID,
 										username: getApp().globalData.userName,
@@ -244,7 +244,7 @@
 										// getApp().globalData.token=res.data.token;
 										uni.request({
 											method: 'GET',
-											url: 'https://wechat.api.kohaku.xin:11731/getprofile',
+											url: 'https://shixiaozhuback.nanju.work:11731/getprofile',
 											data: {
 												openid: getApp().globalData.userID
 											},
@@ -265,7 +265,7 @@
 												that.userName = getApp().globalData.userName;
 												that.avatarUrl = getApp().globalData.avaterUrl;
 												//console.log(that.redls)
-												if(that.AcService.GetConnectStatus()==="disconnected"){
+												
 													
 													that.AcService.Login(getApp().globalData.userID,(data)=>{
 														console.log(data)
@@ -276,7 +276,7 @@
 															.avaterUrl,
 														name: getApp().globalData.userName
 													});
-												}
+												
 												// if (that.goEasy.getConnectionStatus() ===
 												// 	'disconnected') {
 												// 	getApp().globalData.imService = new IMService(
@@ -325,7 +325,7 @@
 						let that = this;
 						uni.request({
 							method: 'GET',
-							url: 'https://wechat.api.kohaku.xin:11731/login',
+							url: 'https://shixiaozhuback.nanju.work:11731/login',
 							data: {
 								openID: getApp().globalData.userID,
 								username: getApp().globalData.userName,
@@ -337,7 +337,7 @@
 								// getApp().globalData.token=res.data.token;
 								uni.request({
 									method: 'GET',
-									url: 'https://wechat.api.kohaku.xin:11731/getprofile',
+									url: 'https://shixiaozhuback.nanju.work:11731/getprofile',
 									data: {
 										openid: getApp().globalData.userID
 									},
@@ -403,7 +403,7 @@
 					let that = this;
 					uni.request({
 						method: 'GET',
-						url: 'https://wechat.api.kohaku.xin:11731/login',
+						url: 'https://shixiaozhuback.nanju.work:11731/login',
 						data: {
 							openID: getApp().globalData.userID,
 							username: getApp().globalData.userName,
@@ -415,7 +415,7 @@
 							// getApp().globalData.token=res.data.token;
 							uni.request({
 								method: 'GET',
-								url: 'https://wechat.api.kohaku.xin:11731/getprofile',
+								url: 'https://shixiaozhuback.nanju.work:11731/getprofile',
 								data: {
 									openid: getApp().globalData.userID
 								},

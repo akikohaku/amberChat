@@ -87,7 +87,7 @@
 				let that = this;
 				uni.request({
 					method: 'GET',
-					url: 'https://wechat.api.kohaku.xin:11731/login',
+					url: 'https://shixiaozhuback.nanju.work:11731/login',
 					data: {
 						openID: getApp().globalData.userID,
 						username: getApp().globalData.userName,
@@ -99,7 +99,7 @@
 						// getApp().globalData.token=res.data.token;
 						uni.request({
 							method: 'GET',
-							url: 'https://wechat.api.kohaku.xin:11731/getprofile',
+							url: 'https://shixiaozhuback.nanju.work:11731/getprofile',
 							data: {
 								openid: getApp().globalData.userID
 							},
@@ -217,7 +217,7 @@
 				let path = '/pages/privateChat/privateChat?to=' + uuid;
 				uni.request({
 					method: 'GET',
-					url: 'https://wechat.api.kohaku.xin:11731/startchat',
+					url: 'https://shixiaozhuback.nanju.work:11731/startchat',
 					data: {
 						openid: getApp().globalData.userID,
 						toopenid: uuid
@@ -225,7 +225,7 @@
 					success(res) {
 						uni.request({
 							method:'GET',
-							url:'https://wechat.api.kohaku.xin:11731/Weixinhuifu',
+							url:'https://shixiaozhuback.nanju.work:11731/Weixinhuifu',
 							data:{
 								openid:uuid
 							},
@@ -329,7 +329,7 @@
 					console.log(this.goEasy.getConnectionStatus());
 					uni.request({
 						method: 'GET',
-						url: 'https://wechat.api.kohaku.xin:11731/startmatch',
+						url: 'https://shixiaozhuback.nanju.work:11731/startmatch',
 						data: {
 							openid: getApp().globalData.userID,
 						},
@@ -360,7 +360,7 @@
 						if (this.isclicked && !this.isconform) {
 							uni.request({
 								method: 'GET',
-								url: 'https://wechat.api.kohaku.xin:11731/match',
+								url: 'https://shixiaozhuback.nanju.work:11731/match',
 								data: {
 									openid: getApp().globalData.userID
 								},
@@ -371,7 +371,7 @@
 									if (res.data.uuid != '') {
 										uni.request({
 											method: 'GET',
-											url: 'https://wechat.api.kohaku.xin:11731/getuserbyid',
+											url: 'https://shixiaozhuback.nanju.work:11731/getuserbyid',
 											data: {
 												openID: friendid,
 											},
@@ -398,7 +398,7 @@
 											success: function(res) {
 												uni.request({
 													method: 'GET',
-													url: 'https://wechat.api.kohaku.xin:11731/stopmatch',
+													url: 'https://shixiaozhuback.nanju.work:11731/stopmatch',
 													data: {
 														openid: getApp().globalData.userID,
 													},
@@ -443,7 +443,7 @@
 				} else {
 					uni.request({
 						method: 'GET',
-						url: 'https://wechat.api.kohaku.xin:11731/stopmatch',
+						url: 'https://shixiaozhuback.nanju.work:11731/stopmatch',
 						data: {
 							openid: getApp().globalData.userID,
 						},

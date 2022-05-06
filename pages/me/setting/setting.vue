@@ -227,7 +227,7 @@
 				});
 				uni.request({
 					method: 'GET',
-					url: 'https://wechat.api.kohaku.xin:11731/setsettings',
+					url: 'https://shixiaozhuback.nanju.work:11731/setsettings',
 					data: {
 						openid: getApp().globalData.userID,
 						besendmatch: this.besendmatch,

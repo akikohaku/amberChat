@@ -31,7 +31,7 @@
 				let that=this
 				uni.request({
 				  method: 'GET',
-				  url: 'https://wechat.api.kohaku.xin:11731/user/getroom',
+				  url: 'https://shixiaozhuback.nanju.work:11731/user/getroom',
 				  
 				  success(res) {
 				    console.log(res.data.id);

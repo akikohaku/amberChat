@@ -362,7 +362,7 @@
 				let that = this;
 				uni.request({
 					method: 'GET',
-					url: 'https://wechat.api.kohaku.xin:11731/updateprofile',
+					url: 'https://shixiaozhuback.nanju.work:11731/updateprofile',
 					data: {
 						openid: getApp().globalData.userID,
 						username: this.userName,

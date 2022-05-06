@@ -61,29 +61,29 @@
 				})
 				return;
 			}
-			if(this.goEasy.getConnectionStatus() === 'disconnected') {
-				getApp().globalData.imService= new IMService(this.goEasy,this.GoEasy);
-				getApp().globalData.imService.connect(currentUser);
-			}
-			uni.showLoading();
+			// if(this.goEasy.getConnectionStatus() === 'disconnected') {
+			// 	getApp().globalData.imService= new IMService(this.goEasy,this.GoEasy);
+			// 	getApp().globalData.imService.connect(currentUser);
+			// }
+			//uni.showLoading();
 			//监听会话列表变化
-			let self = this;
-			this.goEasy.im.on(this.GoEasy.IM_EVENT.CONVERSATIONS_UPDATED, (content) => {
-				self.renderConversations(content);
-			});
+			//let self = this;
+			// this.goEasy.im.on(this.GoEasy.IM_EVENT.CONVERSATIONS_UPDATED, (content) => {
+			// 	self.renderConversations(content);
+			// });
 			//加载会话列表
-			this.goEasy.im.latestConversations({
-				onSuccess: function (result) {
-					let content = result.content;
-					self.renderConversations(content);
-					uni.hideLoading();
-				},
-				onFailed: function (error) {
-					//获取失败
-					uni.hideLoading()
-					console.log("失败获取最新会话列表, code:" + error.code + " content:" + error.content);
-				}
-			});
+			// this.goEasy.im.latestConversations({
+			// 	onSuccess: function (result) {
+			// 		let content = result.content;
+			// 		self.renderConversations(content);
+			// 		uni.hideLoading();
+			// 	},
+			// 	onFailed: function (error) {
+			// 		//获取失败
+			// 		uni.hideLoading()
+			// 		console.log("失败获取最新会话列表, code:" + error.code + " content:" + error.content);
+			// 	}
+			// });
 		},
 		onTabItemTap(){
 			let currentUser = uni.getStorageSync('currentUser');

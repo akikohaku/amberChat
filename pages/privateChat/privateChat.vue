@@ -280,7 +280,7 @@
 			//从服务器获取最新的好友信息
 			uni.request({
 				method: 'GET',
-				url: 'https://wechat.api.kohaku.xin:11731/getuserbyid',
+				url: 'https://shixiaozhuback.nanju.work:11731/getuserbyid',
 				data: {
 					openID: friendId,
 				},
@@ -433,7 +433,7 @@
 							//发送离线消息
 							uni.request({
 								method: 'GET',
-								url: 'https://wechat.api.kohaku.xin:11731/offlinemessage',
+								url: 'https://shixiaozhuback.nanju.work:11731/offlinemessage',
 								data: {
 									openid: that.friendid,
 								},
